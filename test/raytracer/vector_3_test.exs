@@ -1,6 +1,7 @@
 defmodule Raytracer.Vector3Test do
   use ExUnit.Case, async: true
 
+  alias Raytracer.Point3
   alias Raytracer.Vector3
 
   describe "Raytracer.Vector3.add/2" do
@@ -9,6 +10,13 @@ defmodule Raytracer.Vector3Test do
       v2 = %Vector3{dx: 4.0, dy: 5.0, dz: 6.0}
 
       assert Vector3.add(v1, v2) == %Vector3{dx: 5.0, dy: 7.0, dz: 9.0}
+    end
+
+    test "adds a vector and a point and returns the resulting point" do
+      p = %Point3{x: 1.0, y: 2.0, z: 3.0}
+      v = %Vector3{dx: 4.0, dy: 5.0, dz: 6.0}
+
+      assert Vector3.add(v, p) == %Point3{x: 5.0, y: 7.0, z: 9.0}
     end
   end
 

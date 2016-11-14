@@ -1,4 +1,6 @@
 defmodule Raytracer.Vector3 do
+  alias Raytracer.Point3
+
   defstruct [
     dx: 0.0,
     dy: 0.0,
@@ -11,6 +13,10 @@ defmodule Raytracer.Vector3 do
   """
   def add(%__MODULE__{dx: dx1, dy: dy1, dz: dz1}, %__MODULE__{dx: dx2, dy: dy2, dz: dz2}) do
     %__MODULE__{dx: dx1 + dx2, dy: dy1 + dy2, dz: dz1 + dz2}
+  end
+
+  def add(%__MODULE__{dx: dx, dy: dy, dz: dz}, %Point3{x: x, y: y, z: z}) do
+    %Point3{x: dx + x, y: dy + y, z: dz + z}
   end
 
   @doc """
