@@ -88,6 +88,30 @@ defmodule Raytracer.Vector3Test do
     end
   end
 
+  describe "Raytracer.Vector3.max_component/1" do
+    test "returns the largest component value of a vector" do
+      v1 = %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+      v2 = %Vector3{dx: 2.0, dy: 4.0, dz: -1.0}
+      v3 = %Vector3{dx: 5.0, dy: 1.0, dz: -2.0}
+
+      assert Vector3.max_component(v1) == 3.0
+      assert Vector3.max_component(v2) == 4.0
+      assert Vector3.max_component(v3) == 5.0
+    end
+  end
+
+  describe "Raytracer.Vector3.min_component/1" do
+    test "returns the smallest component value of a vector" do
+      v1 = %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+      v2 = %Vector3{dx: 2.0, dy: 4.0, dz: -1.0}
+      v3 = %Vector3{dx: 5.0, dy: -1.0, dz: 2.0}
+
+      assert Vector3.min_component(v1) == 1.0
+      assert Vector3.min_component(v2) == -1.0
+      assert Vector3.min_component(v3) == -1.0
+    end
+  end
+
   describe "Raytracer.Vector3.multiply/2" do
     test "multiplies a vector by a scalar value and returns the resulting vector" do
       v = %Vector3{dx: 2.0, dy: 4.0, dz: 6.0}

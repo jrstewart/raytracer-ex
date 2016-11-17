@@ -49,14 +49,22 @@ defmodule Raytracer.Vector3 do
 
   @spec length(t) :: float
   def length(vector) do
-    vector
-    |> length_squared
-    |> :math.sqrt
+    vector |> length_squared |> :math.sqrt
   end
 
   @spec length_squared(t) :: float
   def length_squared(%__MODULE__{dx: dx, dy: dy, dz: dz}) do
     (dx * dx) + (dy * dy) + (dz * dz)
+  end
+
+  @spec max_component(t) :: float
+  def max_component(%__MODULE__{dx: dx, dy: dy, dz: dz}) do
+    dx |> max(dy) |> max(dz)
+  end
+
+  @spec min_component(t) :: float
+  def min_component(%__MODULE__{dx: dx, dy: dy, dz: dz}) do
+    dx |> min(dy) |> min(dz)
   end
 
   @spec multiply(t, float) :: t
