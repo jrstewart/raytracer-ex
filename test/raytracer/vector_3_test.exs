@@ -4,6 +4,14 @@ defmodule Raytracer.Vector3Test do
   alias Raytracer.Point3
   alias Raytracer.Vector3
 
+  describe "Raytracer.Vector3.abs/1" do
+    test "returns the vector with absolute value of each component" do
+      v = %Vector3{dx: -1.0, dy: -2.0, dz: -3.0}
+
+      assert Vector3.abs(v) == %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+    end
+  end
+
   describe "Raytracer.Vector3.add/2" do
     test "adds two vectors and returns the resulting vector" do
       v1 = %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
@@ -36,6 +44,15 @@ defmodule Raytracer.Vector3Test do
 
       assert Vector3.divide(v, scalar) == %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
     end
+
+    test "raises an error when scalar is 0" do
+      v = %Vector3{}
+      scalar = 0.0
+
+      assert_raise ArgumentError, fn ->
+        Vector3.divide(v, scalar)
+      end
+    end
   end
 
   describe "Raytracer.Vector3.dot/2" do
@@ -59,12 +76,32 @@ defmodule Raytracer.Vector3Test do
     end
   end
 
+  describe "Raytracer.Vector3.length_squared/1" do
+    test "computes the squared length of a vector" do
+      v1 = %Vector3{dx: 1.0, dy: 0.0, dz: 0.0}
+      v2 = %Vector3{dx: 0.0, dy: 2.0, dz: 0.0}
+      v3 = %Vector3{dx: 0.0, dy: 0.0, dz: 3.0}
+
+      assert Vector3.length_squared(v1) == 1.0
+      assert Vector3.length_squared(v2) == 4.0
+      assert Vector3.length_squared(v3) == 9.0
+    end
+  end
+
   describe "Raytracer.Vector3.multiply/2" do
     test "multiplies a vector by a scalar value and returns the resulting vector" do
       v = %Vector3{dx: 2.0, dy: 4.0, dz: 6.0}
       scalar = 2.0
 
       assert Vector3.multiply(v, scalar) == %Vector3{dx: 4.0, dy: 8.0, dz: 12.0}
+    end
+  end
+
+  describe "Raytracer.Vector3.negate/1" do
+    test "returns the vector pointing in the opposite direction of the given vector" do
+      v = %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+
+      assert Vector3.negate(v) == %Vector3{dx: -1.0, dy: -2.0, dz: -3.0}
     end
   end
 
