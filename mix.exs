@@ -9,6 +9,7 @@ defmodule Raytracer.Mixfile do
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       deps: deps(),
+      escript: escript_config(),
     ]
   end
 
@@ -20,5 +21,9 @@ defmodule Raytracer.Mixfile do
     [
       {:credo, "~> 0.5.2", only: [:dev]},
     ]
+  end
+
+  defp escript_config do
+    [main_module: Raytracer]
   end
 end
