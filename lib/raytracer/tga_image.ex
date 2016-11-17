@@ -16,6 +16,24 @@ defmodule Raytracer.TGAImage do
     descriptor: 0,
   ]
 
+  @type t :: %__MODULE__{
+    id_length: 0..255,
+    color_map_type: 0..255,
+    image_type: 0..255,
+    color_map_specification: %{
+      first_entry_index: 0..65_535,
+      num_entries: 0..65_535,
+      entry_size: 0..255,
+    },
+    x_origin: 0..65_535,
+    y_origin: 0..65_535,
+    width: 0..65_535,
+    height: 0..65_535,
+    pixel_depth: 24,
+    descriptor: 0..255,
+  }
+
+  @spec write(t, Path.t, iodata) :: :ok | {:error, File.posix}
   def write(image, path, pixels) do
     File.write(path, file_data(image, pixels), [:binary, :raw])
   end

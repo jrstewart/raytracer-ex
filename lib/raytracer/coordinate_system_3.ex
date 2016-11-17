@@ -7,12 +7,16 @@ defmodule Raytracer.CoordinateSystem3 do
     w_axis: %Vector3{dx: 0.0, dy: 0.0, dz: 1.0},
   ]
 
+  @type t :: %__MODULE__{u_axis: Vector3.t, v_axis: Vector3.t, w_axis: Vector3.t}
+
+  @spec create_from_vector(Vector3.t) :: t
   def create_from_vector(vector) do
     vector
     |> Vector3.normalize
     |> create_from_normalized_vector
   end
 
+  @spec create_from_normalized_vector(Vector3.t) :: t
   def create_from_normalized_vector(
     %Vector3{dx: dx, dy: dy, dz: dz} = vector
   ) when abs(dx) > abs(dy) do

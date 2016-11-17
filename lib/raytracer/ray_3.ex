@@ -7,6 +7,9 @@ defmodule Raytracer.Ray3 do
     direction: %Vector3{dx: 0.0, dy: 0.0, dz: 0.0},
   ]
 
+  @type t :: %__MODULE__{origin: Point3.t, direction: Vector3.t}
+
+  @spec point_at(t, float) :: Point3.t
   def point_at(_ray, distance) when distance < 0 do
     raise ArgumentError, message: "negative value given for distance"
   end

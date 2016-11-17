@@ -10,6 +10,8 @@ defmodule Raytracer.Shape.Sphere do
     radius: 0.0,
   ]
 
+  @type t :: %__MODULE__{center: Point3.t, radius: float}
+
   defimpl Shape do
     def compute_intersection(
       %Sphere{center: center, radius: radius},
