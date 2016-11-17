@@ -29,12 +29,12 @@ defmodule Raytracer.Point3Test do
     end
   end
 
-  describe "Raytracer.Point3.squared_distance_between/2" do
+  describe "Raytracer.Point3.distance_between_squared/2" do
     test "computes the squared distance between two points" do
       p1 = %Point3{x: 0.0, y: 0.0, z: 0.0}
       p2 = %Point3{x: 2.0, y: 0.0, z: 0.0}
 
-      assert Point3.squared_distance_between(p1, p2) == 4.0
+      assert Point3.distance_between_squared(p1, p2) == 4.0
     end
   end
 

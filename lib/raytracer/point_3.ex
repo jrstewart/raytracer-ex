@@ -21,12 +21,12 @@ defmodule Raytracer.Point3 do
   @spec distance_between(t, t) :: float
   def distance_between(point1, point2) do
     point1
-    |> squared_distance_between(point2)
+    |> distance_between_squared(point2)
     |> :math.sqrt
   end
 
-  @spec squared_distance_between(t, t) :: float
-  def squared_distance_between(%__MODULE__{x: x1, y: y1, z: z1}, %__MODULE__{x: x2, y: y2, z: z2}) do
+  @spec distance_between_squared(t, t) :: float
+  def distance_between_squared(%__MODULE__{x: x1, y: y1, z: z1}, %__MODULE__{x: x2, y: y2, z: z2}) do
     :math.pow(x2 - x1, 2) + :math.pow(y2 - y1, 2) + :math.pow(z2 - z1, 2)
   end
 
