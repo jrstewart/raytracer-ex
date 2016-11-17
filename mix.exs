@@ -9,6 +9,7 @@ defmodule Raytracer.Mixfile do
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       deps: deps(),
+      dialyzer: dialyzer_settings(),
       escript: escript_config(),
     ]
   end
@@ -20,7 +21,12 @@ defmodule Raytracer.Mixfile do
   defp deps do
     [
       {:credo, "~> 0.5.2", only: [:dev]},
+      {:dialyxir, "~> 0.4", only: [:dev]},
     ]
+  end
+
+  defp dialyzer_settings do
+    [plt_add_deps: true]
   end
 
   defp escript_config do
