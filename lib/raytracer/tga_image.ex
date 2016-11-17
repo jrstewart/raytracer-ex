@@ -16,9 +16,6 @@ defmodule Raytracer.TGAImage do
     descriptor: 0,
   ]
 
-  @doc """
-  Writes the `image` and `pixels` data to the file at the specified `path`.
-  """
   def write(image, path, pixels) do
     File.write(path, file_data(image, pixels), [:binary, :raw])
   end

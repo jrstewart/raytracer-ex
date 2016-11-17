@@ -28,7 +28,7 @@ defmodule Raytracer.Shape.Sphere do
       compute_intersection_distance(b, radical_part)
     end
 
-    defp compute_intersection_distance(_, radical_part) when radical_part < 0.0, do: nil
+    defp compute_intersection_distance(_b, radical_part) when radical_part < 0.0, do: nil
     defp compute_intersection_distance(b, radical_part) do
       (-b - :math.sqrt(radical_part)) / 2.0
     end

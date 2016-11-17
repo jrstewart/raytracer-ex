@@ -7,11 +7,7 @@ defmodule Raytracer.Ray3 do
     direction: %Vector3{dx: 0.0, dy: 0.0, dz: 0.0},
   ]
 
-  @doc """
-  Computes the point at the given distance along the given ray. The given
-  distance must be greater than or equal to 0 or an `ArgumentError` is raised.
-  """
-  def point_at(_, distance) when distance < 0 do
+  def point_at(_ray, distance) when distance < 0 do
     raise ArgumentError, message: "negative value given for distance"
   end
 
