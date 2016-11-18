@@ -1,7 +1,7 @@
 defmodule Raytracer.Shape.Sphere do
   alias __MODULE__
   alias Raytracer.Point3
-  alias Raytracer.Ray3
+  alias Raytracer.Ray
   alias Raytracer.Shape
   alias Raytracer.Vector3
 
@@ -15,7 +15,7 @@ defmodule Raytracer.Shape.Sphere do
   defimpl Shape do
     def compute_intersection(
       %Sphere{center: center, radius: radius},
-      %Ray3{origin: origin, direction: direction}
+      %Ray{origin: origin, direction: direction}
     ) do
       origin_to_center_vector = Point3.subtract(origin, center)
       b =

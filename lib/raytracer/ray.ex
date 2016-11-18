@@ -1,4 +1,4 @@
-defmodule Raytracer.Ray3 do
+defmodule Raytracer.Ray do
   alias Raytracer.Point3
   alias Raytracer.Vector3
 

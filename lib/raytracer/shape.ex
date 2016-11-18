@@ -1,9 +1,9 @@
 defprotocol Raytracer.Shape do
-  alias Raytracer.Ray3
+  alias Raytracer.Ray
   alias Raytracer.Point3
   alias Raytracer.Vector3
 
-  @spec compute_intersection(t, Ray3.t) :: nil | float
+  @spec compute_intersection(t, Ray.t) :: nil | float
   def compute_intersection(shape, ray)
 
   @spec compute_inward_normal(t, Point3.t) :: Vector3.t
