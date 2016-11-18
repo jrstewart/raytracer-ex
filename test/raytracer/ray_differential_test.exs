@@ -6,8 +6,8 @@ defmodule Raytracer.RayDifferentialTest do
   alias Raytracer.Point3
   alias Raytracer.Vector3
 
-  describe "Raytracer.RayDifferential.scale_differentials/2" do
-    test "scales the ray differentials based on the given scalar" do
+  describe "Raytracer.RayDifferential.scale/2" do
+    test "scales the ray differential based on the given scalar value" do
       rd = %RayDifferential{
         ray: %Ray{
           origin: %Point3{x: 1.0, y: 1.0, z: 1.0},
@@ -20,7 +20,7 @@ defmodule Raytracer.RayDifferentialTest do
       }
       scalar = 2.0
 
-      scaled_rd = RayDifferential.scale_differentials(rd, scalar)
+      scaled_rd = RayDifferential.scale(rd, scalar)
 
       assert scaled_rd.x_origin == %Point3{x: 3.0, y: 3.0, z: 3.0}
       assert scaled_rd.y_origin == %Point3{x: -5.0, y: -5.0, z: -5.0}

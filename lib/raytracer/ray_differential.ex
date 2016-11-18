@@ -21,8 +21,8 @@ defmodule Raytracer.RayDifferential do
     has_differentials?: boolean,
   }
 
-  @spec scale_differentials(t, float) :: t
-  def scale_differentials(
+  @spec scale(t, float) :: t
+  def scale(
     %__MODULE__{
       ray: ray,
       x_origin: x_origin,
