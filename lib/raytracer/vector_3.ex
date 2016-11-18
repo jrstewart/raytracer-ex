@@ -37,9 +37,8 @@ defmodule Raytracer.Vector3 do
     raise ArgumentError, message: "scalar value 0 results in division by 0"
   end
 
-  def divide(%__MODULE__{dx: dx, dy: dy, dz: dz}, scalar) do
-    inverse = 1.0 / scalar
-    %__MODULE__{dx: dx * inverse, dy: dy * inverse, dz: dz * inverse}
+  def divide(vector, scalar) do
+    multiply(vector, 1.0 / scalar)
   end
 
   @spec dot(t, t) :: float
