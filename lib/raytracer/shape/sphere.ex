@@ -1,14 +1,18 @@
 defmodule Raytracer.Shape.Sphere do
+  @moduledoc """
+  Three-dimensional sphere represented by a center point and radius size.
+  """
+
   alias __MODULE__
   alias Raytracer.Geometry.{Ray, Point3, Vector3}
   alias Raytracer.Shape
 
   defstruct [
-    center: %Point3{x: 0.0, y: 0.0, z: 0.0},
+    center: %Point3{},
     radius: 0.0,
   ]
 
-  @type t :: %__MODULE__{center: Point3.t, radius: float}
+  @type t :: %Sphere{center: Point3.t, radius: float}
 
   defimpl Shape do
     def compute_intersection(
