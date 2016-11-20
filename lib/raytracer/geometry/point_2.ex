@@ -84,6 +84,8 @@ defmodule Raytracer.Geometry.Point2 do
   resulting point.
   """
   @spec multiply(t, number) :: t
+  def multiply(point, scalar)
+
   def multiply(%Point2{x: x, y: y}, scalar) do
     %Point2{x: x * scalar, y: y * scalar}
   end
