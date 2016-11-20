@@ -1,4 +1,11 @@
 defmodule Raytracer.CLI do
+  @moduledoc """
+  Command line interface functions for the Raytracer program.
+  """
+
+  @doc """
+  Runs the Raytracer program with given arguments.
+  """
   @spec run(term) :: term
   def run(argv) do
     argv

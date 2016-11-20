@@ -1,4 +1,8 @@
 defmodule Raytracer do
+  @moduledoc """
+  Top-level entry point for the Raytracer program.
+  """
+
   alias Raytracer.CLI
 
   @spec main(term) :: no_return
