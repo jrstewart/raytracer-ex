@@ -68,7 +68,9 @@ defmodule Raytracer.Geometry.Point2Test do
       p1 = %Point2{x: 1.0, y: 1.0}
       p2 = %Point2{x: -1.0, y: -1.0}
 
-      assert Point2.lerp(0.5, p1, p2) == %Point2{x: 0.0, y: 0.0}
+      assert Point2.lerp(p1, p2, 0.5) == %Point2{x: 0.0, y: 0.0}
+      assert Point2.lerp(p1, p2, 0) == p1
+      assert Point2.lerp(p1, p2, 1) == p2
     end
   end
 
