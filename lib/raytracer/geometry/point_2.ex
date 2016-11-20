@@ -89,8 +89,8 @@ defmodule Raytracer.Geometry.Point2 do
   end
 
   @doc """
-  Subtracts two points or a point and a vector and returns the resulting point
-  or vector.
+  Subtracts two points returning the resulting vector, or subtracts a point and a
+  vector returning the resulting point.
   """
   @spec subtract(t, t | Vector2.t) :: t | Vector2.t
   def subtract(point, point_or_vector)
