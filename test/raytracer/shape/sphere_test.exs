@@ -1,11 +1,9 @@
 defmodule Raytracer.Shape.SphereTest do
   use ExUnit.Case, async: true
 
-  alias Raytracer.Point3
-  alias Raytracer.Ray
+  alias Raytracer.Geometry.{Ray, Point3, Vector3}
   alias Raytracer.Shape
   alias Raytracer.Shape.Sphere
-  alias Raytracer.Vector3
 
   describe "Raytracer.Shape.compute_intersection/2" do
     test "returns nil when no intersection exists" do

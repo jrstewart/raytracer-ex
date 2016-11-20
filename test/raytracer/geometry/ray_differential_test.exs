@@ -1,12 +1,9 @@
-defmodule Raytracer.RayDifferentialTest do
+defmodule Raytracer.Geometry.RayDifferentialTest do
   use ExUnit.Case, async: true
 
-  alias Raytracer.Ray
-  alias Raytracer.RayDifferential
-  alias Raytracer.Point3
-  alias Raytracer.Vector3
+  alias Raytracer.Geometry.{Ray, RayDifferential, Point3, Vector3}
 
-  describe "Raytracer.RayDifferential.scale/2" do
+  describe "Raytracer.Geometry.RayDifferential.scale/2" do
     test "scales the ray differential based on the given scalar value" do
       rd = %RayDifferential{
         ray: %Ray{

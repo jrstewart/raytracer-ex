@@ -1,11 +1,9 @@
-defmodule Raytracer.RayTest do
+defmodule Raytracer.Geometry.RayTest do
   use ExUnit.Case, async: true
 
-  alias Raytracer.Ray
-  alias Raytracer.Point3
-  alias Raytracer.Vector3
+  alias Raytracer.Geometry.{Ray, Point3, Vector3}
 
-  describe "Raytracer.Ray.point_at/2" do
+  describe "Raytracer.Geometry.Ray.point_at/2" do
     test "computes the point at a given distance along a ray" do
       r = %Ray{
         origin: %Point3{x: 1.0, y: 0.0, z: 1.0},

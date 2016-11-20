@@ -1,10 +1,9 @@
-defmodule Raytracer.CoordinateSystem3Test do
+defmodule Raytracer.Geometry.CoordinateSystem3Test do
   use ExUnit.Case, async: true
 
-  alias Raytracer.CoordinateSystem3
-  alias Raytracer.Vector3
+  alias Raytracer.Geometry.{CoordinateSystem3, Vector3}
 
-  describe "Raytracer.CoordinateSystem3.create_from_vector/1" do
+  describe "Raytracer.Geometry.CoordinateSystem3.create_from_vector/1" do
     test "creates a coordinate system from a vector" do
       v = %Vector3{dx: 0.0, dy: 0.0, dz: 2.0}
 
@@ -16,7 +15,7 @@ defmodule Raytracer.CoordinateSystem3Test do
     end
   end
 
-  describe "Raytracer.CoordinateSystem3.create_from_normalized_vector/1" do
+  describe "Raytracer.Geometry.CoordinateSystem3.create_from_normalized_vector/1" do
     test "creates a coordinate system from a vector" do
       v = %Vector3{dx: 0.0, dy: 0.0, dz: 1.0}
 

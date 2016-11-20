@@ -1,9 +1,7 @@
 defmodule Raytracer.Shape.Sphere do
   alias __MODULE__
-  alias Raytracer.Point3
-  alias Raytracer.Ray
+  alias Raytracer.Geometry.{Ray, Point3, Vector3}
   alias Raytracer.Shape
-  alias Raytracer.Vector3
 
   defstruct [
     center: %Point3{x: 0.0, y: 0.0, z: 0.0},

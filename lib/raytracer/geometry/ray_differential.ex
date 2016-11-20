@@ -1,7 +1,5 @@
-defmodule Raytracer.RayDifferential do
-  alias Raytracer.Ray
-  alias Raytracer.Point3
-  alias Raytracer.Vector3
+defmodule Raytracer.Geometry.RayDifferential do
+  alias Raytracer.Geometry.{Ray, Point3, Vector3}
 
   defstruct [
     ray: %Ray{},

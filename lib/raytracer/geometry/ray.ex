@@ -1,6 +1,5 @@
-defmodule Raytracer.Ray do
-  alias Raytracer.Point3
-  alias Raytracer.Vector3
+defmodule Raytracer.Geometry.Ray do
+  alias Raytracer.Geometry.{Point3, Vector3}
 
   defstruct [
     origin: %Point3{x: 0.0, y: 0.0, z: 0.0},

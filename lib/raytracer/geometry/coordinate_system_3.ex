@@ -1,5 +1,5 @@
-defmodule Raytracer.CoordinateSystem3 do
-  alias Raytracer.Vector3
+defmodule Raytracer.Geometry.CoordinateSystem3 do
+  alias Raytracer.Geometry.Vector3
 
   defstruct [
     u_axis: %Vector3{dx: 1.0, dy: 0.0, dz: 0.0},

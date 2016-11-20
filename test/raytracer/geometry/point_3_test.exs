@@ -1,10 +1,9 @@
-defmodule Raytracer.Point3Test do
+defmodule Raytracer.Geometry.Point3Test do
   use ExUnit.Case, async: true
 
-  alias Raytracer.Point3
-  alias Raytracer.Vector3
+  alias Raytracer.Geometry.{Point3, Vector3}
 
-  describe "Raytracer.Point3.abs/1" do
+  describe "Raytracer.Geometry.Point3.abs/1" do
     test "returns the point with absolute value of each coordinate" do
       p = %Point3{x: -1.0, y: -2.0, z: -3.0}
 
@@ -12,7 +11,7 @@ defmodule Raytracer.Point3Test do
     end
   end
 
-  describe "Raytracer.Point3.add/2" do
+  describe "Raytracer.Geometry.Point3.add/2" do
     test "adds two points and returns the resulting point" do
       p1 = %Point3{x: 1.0, y: 2.0, z: 3.0}
       p2 = %Point3{x: 4.0, y: 5.0, z: 6.0}
@@ -28,7 +27,7 @@ defmodule Raytracer.Point3Test do
     end
   end
 
-  describe "Raytracer.Point3.distance_between/2" do
+  describe "Raytracer.Geometry.Point3.distance_between/2" do
     test "computes the distance between two points" do
       p1 = %Point3{x: 0.0, y: 0.0, z: 0.0}
       p2 = %Point3{x: 2.0, y: 0.0, z: 0.0}
@@ -37,7 +36,7 @@ defmodule Raytracer.Point3Test do
     end
   end
 
-  describe "Raytracer.Point3.distance_between_squared/2" do
+  describe "Raytracer.Geometry.Point3.distance_between_squared/2" do
     test "computes the squared distance between two points" do
       p1 = %Point3{x: 0.0, y: 0.0, z: 0.0}
       p2 = %Point3{x: 2.0, y: 0.0, z: 0.0}
@@ -46,7 +45,7 @@ defmodule Raytracer.Point3Test do
     end
   end
 
-  describe "Raytracer.Point3.divide/2" do
+  describe "Raytracer.Geometry.Point3.divide/2" do
     test "divides a point by a scalar value and returns the resulting point" do
       p = %Point3{x: 2.0, y: 4.0, z: 6.0}
       scalar = 2.0
@@ -64,7 +63,7 @@ defmodule Raytracer.Point3Test do
     end
   end
 
-  describe "Raytracer.Point3.lerp/3" do
+  describe "Raytracer.Geometry.Point3.lerp/3" do
     test "linearly interpolates between two points" do
       p1 = %Point3{x: 1.0, y: 1.0, z: 1.0}
       p2 = %Point3{x: -1.0, y: -1.0, z: -1.0}
@@ -73,7 +72,7 @@ defmodule Raytracer.Point3Test do
     end
   end
 
-  describe "Raytracer.Point3.multiply/2" do
+  describe "Raytracer.Geometry.Point3.multiply/2" do
     test "multiplies a point by a scalar value and returns the resulting point" do
       p = %Point3{x: 2.0, y: 4.0, z: 6.0}
       scalar = 2.0
@@ -82,7 +81,7 @@ defmodule Raytracer.Point3Test do
     end
   end
 
-  describe "Raytracer.Point3.subtract/2" do
+  describe "Raytracer.Geometry.Point3.subtract/2" do
     test "subtracts a vector from a point and returns the resulting point" do
       p = %Point3{x: 1.0, y: 2.0, z: 3.0}
       v = %Vector3{dx: 4.0, dy: 5.0, dz: 6.0}
