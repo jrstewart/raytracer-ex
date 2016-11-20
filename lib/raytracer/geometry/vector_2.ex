@@ -42,7 +42,7 @@ defmodule Raytracer.Geometry.Vector2 do
   Divides each of the components of `vector` by `scalar` and returns the
   resulting vector. An error is raised if `scalar` is equal to 0.
   """
-  @spec divide(t, float) :: t
+  @spec divide(t, number) :: t
   def divide(_vector, scalar) when scalar == 0 do
     raise ArgumentError, message: "scalar value 0 results in division by 0"
   end
@@ -54,7 +54,7 @@ defmodule Raytracer.Geometry.Vector2 do
   @doc """
   Computes the dot product of `vector1` and `vector2`.
   """
-  @spec dot(t, t) :: float
+  @spec dot(t, t) :: number
   def dot(vector1, vector2)
 
   def dot(%Vector2{dx: dx1, dy: dy1}, %Vector2{dx: dx2, dy: dy2}) do
@@ -72,7 +72,7 @@ defmodule Raytracer.Geometry.Vector2 do
   @doc """
   Computes the squared length of `vector`.
   """
-  @spec length_squared(t) :: float
+  @spec length_squared(t) :: number
   def length_squared(vector)
 
   def length_squared(%Vector2{dx: dx, dy: dy}) do
@@ -82,7 +82,7 @@ defmodule Raytracer.Geometry.Vector2 do
   @doc """
   Returns the component of `vector` with the largest value.
   """
-  @spec max_component(t) :: float
+  @spec max_component(t) :: number
   def max_component(vector)
 
   def max_component(%Vector2{dx: dx, dy: dy}) do
@@ -92,7 +92,7 @@ defmodule Raytracer.Geometry.Vector2 do
   @doc """
   Returns the component of `vector` with the smallest value.
   """
-  @spec min_component(t) :: float
+  @spec min_component(t) :: number
   def min_component(vector)
 
   def min_component(%Vector2{dx: dx, dy: dy}) do
@@ -103,7 +103,7 @@ defmodule Raytracer.Geometry.Vector2 do
   Multiplies each of the component of `vector` by `scalar` and returns the
   resulting vector.
   """
-  @spec multiply(t, float) :: t
+  @spec multiply(t, number) :: t
   def multiply(vector, scalar)
 
   def multiply(%Vector2{dx: dx, dy: dy}, scalar) do

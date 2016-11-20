@@ -48,7 +48,7 @@ defmodule Raytracer.Geometry.Point2 do
   @doc """
   Computes the squared distance between `point1` and `point2`.
   """
-  @spec distance_between_squared(t, t) :: float
+  @spec distance_between_squared(t, t) :: number
   def distance_between_squared(point1, point2) do
     point1 |> subtract(point2) |> Vector2.length_squared
   end

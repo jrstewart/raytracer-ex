@@ -49,7 +49,7 @@ defmodule Raytracer.Geometry.Point3 do
   @doc """
   Computes the squared distance between `point1` and `point2`.
   """
-  @spec distance_between_squared(t, t) :: float
+  @spec distance_between_squared(t, t) :: number
   def distance_between_squared(point1, point2) do
     point1 |> subtract(point2) |> Vector3.length_squared
   end
@@ -86,7 +86,7 @@ defmodule Raytracer.Geometry.Point3 do
   Multiplies each of the coordinates of `point` by `scalar` and returns the
   resulting point.
   """
-  @spec multiply(t, float) :: t
+  @spec multiply(t, number) :: t
   def multiply(point, scalar)
 
   def multiply(%Point3{x: x, y: y, z: z}, scalar) do
