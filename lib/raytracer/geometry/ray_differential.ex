@@ -1,4 +1,11 @@
 defmodule Raytracer.Geometry.RayDifferential do
+  @moduledoc """
+  Ray differentials provide two auxiliary rays in addition to a primary ray to
+  allow additional information to be used in computations such as
+  antialiasing and texture mapping.
+  """
+
+  alias __MODULE__
   alias Raytracer.Geometry.{Ray, Point3, Vector3}
 
   defstruct [
@@ -10,7 +17,7 @@ defmodule Raytracer.Geometry.RayDifferential do
     has_differentials?: false,
   ]
 
-  @type t :: %__MODULE__{
+  @type t :: %RayDifferential{
     ray: Ray.t,
     x_origin: Point3.t,
     y_origin: Point3.t,
@@ -19,9 +26,13 @@ defmodule Raytracer.Geometry.RayDifferential do
     has_differentials?: boolean,
   }
 
-  @spec scale(t, float) :: t
+  @doc """
+  Scales the auxiliary ray information of `ray_differential` by the given
+  `scalar` value.
+  """
+  @spec scale(t, number) :: t
   def scale(
-    %__MODULE__{
+    %RayDifferential{
       ray: ray,
       x_origin: x_origin,
       y_origin: y_origin,
