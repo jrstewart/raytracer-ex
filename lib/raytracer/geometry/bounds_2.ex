@@ -135,7 +135,7 @@ defmodule Raytracer.Geometry.Bounds2 do
   @doc """
   Returns the continuous position of `point` relative to the minimum and maximum
   corners of `bounds`. A point at the minimum corner has an offset of (0, 0) and
-  a point at the maximum corner has an offset (1, 1).
+  a point at the maximum corner has an offset of (1, 1).
   """
   @spec offset(t, Point2.t) :: %{x: number, y: number}
   def offset(bounds, point) do
