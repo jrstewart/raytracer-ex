@@ -130,7 +130,7 @@ defmodule Raytracer.Geometry.Bounds2 do
   end
 
   defp find_largest_extent(%Vector2{dx: dx, dy: dy}) when dx > dy, do: :x
-  defp find_largest_extent(_vector), do: :y
+  defp find_largest_extent(_), do: :y
 
   @doc """
   Returns the continuous position of `point` relative to the minimum and maximum
