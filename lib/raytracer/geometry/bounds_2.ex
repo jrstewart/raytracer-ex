@@ -15,10 +15,10 @@ defmodule Raytracer.Geometry.Bounds2 do
   @type t :: %Bounds2{min_point: Point2.t, max_point: Point2.t}
 
   @doc """
-  Return the corner point at `corner_index` of `bounds`.
+  Return the corner point of `bounds` with index equal to `index`.
   """
   @spec corner(t, 0..3) :: Point2.t
-  def corner(bounds, corner_index)
+  def corner(bounds, index)
 
   def corner(%Bounds2{min_point: min_point}, 0) do
     min_point
@@ -165,7 +165,7 @@ defmodule Raytracer.Geometry.Bounds2 do
   end
 
   @doc """
-  Checks if `bounds1` and `bounds` overlap.
+  Checks if `bounds1` and `bounds2` overlap.
   """
   @spec overlap?(t, t) :: boolean
   def overlap?(bounds1, bounds2)
