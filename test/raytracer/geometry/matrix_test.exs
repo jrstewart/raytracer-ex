@@ -36,7 +36,7 @@ defmodule Raytracer.Geometry.MatrixTest do
         9.0, 7.0, 11.0, 15.0,
         10.0, 8.0, 12.0, 2.0,
       }
-      delta = 0.0000001
+      delta = 1.0e-7
 
       # Computing the inverse twice returns the original matrix
       result = m |> Matrix.inverse |> Matrix.inverse
