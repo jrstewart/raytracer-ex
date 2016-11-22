@@ -39,7 +39,9 @@ defmodule Raytracer.Geometry.Quaternion do
   Normalizes `quaternion` and returns the resulting quaternion.
   """
   @spec normalize(t) :: t
-  def normalize(quaternion), do: divide(quaternion, dot(quaternion, quaternion) |> :math.sqrt)
+  def normalize(quaternion) do
+    divide(quaternion, quaternion |> dot(quaternion) |> :math.sqrt)
+  end
 
   @doc """
   Computes the spherical linear interpolation from `quaternion1` to `quaterionn2`
@@ -58,7 +60,7 @@ defmodule Raytracer.Geometry.Quaternion do
   end
 
   defp do_slerp(quaternion1, quaternion2, t, cos_theta) do
-    theta = Geometry.clamp(cos_theta, -1.0, 1.0) |> :math.acos
+    theta = cos_theta |> Geometry.clamp(-1.0, 1.0) |> :math.acos
     theta_p = theta * t
     q_perpendicular = compute_perpendicular(quaternion1, quaternion2, cos_theta)
     add(multiply(quaternion1, :math.cos(theta_p)), multiply(q_perpendicular, :math.sin(theta_p)))
