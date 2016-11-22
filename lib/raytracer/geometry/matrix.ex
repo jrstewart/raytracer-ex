@@ -1,7 +1,7 @@
 defmodule Raytracer.Geometry.Matrix do
   @moduledoc """
   This module provides a set of functions for working with matrices represented
-  by a tuple of matrix elements.
+  by a tuple of matrix elements stored in row-major order.
   """
 
   @type t :: {
