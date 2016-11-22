@@ -6,23 +6,23 @@ defmodule Raytracer.Geometry.RayDifferential do
   """
 
   alias __MODULE__
-  alias Raytracer.Geometry.{Ray, Point3, Vector3}
+  alias Raytracer.Geometry.{Ray, Point, Vector}
 
   defstruct [
     ray: %Ray{},
-    x_origin: %Point3{},
-    y_origin: %Point3{},
-    x_direction: %Vector3{},
-    y_direction: %Vector3{},
+    x_origin: {0.0, 0.0, 0.0},
+    y_origin: {0.0, 0.0, 0.0},
+    x_direction: {0.0, 0.0, 0.0},
+    y_direction: {0.0, 0.0, 0.0},
     has_differentials?: false,
   ]
 
   @type t :: %RayDifferential{
     ray: Ray.t,
-    x_origin: Point3.t,
-    y_origin: Point3.t,
-    x_direction: Vector3.t,
-    y_direction: Vector3.t,
+    x_origin: Point.point3_t,
+    y_origin: Point.point3_t,
+    x_direction: Vector.vector3_t,
+    y_direction: Vector.vector3_t,
     has_differentials?: boolean,
   }
 
@@ -50,15 +50,15 @@ defmodule Raytracer.Geometry.RayDifferential do
 
   defp scale_point(%Ray{origin: origin}, point, scalar) do
     point
-    |> Point3.subtract(origin)
-    |> Vector3.multiply(scalar)
-    |> Vector3.add(origin)
+    |> Point.subtract(origin)
+    |> Vector.multiply(scalar)
+    |> Vector.add(origin)
   end
 
   defp scale_vector(%Ray{direction: direction}, vector, scalar) do
     vector
-    |> Vector3.subtract(direction)
-    |> Vector3.multiply(scalar)
-    |> Vector3.add(direction)
+    |> Vector.subtract(direction)
+    |> Vector.multiply(scalar)
+    |> Vector.add(direction)
   end
 end

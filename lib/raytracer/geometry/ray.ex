@@ -4,27 +4,27 @@ defmodule Raytracer.Geometry.Ray do
   """
 
   alias __MODULE__
-  alias Raytracer.Geometry.{Point3, Vector3}
+  alias Raytracer.Geometry.{Point, Vector}
 
   defstruct [
-    origin: %Point3{},
-    direction: %Vector3{},
+    origin: {0.0, 0.0, 0.0},
+    direction: {0.0, 0.0, 0.0},
   ]
 
-  @type t :: %Ray{origin: Point3.t, direction: Vector3.t}
+  @type t :: %Ray{origin: Point.point3_t, direction: Vector.vector3_t}
 
   @doc """
   Computes the point at `distance` on `ray`. An error is raised if `distance` is
   less than 0.
   """
-  @spec point_at(t, number) :: Point3.t
+  @spec point_at(t, number) :: Point.point3_t
   def point_at(_ray, distance) when distance < 0 do
     raise ArgumentError, message: "negative value given for distance"
   end
 
   def point_at(%Ray{origin: origin, direction: direction}, distance) do
     direction
-    |> Vector3.multiply(distance)
-    |> Vector3.add(origin)
+    |> Vector.multiply(distance)
+    |> Vector.add(origin)
   end
 end
