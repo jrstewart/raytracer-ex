@@ -7,6 +7,7 @@ defmodule Raytracer.Geometry.Vector do
 
   alias __MODULE__
   alias Raytracer.Geometry.Point
+  alias Raytracer.Transform
 
   @type vector2_t :: {number, number}
   @type vector3_t :: {number, number, number}
@@ -25,6 +26,19 @@ defmodule Raytracer.Geometry.Vector do
   @spec add(t, t | Point.t) :: t | Point.t
   def add(vector, vector_or_point)
   def add(vector, vector_or_point), do: Point.add(vector, vector_or_point)
+
+  @doc """
+  Applies `transform` to `vector` and returns the resulting vector.
+  """
+  @spec apply_transform(vector3_t, Transform.t) :: vector3_t
+  def apply_transform(vector, transform)
+  def apply_transform({dx, dy, dz}, %Transform{matrix: m}) do
+    {
+      elem(m, 0) * dx + elem(m, 1) * dy + elem(m, 2) * dz,
+      elem(m, 4) * dx + elem(m, 5) * dy + elem(m, 6) * dz,
+      elem(m, 8) * dx + elem(m, 9) * dy + elem(m, 10) * dz,
+    }
+  end
 
   @doc """
   Computes the cross product of `vector1` and `vector2`.

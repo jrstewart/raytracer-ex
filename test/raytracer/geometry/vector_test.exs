@@ -2,6 +2,7 @@ defmodule Raytracer.Geometry.VectorTest do
   use ExUnit.Case, async: true
 
   alias Raytracer.Geometry.Vector
+  alias Raytracer.Transform
 
   describe "Raytracer.Geometry.Vector.abs/1" do
     test "returns the vector with absolute value of each component" do
@@ -14,6 +15,15 @@ defmodule Raytracer.Geometry.VectorTest do
     test "adds two vectors" do
       assert Vector.add({1.0, 2.0}, {4.0, 5.0}) == {5.0, 7.0}
       assert Vector.add({1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}) == {5.0, 7.0, 9.0}
+    end
+  end
+
+  describe "Raytracer.Geometry.Vector.apply_transform/2" do
+    test "transforms a vector and returns the result" do
+      t = Transform.scale({2.0, 3.0, 4.0})
+      v = {2.0, 3.0, 4.0}
+
+      assert Vector.apply_transform(v, t) == {4.0, 9.0, 16.0}
     end
   end
 
