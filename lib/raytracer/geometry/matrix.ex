@@ -4,12 +4,13 @@ defmodule Raytracer.Geometry.Matrix do
   by a tuple of matrix elements stored in row-major order.
   """
 
-  @type t :: {
-    number, number, number, number,
-    number, number, number, number,
-    number, number, number, number,
-    number, number, number, number,
+  @type matrix4x4_t :: {
+    float, float, float, float,
+    float, float, float, float,
+    float, float, float, float,
+    float, float, float, float,
   }
+  @type t :: matrix4x4_t
 
   @doc """
   Multiplies two matrices and return the resulting matrix.
