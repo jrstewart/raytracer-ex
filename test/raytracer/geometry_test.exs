@@ -17,11 +17,23 @@ defmodule Raytracer.GeometryTest do
     end
   end
 
+  describe "Raytracer.Geometry.degrees_to_radians/1" do
+    test "converts an angle in degrees to radians" do
+      assert Geometry.degrees_to_radians(180.0) == :math.pi()
+    end
+  end
+
   describe "Raytracer.Geometry.lerp/3" do
     test "linearly interpolates between two values" do
       assert Geometry.lerp(0.0, 2.0, 0.5) == 1.0
       assert Geometry.lerp(0.0, 2.0, 0.0) == 0.0
       assert Geometry.lerp(0.0, 2.0, 1.0) == 2.0
+    end
+  end
+
+  describe "Raytracer.Geometry.radians_to_degrees/1" do
+    test "converts an angle in radians to degrees" do
+      assert Geometry.radians_to_degrees(:math.pi()) == 180.0
     end
   end
 end
