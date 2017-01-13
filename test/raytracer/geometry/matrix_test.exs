@@ -1,6 +1,8 @@
 defmodule Raytracer.Geometry.MatrixTest do
   use ExUnit.Case, async: true
 
+  import Raytracer.MatrixTestHelpers
+
   alias Raytracer.Geometry.Matrix
 
   describe "Raytracer.Geometry.Matrix.multiply/2" do
@@ -36,14 +38,11 @@ defmodule Raytracer.Geometry.MatrixTest do
         9.0, 7.0, 11.0, 15.0,
         10.0, 8.0, 12.0, 2.0,
       }
-      delta = 1.0e-7
 
       # Computing the inverse twice returns the original matrix
       result = m |> Matrix.inverse |> Matrix.inverse
 
-      for i <- 0..15 do
-        assert_in_delta elem(result, i), elem(m, i), delta
-      end
+      assert_matrices_equal_within_delta result, m
     end
   end
 

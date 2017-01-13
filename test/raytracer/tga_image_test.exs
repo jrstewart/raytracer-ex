@@ -3,7 +3,7 @@ defmodule Raytracer.TGAImageTest do
 
   alias Raytracer.TGAImage
 
-  @test_dir "test/test_data/"
+  @test_dir "test/support/test_data/"
 
   describe "Raytracer.TGAImage.write/3" do
     test "writes the image file" do

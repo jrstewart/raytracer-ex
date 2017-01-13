@@ -1,6 +1,8 @@
 defmodule Raytracer.TransformTest do
   use ExUnit.Case, async: true
 
+  import Raytracer.MatrixTestHelpers
+
   alias Raytracer.Geometry.Matrix
   alias Raytracer.Transform
 
@@ -62,24 +64,16 @@ defmodule Raytracer.TransformTest do
         0.0,  0.0, -1.0, 0.0,
         0.0,  0.0, 0.0,  1.0,
       }
-      inverse_expected = Matrix.inverse(expected)
-      delta = 1.0e-7
 
       t = Transform.look_at(position, center, up)
 
-      for i <- 0..15 do
-        assert_in_delta elem(t.matrix, i), elem(expected, i), delta
-      end
-      for i <- 0..15 do
-        assert_in_delta elem(t.inverse_matrix, i), elem(inverse_expected, i), delta
-      end
+      assert_matrices_equal_within_delta t.matrix, expected
+      assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
     end
   end
 
   describe "Raytracer.Transform.rotate/2" do
     test "creates a rotation transform about an arbitrary axis" do
-      delta = 1.0e-7
-
       #
       # Create a rotation around the x-axis
       #
@@ -90,16 +84,11 @@ defmodule Raytracer.TransformTest do
         0.0, 1.0, 0.0,  0.0,
         0.0, 0.0, 0.0,  1.0,
       }
-      inverse_expected = Matrix.inverse(expected)
 
       t = Transform.rotate(90.0, {1.0, 0.0, 0.0})
 
-      for i <- 0..15 do
-        assert_in_delta elem(t.matrix, i), elem(expected, i), delta
-      end
-      for i <- 0..15 do
-        assert_in_delta elem(t.inverse_matrix, i), elem(inverse_expected, i), delta
-      end
+      assert_matrices_equal_within_delta t.matrix, expected
+      assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
 
       #
       # Create a rotation around the y-axis
@@ -111,16 +100,11 @@ defmodule Raytracer.TransformTest do
         -1.0, 0.0, 0.0, 0.0,
         0.0,  0.0, 0.0, 1.0,
       }
-      inverse_expected = Matrix.inverse(expected)
 
       t = Transform.rotate(90.0, {0.0, 1.0, 0.0})
 
-      for i <- 0..15 do
-        assert_in_delta elem(t.matrix, i), elem(expected, i), delta
-      end
-      for i <- 0..15 do
-        assert_in_delta elem(t.inverse_matrix, i), elem(inverse_expected, i), delta
-      end
+      assert_matrices_equal_within_delta t.matrix, expected
+      assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
 
       #
       # Create a rotation around the z-axis
@@ -132,16 +116,11 @@ defmodule Raytracer.TransformTest do
         0.0, 0.0,  1.0, 0.0,
         0.0, 0.0,  0.0, 1.0,
       }
-      inverse_expected = Matrix.inverse(expected)
 
       t = Transform.rotate(90.0, {0.0, 0.0, 1.0})
 
-      for i <- 0..15 do
-        assert_in_delta elem(t.matrix, i), elem(expected, i), delta
-      end
-      for i <- 0..15 do
-        assert_in_delta elem(t.inverse_matrix, i), elem(inverse_expected, i), delta
-      end
+      assert_matrices_equal_within_delta t.matrix, expected
+      assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
     end
   end
 
@@ -153,17 +132,11 @@ defmodule Raytracer.TransformTest do
         0.0, 1.0, 0.0,  0.0,
         0.0, 0.0, 0.0,  1.0,
       }
-      inverse_expected = Matrix.inverse(expected)
-      delta = 1.0e-7
 
       t = Transform.rotate_x(90.0)
 
-      for i <- 0..15 do
-        assert_in_delta elem(t.matrix, i), elem(expected, i), delta
-      end
-      for i <- 0..15 do
-        assert_in_delta elem(t.inverse_matrix, i), elem(inverse_expected, i), delta
-      end
+      assert_matrices_equal_within_delta t.matrix, expected
+      assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
     end
   end
 
@@ -175,17 +148,11 @@ defmodule Raytracer.TransformTest do
         -1.0, 0.0, 0.0, 0.0,
         0.0,  0.0, 0.0, 1.0,
       }
-      inverse_expected = Matrix.inverse(expected)
-      delta = 1.0e-7
 
       t = Transform.rotate_y(90.0)
 
-      for i <- 0..15 do
-        assert_in_delta elem(t.matrix, i), elem(expected, i), delta
-      end
-      for i <- 0..15 do
-        assert_in_delta elem(t.inverse_matrix, i), elem(inverse_expected, i), delta
-      end
+      assert_matrices_equal_within_delta t.matrix, expected
+      assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
     end
   end
 
@@ -197,17 +164,11 @@ defmodule Raytracer.TransformTest do
         0.0, 0.0,  1.0, 0.0,
         0.0, 0.0,  0.0, 1.0,
       }
-      inverse_expected = Matrix.inverse(expected)
-      delta = 1.0e-7
 
       t = Transform.rotate_z(90.0)
 
-      for i <- 0..15 do
-        assert_in_delta elem(t.matrix, i), elem(expected, i), delta
-      end
-      for i <- 0..15 do
-        assert_in_delta elem(t.inverse_matrix, i), elem(inverse_expected, i), delta
-      end
+      assert_matrices_equal_within_delta t.matrix, expected
+      assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
     end
   end
 
