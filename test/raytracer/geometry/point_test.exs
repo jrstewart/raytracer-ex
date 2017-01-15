@@ -2,6 +2,7 @@ defmodule Raytracer.Geometry.PointTest do
   use ExUnit.Case, async: true
 
   alias Raytracer.Geometry.Point
+  alias Raytracer.Transform
 
   describe "Raytracer.Geometry.Point.abs/1" do
     test "returns the point with absolute value of each coordinate" do
@@ -14,6 +15,29 @@ defmodule Raytracer.Geometry.PointTest do
     test "adds two points and returns the resulting point" do
       assert Point.add({1.0, 2.0}, {4.0, 5.0}) == {5.0, 7.0}
       assert Point.add({1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}) == {5.0, 7.0, 9.0}
+    end
+  end
+
+  describe "Raytracer.Geometry.Point.apply_transform/2" do
+    test "transforms a point and returns the result" do
+      t = Transform.translate({2.0, 3.0, 4.0})
+      p = {2.0, 3.0, 4.0}
+
+      assert Point.apply_transform(p, t) == {4.0, 6.0, 8.0}
+    end
+
+    test "transforms a point with a transform that has a non-homogeneous weight" do
+      t =
+        {
+          4.0, 0.0, 0.0, 0.0,
+          0.0, 4.0, 0.0, 0.0,
+          0.0, 0.0, 4.0, 0.0,
+          0.0, 0.0, 0.0, 2.0,
+        }
+        |> Transform.from_matrix
+      p = {2.0, 3.0, 4.0}
+
+      assert Point.apply_transform(p, t) == {4.0, 6.0, 8.0}
     end
   end
 
