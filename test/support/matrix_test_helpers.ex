@@ -5,6 +5,7 @@ defmodule Raytracer.MatrixTestHelpers do
 
   import ExUnit.Assertions, only: [assert_in_delta: 3]
 
+
   @doc """
   Asserts the elements of `m1` and `m2` are equal within `delta`.
   """

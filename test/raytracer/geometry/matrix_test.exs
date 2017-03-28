@@ -5,6 +5,7 @@ defmodule Raytracer.Geometry.MatrixTest do
 
   alias Raytracer.Geometry.Matrix
 
+
   describe "Raytracer.Geometry.Matrix.multiply/2" do
     test "multiplies two matrices and returns the resulting matrix" do
       m1 = {
@@ -30,6 +31,7 @@ defmodule Raytracer.Geometry.MatrixTest do
     end
   end
 
+
   describe "Raytracer.Geometry.Matrix.inverse/1" do
     test "computes the inverse of a matrix" do
       m = {
@@ -45,6 +47,7 @@ defmodule Raytracer.Geometry.MatrixTest do
       assert_matrices_equal_within_delta result, m
     end
   end
+
 
   describe "Raytracer.Geometry.Matrix.transpose/1" do
     test "transposes a matrix" do

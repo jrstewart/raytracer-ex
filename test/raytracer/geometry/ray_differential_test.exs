@@ -3,6 +3,7 @@ defmodule Raytracer.Geometry.RayDifferentialTest do
 
   alias Raytracer.Geometry.{Ray, RayDifferential}
 
+
   describe "Raytracer.Geometry.RayDifferential.scale/2" do
     test "scales the ray differential based on the given scalar value" do
       rd = %RayDifferential{

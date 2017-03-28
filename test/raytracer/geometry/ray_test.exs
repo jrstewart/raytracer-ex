@@ -3,6 +3,7 @@ defmodule Raytracer.Geometry.RayTest do
 
   alias Raytracer.Geometry.Ray
 
+
   describe "Raytracer.Geometry.Ray.point_at/2" do
     test "computes the point at a given distance along a ray" do
       r = %Ray{

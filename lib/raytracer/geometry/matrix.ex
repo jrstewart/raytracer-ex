@@ -10,12 +10,15 @@ defmodule Raytracer.Geometry.Matrix do
     float, float, float, float,
     float, float, float, float,
   }
+
   @type t :: matrix4x4_t
+
 
   @doc """
   Multiplies two matrices and return the resulting matrix.
   """
   @spec multiply(t, t) :: t
+
   def multiply(matrix1, matrix2)
 
   def multiply(
@@ -52,12 +55,14 @@ defmodule Raytracer.Geometry.Matrix do
     }
   end
 
+
   @doc """
   Computes the inverse of `matrix`.
 
   An `ArithmeticError` is raised if `matrix` cannot be inverted.
   """
   @spec inverse(t) :: t
+
   def inverse(matrix)
 
   def inverse(
@@ -107,10 +112,12 @@ defmodule Raytracer.Geometry.Matrix do
     }
   end
 
+
   @doc """
   Transposes `matrix` and returns the resulting matrix.
   """
   @spec transpose(t) :: t
+
   def transpose(matrix)
 
   def transpose(

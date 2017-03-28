@@ -6,19 +6,24 @@ defmodule Raytracer.Geometry.Bounds do
 
   alias __MODULE__
   alias Raytracer.Geometry
-  alias Raytracer.Geometry.{Point, Vector}
+  alias Raytracer.Geometry.Point
+  alias Raytracer.Geometry.Vector
+
 
   defstruct [
     min_point: {0.0, 0.0, 0.0},
     max_point: {0.0, 0.0, 0.0},
   ]
 
+
   @type t :: %Bounds{min_point: Point.t, max_point: Point.t}
+
 
   @doc """
   Return the corner point of `bounds` with index equal to `index`.
   """
   @spec corner(t, 0..7) :: Point.t
+
   def corner(bounds, index)
 
   def corner(%Bounds{min_point: min_point}, 0) do
@@ -65,20 +70,25 @@ defmodule Raytracer.Geometry.Bounds do
     {x, y, z}
   end
 
+
   @doc """
   Compute the vector along the diagonal of `bounds` from the minimum point to the
   maximum point.
   """
   @spec diagonal(t) :: Vector.t
+
   def diagonal(bounds)
+
   def diagonal(%Bounds{min_point: min_point, max_point: max_point}) do
     Point.subtract(max_point, min_point)
   end
+
 
   @doc """
   Pads `bounds` in all directions by the value of `delta`.
   """
   @spec expand(t, number) :: t
+
   def expand(%Bounds{min_point: {_, _}, max_point: {_, _}} = bounds, delta) do
     v = {delta, delta}
     %Bounds{
@@ -95,10 +105,12 @@ defmodule Raytracer.Geometry.Bounds do
     }
   end
 
+
   @doc """
   Checks if `point` is inside `bounds`.
   """
   @spec inside?(t, Point.t) :: boolean
+
   def inside?(bounds, point)
 
   def inside?(
@@ -115,10 +127,12 @@ defmodule Raytracer.Geometry.Bounds do
     x >= min_x && x <= max_x && y >= min_y && y <= max_y && z >= min_z && z <= max_z
   end
 
+
   @doc """
   Checks if `point` is inside `bounds` excluding the upper boundary of `bounds`.
   """
   @spec inside_exclusive?(t, Point.t) :: boolean
+
   def inside_exclusive?(bounds, point)
 
   def inside_exclusive?(
@@ -135,10 +149,12 @@ defmodule Raytracer.Geometry.Bounds do
     x >= min_x && x < max_x && y >= min_y && y < max_y && z < max_z && z >= min_z
   end
 
+
   @doc """
   Compute the bounding box that is the intersection of `bounds1` and `bounds2`.
   """
   @spec intersect(t, t) :: t
+
   def intersect(bounds1, bounds2)
 
   def intersect(
@@ -161,12 +177,14 @@ defmodule Raytracer.Geometry.Bounds do
     }
   end
 
+
   @doc """
   Linearly interpolates the point between the minimum and maximum corners of
   `bounds` by the given amount in each direction specified by the x, y, and z
   values of the map `values`.
   """
   @spec lerp(t, %{tx: number, ty: number, tz: number}) :: Point.t
+
   def lerp(bounds, values)
 
   def lerp(
@@ -187,18 +205,28 @@ defmodule Raytracer.Geometry.Bounds do
     }
   end
 
+
   @doc """
   Returns either `:x`, `:y`, or `:z` indicating the direction of the largest
   extent of `bounds`.
   """
   @spec maximum_extent(t) :: atom
-  def maximum_extent(bounds), do: bounds |> diagonal |> find_largest_extent
+
+  def maximum_extent(bounds) do
+    bounds |> diagonal |> find_largest_extent
+  end
+
 
   defp find_largest_extent({dx, dy}) when dx > dy, do: :x
+
   defp find_largest_extent({_, _}), do: :y
+
   defp find_largest_extent({dx, dy, dz}) when dx > dy and dx > dz, do: :x
+
   defp find_largest_extent({dy, _, dz}) when dy > dz, do: :y
+
   defp find_largest_extent({_, _, _}), do: :z
+
 
   @doc """
   Returns the continuous position of `point` relative to the minimum and maximum
@@ -206,6 +234,7 @@ defmodule Raytracer.Geometry.Bounds do
   and a point at the maximum corner has an offset of (1, 1, 1).
   """
   @spec offset(t, Point.t) :: {number, number} | {number, number, number}
+
   def offset(%Bounds{min_point: {_, _}, max_point: {_, _}} = bounds, point) do
     {offset_x(bounds, point), offset_y(bounds, point)}
   end
@@ -213,6 +242,7 @@ defmodule Raytracer.Geometry.Bounds do
   def offset(%Bounds{min_point: {_, _, _}, max_point: {_, _, _}} = bounds, point) do
     {offset_x(bounds, point), offset_y(bounds, point), offset_z(bounds, point)}
   end
+
 
   defp offset_x(%Bounds{min_point: min_point, max_point: max_point}, point) do
     min_x = elem(min_point, 0)
@@ -225,6 +255,7 @@ defmodule Raytracer.Geometry.Bounds do
     end
   end
 
+
   defp offset_y(%Bounds{min_point: min_point, max_point: max_point}, point) do
     min_y = elem(min_point, 1)
     max_y = elem(max_point, 1)
@@ -235,6 +266,7 @@ defmodule Raytracer.Geometry.Bounds do
       y - min_y
     end
   end
+
 
   defp offset_z(%Bounds{min_point: min_point, max_point: max_point}, point) do
     min_z = elem(min_point, 2)
@@ -247,10 +279,12 @@ defmodule Raytracer.Geometry.Bounds do
     end
   end
 
+
   @doc """
   Checks if `bounds1` and `bounds2` overlap.
   """
   @spec overlap?(t, t) :: boolean
+
   def overlap?(bounds1, bounds2)
 
   def overlap?(
@@ -269,6 +303,7 @@ defmodule Raytracer.Geometry.Bounds do
       max_z1 >= min_z2 && min_z1 <= max_z2
   end
 
+
   @doc """
   Given a bounding box and a point, this function computes a new bounding box
   that encompasses both the bounding box and point. Given two bounding boxes,
@@ -276,6 +311,7 @@ defmodule Raytracer.Geometry.Bounds do
   the two bounding boxes.
   """
   @spec union(t, t | Point.t) :: t
+
   def union(bounds, bounds_or_point)
 
   def union(

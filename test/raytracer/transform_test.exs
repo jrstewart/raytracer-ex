@@ -6,6 +6,7 @@ defmodule Raytracer.TransformTest do
   alias Raytracer.Geometry.Matrix
   alias Raytracer.Transform
 
+
   describe "Raytracer.Transform.from_matrix/1" do
     test "creates a transform from a matrix" do
       m = {
@@ -22,6 +23,7 @@ defmodule Raytracer.TransformTest do
     end
   end
 
+
   describe "Raytracer.Transform.has_scale?/1" do
     test "returns true if the transform is a scaling transform" do
       t = Transform.scale({2.0, 3.0, 4.0})
@@ -35,6 +37,7 @@ defmodule Raytracer.TransformTest do
       refute Transform.has_scale?(t)
     end
   end
+
 
   describe "Raytracer.Transform.inverse/1" do
     test "computes the inverse of a transform" do
@@ -52,6 +55,7 @@ defmodule Raytracer.TransformTest do
       assert inverse_t.inverse_matrix == t.matrix
     end
   end
+
 
   describe "Raytracer.Transform.look_at/3" do
     test "creates a look at transform" do
@@ -72,12 +76,9 @@ defmodule Raytracer.TransformTest do
     end
   end
 
-  describe "Raytracer.Transform.rotate/2" do
-    test "creates a rotation transform about an arbitrary axis" do
-      #
-      # Create a rotation around the x-axis
-      #
 
+  describe "Raytracer.Transform.rotate/2" do
+    test "creates a rotation transform about the x-axis" do
       expected = {
         1.0, 0.0, 0.0,  0.0,
         0.0, 0.0, -1.0, 0.0,
@@ -89,11 +90,9 @@ defmodule Raytracer.TransformTest do
 
       assert_matrices_equal_within_delta t.matrix, expected
       assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
+    end
 
-      #
-      # Create a rotation around the y-axis
-      #
-
+    test "creates a rotation transform about the y-axis" do
       expected = {
         0.0,  0.0, 1.0, 0.0,
         0.0,  1.0, 0.0, 0.0,
@@ -105,11 +104,9 @@ defmodule Raytracer.TransformTest do
 
       assert_matrices_equal_within_delta t.matrix, expected
       assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
+    end
 
-      #
-      # Create a rotation around the z-axis
-      #
-
+    test "creates a rotation transform about the z-axis" do
       expected = {
         0.0, -1.0, 0.0, 0.0,
         1.0, 0.0,  0.0, 0.0,
@@ -123,6 +120,7 @@ defmodule Raytracer.TransformTest do
       assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
     end
   end
+
 
   describe "Raytracer.Transform.rotate_x/1" do
     test "creates a rotation transform about the x-axis" do
@@ -140,6 +138,7 @@ defmodule Raytracer.TransformTest do
     end
   end
 
+
   describe "Raytracer.Transform.rotate_y/1" do
     test "creates a rotation transform about the y-axis" do
       expected = {
@@ -155,6 +154,7 @@ defmodule Raytracer.TransformTest do
       assert_matrices_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
     end
   end
+
 
   describe "Raytracer.Transform.rotate_z/1" do
     test "creates a rotation transform about the z-axis" do
@@ -172,6 +172,7 @@ defmodule Raytracer.TransformTest do
     end
   end
 
+
   describe "Raytracer.Transform.scale/1" do
     test "creates a scaling transform with the given scale factors" do
       expected = {
@@ -188,6 +189,7 @@ defmodule Raytracer.TransformTest do
     end
   end
 
+
   describe "Raytracer.Transform.translate/1" do
     test "creates a translation transform with the given deltas" do
       expected = {
@@ -203,6 +205,7 @@ defmodule Raytracer.TransformTest do
       assert t.inverse_matrix == Matrix.inverse(expected)
     end
   end
+
 
   describe "Raytracer.Transform.transpose/1" do
     test "transposes the matrix of a transformation" do

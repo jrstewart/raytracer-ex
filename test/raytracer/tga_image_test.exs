@@ -3,7 +3,9 @@ defmodule Raytracer.TGAImageTest do
 
   alias Raytracer.TGAImage
 
+
   @test_dir "test/support/test_data/"
+
 
   describe "Raytracer.TGAImage.write/3" do
     test "writes the image file" do
@@ -81,13 +83,6 @@ defmodule Raytracer.TGAImageTest do
       File.rm!(test_file)
     end
 
-    defp format_pixels(pixels) do
-      for <<pixel::little-24 <- pixels>> do
-        <<pixel::24>>
-      end
-      |> Enum.join
-    end
-
     test "writes the file footer" do
       image = %TGAImage{}
       test_file = @test_dir <> "test_file_4.tga"
@@ -99,5 +94,13 @@ defmodule Raytracer.TGAImageTest do
 
       File.rm!(test_file)
     end
+  end
+
+
+  defp format_pixels(pixels) do
+    for <<pixel::little-24 <- pixels>> do
+      <<pixel::24>>
+    end
+    |> Enum.join
   end
 end

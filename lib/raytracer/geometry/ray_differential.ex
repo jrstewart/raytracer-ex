@@ -6,7 +6,10 @@ defmodule Raytracer.Geometry.RayDifferential do
   """
 
   alias __MODULE__
-  alias Raytracer.Geometry.{Ray, Point, Vector}
+  alias Raytracer.Geometry.Ray
+  alias Raytracer.Geometry.Point
+  alias Raytracer.Geometry.Vector
+
 
   defstruct [
     ray: %Ray{},
@@ -17,6 +20,7 @@ defmodule Raytracer.Geometry.RayDifferential do
     has_differentials?: false,
   ]
 
+
   @type t :: %RayDifferential{
     ray: Ray.t,
     x_origin: Point.point3_t,
@@ -26,11 +30,13 @@ defmodule Raytracer.Geometry.RayDifferential do
     has_differentials?: boolean,
   }
 
+
   @doc """
   Scales the auxiliary ray information of `ray_differential` by the given
   `scalar` value.
   """
   @spec scale(t, number) :: t
+
   def scale(
     %RayDifferential{
       ray: ray,
@@ -48,12 +54,14 @@ defmodule Raytracer.Geometry.RayDifferential do
     |> Map.put(:y_direction, scale_vector(ray, y_direction, scalar))
   end
 
+
   defp scale_point(%Ray{origin: origin}, point, scalar) do
     point
     |> Point.subtract(origin)
     |> Vector.multiply(scalar)
     |> Vector.add(origin)
   end
+
 
   defp scale_vector(%Ray{direction: direction}, vector, scalar) do
     vector

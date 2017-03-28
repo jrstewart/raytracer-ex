@@ -5,6 +5,7 @@ defmodule Raytracer.Shape.SphereTest do
   alias Raytracer.Shape
   alias Raytracer.Shape.Sphere
 
+
   describe "Raytracer.Shape.compute_intersection/2" do
     test "returns nil when no intersection exists" do
       r = %Ray{origin: {0.0, 0.0, 0.0}, direction: {0.0, 1.0, 0.0}}
@@ -21,6 +22,7 @@ defmodule Raytracer.Shape.SphereTest do
     end
   end
 
+
   describe "Raytracer.Shape.compute_outward_normal/2" do
     test "computes the outward pointing normal at a point on a sphere" do
       s = %Sphere{center: {0.0, 0.0, 0.0}, radius: 1.0}
@@ -29,6 +31,7 @@ defmodule Raytracer.Shape.SphereTest do
       assert Shape.compute_outward_normal(s, p) == {1.0, 0.0, 0.0}
     end
   end
+
 
   describe "Raytracer.Shape.compute_inward_normal/2" do
     test "computes the inward pointing normal at a point on a sphere" do
