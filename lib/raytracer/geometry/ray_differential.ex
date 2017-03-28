@@ -1,14 +1,15 @@
 defmodule Raytracer.Geometry.RayDifferential do
   @moduledoc """
   Ray differentials provide two auxiliary rays in addition to a primary ray to
-  allow additional information to be used in computations such as
-  antialiasing and texture mapping.
+  allow additional information to be used in computations such as antialiasing
+  and texture mapping.
   """
 
   alias __MODULE__
   alias Raytracer.Geometry.Ray
   alias Raytracer.Geometry.Point
   alias Raytracer.Geometry.Vector
+  alias Raytracer.Transform
 
   defstruct [
     ray: %Ray{},
@@ -27,6 +28,29 @@ defmodule Raytracer.Geometry.RayDifferential do
     y_direction: Vector.vector3_t,
     has_differentials?: boolean,
   }
+
+
+  @doc """
+  Applies `transform` to `ray` and returns the resulting ray.
+  """
+  @spec apply_transform(t, Transform.t) :: t
+  def apply_transform(
+    %RayDifferential{
+      ray: ray,
+      x_origin: x_origin,
+      y_origin: y_origin,
+      x_direction: x_direction,
+      y_direction: y_direction,
+    } = ray_differential,
+    transform
+  ) do
+    ray_differential
+    |> Map.put(:ray, Ray.apply_transform(ray, transform))
+    |> Map.put(:x_origin, Point.apply_transform(x_origin, transform))
+    |> Map.put(:y_origin, Point.apply_transform(y_origin, transform))
+    |> Map.put(:x_direction, Vector.apply_transform(x_direction, transform))
+    |> Map.put(:y_direction, Vector.apply_transform(y_direction, transform))
+  end
 
 
   @doc """
