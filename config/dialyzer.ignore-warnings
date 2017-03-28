@@ -1,0 +1,11 @@
+Unknown function 'Elixir.Raytracer.Shape.Atom':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.BitString':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.Float':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.Function':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.Integer':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.List':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.Map':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.PID':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.Port':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.Reference':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Shape.Tuple':'__impl__'/1
