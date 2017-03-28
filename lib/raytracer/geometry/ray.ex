@@ -6,6 +6,7 @@ defmodule Raytracer.Geometry.Ray do
   alias __MODULE__
   alias Raytracer.Geometry.Point
   alias Raytracer.Geometry.Vector
+  alias Raytracer.Transform
 
 
   defstruct [
@@ -15,6 +16,21 @@ defmodule Raytracer.Geometry.Ray do
 
 
   @type t :: %Ray{origin: Point.point3_t, direction: Vector.vector3_t}
+
+
+  @doc """
+  Applies `transform` to `ray` and returns the resulting ray.
+  """
+  @spec apply_transform(t, Transform.t) :: t
+
+  def apply_transform(ray, transfrom)
+
+  def apply_transform(%Ray{origin: origin, direction: direction}, transform) do
+    %Ray{
+      origin: Point.apply_transform(origin, transform),
+      direction: Vector.apply_transform(direction, transform),
+    }
+  end
 
 
   @doc """
