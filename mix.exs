@@ -1,7 +1,6 @@
 defmodule Raytracer.Mixfile do
   use Mix.Project
 
-
   def project do
     [
       app: :raytracer,
@@ -16,11 +15,9 @@ defmodule Raytracer.Mixfile do
     ]
   end
 
-
   def application do
     [extra_applications: [:logger]]
   end
-
 
   defp deps do
     [
@@ -29,16 +26,12 @@ defmodule Raytracer.Mixfile do
     ]
   end
 
-
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-
   defp elixirc_paths(_), do: ["lib"]
-
 
   defp escript_config do
     [main_module: Raytracer]
   end
-
 
   defp dialyzer_config do
     [ignore_warnings: "config/dialyzer.ignore-warnings"]
