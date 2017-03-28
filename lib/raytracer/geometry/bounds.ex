@@ -8,6 +8,7 @@ defmodule Raytracer.Geometry.Bounds do
   alias Raytracer.Geometry
   alias Raytracer.Geometry.Point
   alias Raytracer.Geometry.Vector
+  alias Raytracer.Transform
 
   defstruct [
     min_point: {0.0, 0.0, 0.0},
@@ -15,6 +16,25 @@ defmodule Raytracer.Geometry.Bounds do
   ]
 
   @type t :: %Bounds{min_point: Point.t, max_point: Point.t}
+
+
+  @doc """
+  Applies `transform` to `bounds` and returns the resulting bounding box.
+  """
+  @spec apply_transform(t, Transform.t) :: t
+  def apply_transform(
+    %Bounds{min_point: {min_x, min_y, min_z}, max_point: {max_x, max_y, max_z}} = bounds,
+    transform
+  ) do
+    bounds
+    |> union(Point.apply_transform({min_x, min_y, min_z}, transform))
+    |> union(Point.apply_transform({max_x, min_y, min_z}, transform))
+    |> union(Point.apply_transform({min_x, max_y, min_z}, transform))
+    |> union(Point.apply_transform({min_x, min_y, max_z}, transform))
+    |> union(Point.apply_transform({max_x, max_y, min_z}, transform))
+    |> union(Point.apply_transform({max_x, min_y, max_z}, transform))
+    |> union(Point.apply_transform({max_x, max_y, max_z}, transform))
+  end
 
 
   @doc """

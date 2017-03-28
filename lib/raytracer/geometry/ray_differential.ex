@@ -31,7 +31,7 @@ defmodule Raytracer.Geometry.RayDifferential do
 
 
   @doc """
-  Applies `transform` to `ray` and returns the resulting ray.
+  Applies `transform` to `ray` and returns the resulting ray differential.
   """
   @spec apply_transform(t, Transform.t) :: t
   def apply_transform(
