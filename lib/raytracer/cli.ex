@@ -3,18 +3,15 @@ defmodule Raytracer.CLI do
   Command line interface functions for the Raytracer program.
   """
 
-
   @doc """
   Runs the Raytracer program with given arguments.
   """
   @spec run(term) :: term
-
   def run(argv) do
     argv
     |> parse_args
     |> process
   end
-
 
   defp parse_args(argv) do
     argv
@@ -24,7 +21,6 @@ defmodule Raytracer.CLI do
          _ -> :help
        end
   end
-
 
   defp process(:help) do
     IO.puts """

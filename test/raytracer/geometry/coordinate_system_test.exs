@@ -3,7 +3,6 @@ defmodule Raytracer.Geometry.CoordinateSystemTest do
 
   alias Raytracer.Geometry.CoordinateSystem
 
-
   describe "Raytracer.Geometry.CoordinateSystem.create_from_vector/1" do
     test "creates a coordinate system from a vector" do
       c = CoordinateSystem.create_from_vector({0.0, 0.0, 2.0})
@@ -13,7 +12,6 @@ defmodule Raytracer.Geometry.CoordinateSystemTest do
       assert c.w_axis == {-1.0, 0.0, 0.0}
     end
   end
-
 
   describe "Raytracer.Geometry.CoordinateSystem.create_from_normalized_vector/1" do
     test "creates a coordinate system from a vector" do

@@ -6,7 +6,6 @@ defmodule Raytracer.TGAImage do
 
   alias __MODULE__
 
-
   defstruct [
     id_length: 0,
     color_map_type: 0,
@@ -23,7 +22,6 @@ defmodule Raytracer.TGAImage do
     pixel_depth: 24,
     descriptor: 0,
   ]
-
 
   @type t :: %TGAImage{
     id_length: 0..255,
@@ -47,16 +45,13 @@ defmodule Raytracer.TGAImage do
   Writes the `image` and `pixels` data to the file at the specified `path`.
   """
   @spec write(t, Path.t, iodata) :: :ok | {:error, File.posix}
-
   def write(image, path, pixels) do
     File.write(path, file_data(image, pixels), [:binary, :raw])
   end
 
-
   defp file_data(image, pixels) do
     header(image) <> format_pixels(image, pixels, "") <> footer()
   end
-
 
   defp header(image) do
     <<image.id_length::little-8>> <>
@@ -71,13 +66,11 @@ defmodule Raytracer.TGAImage do
       <<image.descriptor::little-8>>
   end
 
-
   defp color_map_specification_to_binary(color_map_specification) do
     <<color_map_specification.first_entry_index::little-16>> <>
       <<color_map_specification.num_entries::little-16>> <>
       <<color_map_specification.entry_size::little-8>>
   end
-
 
   defp format_pixels(_, "", acc), do: acc
 
@@ -88,7 +81,6 @@ defmodule Raytracer.TGAImage do
   ) when pixel_depth == 24 do
     format_pixels(image, rest, acc <> <<pixel::little-24>>)
   end
-
 
   defp footer() do
     "TRUEVISION-XFILE." <> :binary.copy(<<0>>, 9)

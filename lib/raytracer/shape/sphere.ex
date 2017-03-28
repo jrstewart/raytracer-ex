@@ -9,15 +9,12 @@ defmodule Raytracer.Shape.Sphere do
   alias Raytracer.Geometry.Vector
   alias Raytracer.Shape
 
-
   defstruct [
     center: {0.0, 0.0, 0.0},
     radius: 0.0,
   ]
 
-
   @type t :: %Sphere{center: Point.point3_t, radius: float}
-
 
   defimpl Shape do
     def compute_intersection(
@@ -37,18 +34,14 @@ defmodule Raytracer.Shape.Sphere do
       compute_intersection_distance(b, radical_part)
     end
 
-
     defp compute_intersection_distance(_b, radical_part) when radical_part < 0.0, do: nil
-
     defp compute_intersection_distance(b, radical_part), do: (-b - :math.sqrt(radical_part)) / 2.0
-
 
     def compute_inward_normal(%Sphere{center: center}, point) do
       center
       |> Point.subtract(point)
       |> Vector.normalize
     end
-
 
     def compute_outward_normal(%Sphere{center: center}, point) do
       point

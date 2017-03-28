@@ -18,9 +18,7 @@ defmodule Raytracer.Geometry.Matrix do
   Multiplies two matrices and return the resulting matrix.
   """
   @spec multiply(t, t) :: t
-
   def multiply(matrix1, matrix2)
-
   def multiply(
     {
       m1_00, m1_01, m1_02, m1_03,
@@ -62,9 +60,7 @@ defmodule Raytracer.Geometry.Matrix do
   An `ArithmeticError` is raised if `matrix` cannot be inverted.
   """
   @spec inverse(t) :: t
-
   def inverse(matrix)
-
   def inverse(
     {
       m00, m01, m02, m03,
@@ -117,9 +113,7 @@ defmodule Raytracer.Geometry.Matrix do
   Transposes `matrix` and returns the resulting matrix.
   """
   @spec transpose(t) :: t
-
   def transpose(matrix)
-
   def transpose(
     {
       m00, m01, m02, m03,

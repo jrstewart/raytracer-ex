@@ -3,7 +3,6 @@ defmodule Raytracer.GeometryTest do
 
   alias Raytracer.Geometry
 
-
   describe "Raytracer.Geometry.clamp/3" do
     test "returns min_value if value is less than min_value" do
       assert Geometry.clamp(-1.0, 0.0, 3.0) == 0.0
@@ -18,13 +17,11 @@ defmodule Raytracer.GeometryTest do
     end
   end
 
-
   describe "Raytracer.Geometry.degrees_to_radians/1" do
     test "converts an angle in degrees to radians" do
       assert Geometry.degrees_to_radians(180.0) == :math.pi()
     end
   end
-
 
   describe "Raytracer.Geometry.lerp/3" do
     test "linearly interpolates between two values" do
@@ -33,7 +30,6 @@ defmodule Raytracer.GeometryTest do
       assert Geometry.lerp(0.0, 2.0, 1.0) == 2.0
     end
   end
-
 
   describe "Raytracer.Geometry.radians_to_degrees/1" do
     test "converts an angle in radians to degrees" do

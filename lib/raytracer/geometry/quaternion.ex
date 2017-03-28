@@ -6,7 +6,6 @@ defmodule Raytracer.Geometry.Quaternion do
 
   alias Raytracer.Geometry
 
-
   @type t :: {float, float, float, float}
 
 
@@ -14,9 +13,7 @@ defmodule Raytracer.Geometry.Quaternion do
   Adds two quaternions and returns the resulting quaternion.
   """
   @spec add(t, t) :: t
-
   def add(quaternion1, quaternion2)
-
   def add({x1, y1, z1, w1}, {x2, y2, z2, w2}), do: {x1 + x2, y1 + y2, z1 + z2, w1 + w2}
 
 
@@ -24,7 +21,6 @@ defmodule Raytracer.Geometry.Quaternion do
   Divides `quaternion` by `scalar` and returns the resulting quaternion.
   """
   @spec divide(t, float) :: t
-
   def divide(quaternion, scalar), do: multiply(quaternion, 1.0 / scalar)
 
 
@@ -32,9 +28,7 @@ defmodule Raytracer.Geometry.Quaternion do
   Computes the dot product of `quaternion1` and `quaternion2`.
   """
   @spec dot(t, t) :: float
-
   def dot(quaternion1, quaternion2)
-
   def dot({x1, y1, z1, w1}, {x2, y2, z2, w2}), do: (x1 * x2) + (y1 * y2) + (z1 * z2) + (w1 * w2)
 
 
@@ -42,9 +36,7 @@ defmodule Raytracer.Geometry.Quaternion do
   Multiplies `quaternion` by `scalar` and returns the resulting quaternion.
   """
   @spec multiply(t, float) :: t
-
   def multiply(quaternion, scalar)
-
   def multiply({x, y, z, w}, scalar), do: {x * scalar, y * scalar, z * scalar, w * scalar}
 
 
@@ -52,7 +44,6 @@ defmodule Raytracer.Geometry.Quaternion do
   Normalizes `quaternion` and returns the resulting quaternion.
   """
   @spec normalize(t) :: t
-
   def normalize(quaternion) do
     divide(quaternion, quaternion |> dot(quaternion) |> :math.sqrt)
   end
@@ -63,11 +54,9 @@ defmodule Raytracer.Geometry.Quaternion do
   by the value `t`.
   """
   @spec slerp(t, t, float) :: t
-
   def slerp(quaternion1, quaternion2, t) do
     do_slerp(quaternion1, quaternion2, t, dot(quaternion1, quaternion2))
   end
-
 
   defp do_slerp(quaternion1, quaternion2, t, cos_theta) when cos_theta > 0.9995 do
     quaternion1
@@ -83,7 +72,6 @@ defmodule Raytracer.Geometry.Quaternion do
     add(multiply(quaternion1, :math.cos(theta_p)), multiply(q_perpendicular, :math.sin(theta_p)))
   end
 
-
   defp compute_perpendicular(quaternion1, quaternion2, cos_theta) do
     subtract(quaternion2, multiply(quaternion1, cos_theta))
   end
@@ -93,8 +81,6 @@ defmodule Raytracer.Geometry.Quaternion do
   Subtracts two quaternions and returns the resulting quaternion.
   """
   @spec subtract(t, t) :: t
-
   def subtract(quaternion1, quaternion2)
-
   def subtract({x1, y1, z1, w1}, {x2, y2, z2, w2}), do: {x1 - x2, y1 - y2, z1 - z2, w1 - w2}
 end

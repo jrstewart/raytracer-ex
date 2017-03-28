@@ -2,7 +2,6 @@ defmodule Raytracer.Mixfile do
   use Mix.Project
 
 
-  @doc false
   def project do
     [
       app: :raytracer,
@@ -15,6 +14,11 @@ defmodule Raytracer.Mixfile do
       escript: escript_config(),
       dialyzer: dialyzer_config(),
     ]
+  end
+
+
+  def application do
+    [extra_applications: [:logger]]
   end
 
 
@@ -38,11 +42,5 @@ defmodule Raytracer.Mixfile do
 
   defp dialyzer_config do
     [ignore_warnings: "config/dialyzer.ignore-warnings"]
-  end
-
-
-  @doc false
-  def application do
-    [extra_applications: [:logger]]
   end
 end

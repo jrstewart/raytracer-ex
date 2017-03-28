@@ -4,7 +4,6 @@ defmodule Raytracer.Geometry.RayTest do
   alias Raytracer.Geometry.Ray
   alias Raytracer.Transform
 
-
   describe "Raytracer.Geometry.Ray.apply_transform/2" do
     test "transforms a ray and returns the result" do
       t = Transform.scale({2.0, 3.0, 4.0})
@@ -20,7 +19,6 @@ defmodule Raytracer.Geometry.RayTest do
       assert Ray.apply_transform(r, t) == expected
     end
   end
-
 
   describe "Raytracer.Geometry.Ray.point_at/2" do
     test "computes the point at a given distance along a ray" do

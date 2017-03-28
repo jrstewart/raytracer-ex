@@ -5,7 +5,6 @@ defmodule Raytracer.CLITest do
 
   alias Raytracer.CLI
 
-
   describe "Raytracer.CLI.run/1" do
     test "-h option prints the help documentation" do
       assert capture_io(fn ->
