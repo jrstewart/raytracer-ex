@@ -17,9 +17,9 @@ defmodule Raytracer.CLI do
     argv
     |> OptionParser.parse(switches: [help: :boolean], aliases: [h: :help])
     |> case do
-         {[help: true], _, _} -> :help
-         _ -> :help
-       end
+      {[help: true], _, _} -> :help
+      _ -> :help
+    end
   end
 
   defp process(:help) do

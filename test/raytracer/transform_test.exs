@@ -8,12 +8,10 @@ defmodule Raytracer.TransformTest do
 
   describe "Raytracer.Transform.from_matrix/1" do
     test "creates a transform from a matrix" do
-      m = {
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 0.0, 1.0,
-      }
+      m = {1.0, 0.0, 0.0, 1.0,
+           0.0, 1.0, 0.0, 1.0,
+           0.0, 0.0, 1.0, 1.0,
+           0.0, 0.0, 0.0, 1.0}
 
       t = Transform.from_matrix(m)
 
@@ -38,12 +36,10 @@ defmodule Raytracer.TransformTest do
 
   describe "Raytracer.Transform.inverse/1" do
     test "computes the inverse of a transform" do
-      m = {
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 0.0, 0.0, 1.0,
-      }
+      m = {1.0, 0.0, 0.0, 1.0,
+           0.0, 1.0, 0.0, 1.0,
+           0.0, 0.0, 1.0, 1.0,
+           0.0, 0.0, 0.0, 1.0}
       t = Transform.from_matrix(m)
 
       inverse_t = Transform.inverse(t)
@@ -58,12 +54,10 @@ defmodule Raytracer.TransformTest do
       position = {0.0, 0.0, 0.0}
       center = {0.0, 0.0, -10.0}
       up = {0.0, 1.0, 0.0}
-      expected = {
-        -1.0, 0.0, 0.0,  0.0,
-        0.0,  1.0, 0.0,  0.0,
-        0.0,  0.0, -1.0, 0.0,
-        0.0,  0.0, 0.0,  1.0,
-      }
+      expected = {-1.0, 0.0,  0.0, 0.0,
+                   0.0, 1.0,  0.0, 0.0,
+                   0.0, 0.0, -1.0, 0.0,
+                   0.0, 0.0,  0.0, 1.0}
 
       t = Transform.look_at(position, center, up)
 
@@ -74,12 +68,10 @@ defmodule Raytracer.TransformTest do
 
   describe "Raytracer.Transform.rotate/2" do
     test "creates a rotation transform about the x-axis" do
-      expected = {
-        1.0, 0.0, 0.0,  0.0,
-        0.0, 0.0, -1.0, 0.0,
-        0.0, 1.0, 0.0,  0.0,
-        0.0, 0.0, 0.0,  1.0,
-      }
+      expected = {1.0, 0.0,  0.0, 0.0,
+                  0.0, 0.0, -1.0, 0.0,
+                  0.0, 1.0,  0.0, 0.0,
+                  0.0, 0.0,  0.0, 1.0}
 
       t = Transform.rotate(90.0, {1.0, 0.0, 0.0})
 
@@ -88,12 +80,10 @@ defmodule Raytracer.TransformTest do
     end
 
     test "creates a rotation transform about the y-axis" do
-      expected = {
-        0.0,  0.0, 1.0, 0.0,
-        0.0,  1.0, 0.0, 0.0,
-        -1.0, 0.0, 0.0, 0.0,
-        0.0,  0.0, 0.0, 1.0,
-      }
+      expected = { 0.0, 0.0, 1.0, 0.0,
+                   0.0, 1.0, 0.0, 0.0,
+                  -1.0, 0.0, 0.0, 0.0,
+                   0.0, 0.0, 0.0, 1.0}
 
       t = Transform.rotate(90.0, {0.0, 1.0, 0.0})
 
@@ -102,12 +92,10 @@ defmodule Raytracer.TransformTest do
     end
 
     test "creates a rotation transform about the z-axis" do
-      expected = {
-        0.0, -1.0, 0.0, 0.0,
-        1.0, 0.0,  0.0, 0.0,
-        0.0, 0.0,  1.0, 0.0,
-        0.0, 0.0,  0.0, 1.0,
-      }
+      expected = {0.0, -1.0, 0.0, 0.0,
+                  1.0,  0.0, 0.0, 0.0,
+                  0.0,  0.0, 1.0, 0.0,
+                  0.0,  0.0, 0.0, 1.0}
 
       t = Transform.rotate(90.0, {0.0, 0.0, 1.0})
 
@@ -118,12 +106,10 @@ defmodule Raytracer.TransformTest do
 
   describe "Raytracer.Transform.rotate_x/1" do
     test "creates a rotation transform about the x-axis" do
-      expected = {
-        1.0, 0.0, 0.0,  0.0,
-        0.0, 0.0, -1.0, 0.0,
-        0.0, 1.0, 0.0,  0.0,
-        0.0, 0.0, 0.0,  1.0,
-      }
+      expected = {1.0, 0.0,  0.0, 0.0,
+                  0.0, 0.0, -1.0, 0.0,
+                  0.0, 1.0,  0.0, 0.0,
+                  0.0, 0.0,  0.0, 1.0}
 
       t = Transform.rotate_x(90.0)
 
@@ -134,12 +120,10 @@ defmodule Raytracer.TransformTest do
 
   describe "Raytracer.Transform.rotate_y/1" do
     test "creates a rotation transform about the y-axis" do
-      expected = {
-        0.0,  0.0, 1.0, 0.0,
-        0.0,  1.0, 0.0, 0.0,
-        -1.0, 0.0, 0.0, 0.0,
-        0.0,  0.0, 0.0, 1.0,
-      }
+      expected = { 0.0, 0.0, 1.0, 0.0,
+                   0.0, 1.0, 0.0, 0.0,
+                  -1.0, 0.0, 0.0, 0.0,
+                   0.0, 0.0, 0.0, 1.0}
 
       t = Transform.rotate_y(90.0)
 
@@ -150,12 +134,10 @@ defmodule Raytracer.TransformTest do
 
   describe "Raytracer.Transform.rotate_z/1" do
     test "creates a rotation transform about the z-axis" do
-      expected = {
-        0.0, -1.0, 0.0, 0.0,
-        1.0, 0.0,  0.0, 0.0,
-        0.0, 0.0,  1.0, 0.0,
-        0.0, 0.0,  0.0, 1.0,
-      }
+      expected = {0.0, -1.0, 0.0, 0.0,
+                  1.0,  0.0, 0.0, 0.0,
+                  0.0,  0.0, 1.0, 0.0,
+                  0.0,  0.0, 0.0, 1.0}
 
       t = Transform.rotate_z(90.0)
 
@@ -166,12 +148,10 @@ defmodule Raytracer.TransformTest do
 
   describe "Raytracer.Transform.scale/1" do
     test "creates a scaling transform with the given scale factors" do
-      expected = {
-        2.0, 0.0, 0.0, 0.0,
-        0.0, 3.0, 0.0, 0.0,
-        0.0, 0.0, 4.0, 0.0,
-        0.0, 0.0, 0.0, 1.0,
-      }
+      expected = {2.0, 0.0, 0.0, 0.0,
+                  0.0, 3.0, 0.0, 0.0,
+                  0.0, 0.0, 4.0, 0.0,
+                  0.0, 0.0, 0.0, 1.0}
 
       t = Transform.scale({2.0, 3.0, 4.0})
 
@@ -182,12 +162,10 @@ defmodule Raytracer.TransformTest do
 
   describe "Raytracer.Transform.translate/1" do
     test "creates a translation transform with the given deltas" do
-      expected = {
-        1.0, 0.0, 0.0, 2.0,
-        0.0, 1.0, 0.0, 3.0,
-        0.0, 0.0, 1.0, 4.0,
-        0.0, 0.0, 0.0, 1.0,
-      }
+      expected = {1.0, 0.0, 0.0, 2.0,
+                  0.0, 1.0, 0.0, 3.0,
+                  0.0, 0.0, 1.0, 4.0,
+                  0.0, 0.0, 0.0, 1.0}
 
       t = Transform.translate({2.0, 3.0, 4.0})
 
@@ -198,20 +176,14 @@ defmodule Raytracer.TransformTest do
 
   describe "Raytracer.Transform.transpose/1" do
     test "transposes the matrix of a transformation" do
-      t = %Transform{
-        matrix: {
-          1.0, 0.0, 0.0, 1.0,
-          0.0, 1.0, 0.0, 1.0,
-          0.0, 0.0, 1.0, 1.0,
-          0.0, 0.0, 0.0, 1.0,
-        },
-        inverse_matrix: {
-          1.0, 0.0, 0.0, -1.0,
-          0.0, 1.0, 0.0, -1.0,
-          0.0, 0.0, 1.0, -1.0,
-          0.0, 0.0, 0.0, 1.0,
-        }
-      }
+      t = %Transform{matrix: {1.0, 0.0, 0.0, 1.0,
+                              0.0, 1.0, 0.0, 1.0,
+                              0.0, 0.0, 1.0, 1.0,
+                              0.0, 0.0, 0.0, 1.0},
+                     inverse_matrix: {1.0, 0.0, 0.0, -1.0,
+                                      0.0, 1.0, 0.0, -1.0,
+                                      0.0, 0.0, 1.0, -1.0,
+                                      0.0, 0.0, 0.0,  1.0}}
 
       transpose_t = Transform.transpose(t)
 

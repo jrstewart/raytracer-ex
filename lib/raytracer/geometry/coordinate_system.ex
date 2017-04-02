@@ -6,18 +6,13 @@ defmodule Raytracer.Geometry.CoordinateSystem do
   alias __MODULE__
   alias Raytracer.Geometry.Vector
 
-  defstruct [
-    u_axis: {1.0, 0.0, 0.0},
-    v_axis: {0.0, 1.0, 0.0},
-    w_axis: {0.0, 0.0, 1.0},
-  ]
+  defstruct u_axis: {1.0, 0.0, 0.0},
+            v_axis: {0.0, 1.0, 0.0},
+            w_axis: {0.0, 0.0, 1.0}
 
-  @type t :: %CoordinateSystem{
-    u_axis: Vector.vector3_t,
-    v_axis: Vector.vector3_t,
-    w_axis: Vector.vector3_t,
-  }
-
+  @type t :: %CoordinateSystem{u_axis: Vector.vector3_t,
+                               v_axis: Vector.vector3_t,
+                               w_axis: Vector.vector3_t}
 
   @doc """
   Creates a three-dimensional coordinate system from `vector`.
@@ -35,7 +30,6 @@ defmodule Raytracer.Geometry.CoordinateSystem do
     |> create_from_normalized_vector
   end
 
-
   @doc """
   Creates a three-dimensional coordinate system from `vector`.
 
@@ -50,7 +44,6 @@ defmodule Raytracer.Geometry.CoordinateSystem do
     w_axis = Vector.cross(vector, v_axis)
     %CoordinateSystem{u_axis: vector, v_axis: v_axis, w_axis: w_axis}
   end
-
   def create_from_normalized_vector({_, dy, dz} = vector) do
     v_axis = {0.0, dz, -dy} |> Vector.divide(:math.sqrt(dy * dy + dz * dz))
     w_axis = Vector.cross(vector, v_axis)

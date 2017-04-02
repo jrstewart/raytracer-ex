@@ -4,23 +4,17 @@ defmodule Raytracer.Shape.Sphere do
   """
 
   alias __MODULE__
-  alias Raytracer.Geometry.Ray
   alias Raytracer.Geometry.Point
   alias Raytracer.Geometry.Vector
   alias Raytracer.Shape
 
-  defstruct [
-    center: {0.0, 0.0, 0.0},
-    radius: 0.0,
-  ]
+  defstruct center: {0.0, 0.0, 0.0},
+            radius: 0.0
 
   @type t :: %Sphere{center: Point.point3_t, radius: float}
 
   defimpl Shape do
-    def compute_intersection(
-      %Sphere{center: center, radius: radius},
-      %Ray{origin: origin, direction: direction}
-    ) do
+    def compute_intersection(%Sphere{center: center, radius: radius}, {origin, direction}) do
       origin_to_center_vector = Point.subtract(origin, center)
       b =
         direction

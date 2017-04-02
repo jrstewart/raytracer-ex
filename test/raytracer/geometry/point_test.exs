@@ -27,14 +27,10 @@ defmodule Raytracer.Geometry.PointTest do
     end
 
     test "transforms a point with a transform that has a non-homogeneous weight" do
-      t =
-        {
-          4.0, 0.0, 0.0, 0.0,
-          0.0, 4.0, 0.0, 0.0,
-          0.0, 0.0, 4.0, 0.0,
-          0.0, 0.0, 0.0, 2.0,
-        }
-        |> Transform.from_matrix
+      t = Transform.from_matrix({4.0, 0.0, 0.0, 0.0,
+                                 0.0, 4.0, 0.0, 0.0,
+                                 0.0, 0.0, 4.0, 0.0,
+                                 0.0, 0.0, 0.0, 2.0})
       p = {2.0, 3.0, 4.0}
 
       assert Point.apply_transform(p, t) == {4.0, 6.0, 8.0}

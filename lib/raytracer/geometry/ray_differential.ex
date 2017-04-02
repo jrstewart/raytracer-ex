@@ -11,39 +11,30 @@ defmodule Raytracer.Geometry.RayDifferential do
   alias Raytracer.Geometry.Vector
   alias Raytracer.Transform
 
-  defstruct [
-    ray: %Ray{},
-    x_origin: {0.0, 0.0, 0.0},
-    y_origin: {0.0, 0.0, 0.0},
-    x_direction: {0.0, 0.0, 0.0},
-    y_direction: {0.0, 0.0, 0.0},
-    has_differentials?: false,
-  ]
+  defstruct ray: {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}},
+            x_origin: {0.0, 0.0, 0.0},
+            y_origin: {0.0, 0.0, 0.0},
+            x_direction: {0.0, 0.0, 0.0},
+            y_direction: {0.0, 0.0, 0.0},
+            has_differentials?: false
 
-  @type t :: %RayDifferential{
-    ray: Ray.t,
-    x_origin: Point.point3_t,
-    y_origin: Point.point3_t,
-    x_direction: Vector.vector3_t,
-    y_direction: Vector.vector3_t,
-    has_differentials?: boolean,
-  }
-
+  @type t :: %RayDifferential{ray: Ray.t,
+                              x_origin: Point.point3_t,
+                              y_origin: Point.point3_t,
+                              x_direction: Vector.vector3_t,
+                              y_direction: Vector.vector3_t,
+                              has_differentials?: boolean}
 
   @doc """
   Applies `transform` to `ray` and returns the resulting ray differential.
   """
   @spec apply_transform(t, Transform.t) :: t
-  def apply_transform(
-    %RayDifferential{
-      ray: ray,
-      x_origin: x_origin,
-      y_origin: y_origin,
-      x_direction: x_direction,
-      y_direction: y_direction,
-    } = ray_differential,
-    transform
-  ) do
+  def apply_transform(%RayDifferential{ray: ray,
+                                       x_origin: x_origin,
+                                       y_origin: y_origin,
+                                       x_direction: x_direction,
+                                       y_direction: y_direction} = ray_differential,
+                      transform) do
     ray_differential
     |> Map.put(:ray, Ray.apply_transform(ray, transform))
     |> Map.put(:x_origin, Point.apply_transform(x_origin, transform))
@@ -52,22 +43,17 @@ defmodule Raytracer.Geometry.RayDifferential do
     |> Map.put(:y_direction, Vector.apply_transform(y_direction, transform))
   end
 
-
   @doc """
   Scales the auxiliary ray information of `ray_differential` by the given
   `scalar` value.
   """
   @spec scale(t, number) :: t
-  def scale(
-    %RayDifferential{
-      ray: ray,
-      x_origin: x_origin,
-      y_origin: y_origin,
-      x_direction: x_direction,
-      y_direction: y_direction,
-    } = ray_differential,
-    scalar
-  ) do
+  def scale(%RayDifferential{ray: ray,
+                             x_origin: x_origin,
+                             y_origin: y_origin,
+                             x_direction: x_direction,
+                             y_direction: y_direction} = ray_differential,
+            scalar) do
     ray_differential
     |> Map.put(:x_origin, scale_point(ray, x_origin, scalar))
     |> Map.put(:y_origin, scale_point(ray, y_origin, scalar))
@@ -75,14 +61,14 @@ defmodule Raytracer.Geometry.RayDifferential do
     |> Map.put(:y_direction, scale_vector(ray, y_direction, scalar))
   end
 
-  defp scale_point(%Ray{origin: origin}, point, scalar) do
+  defp scale_point({origin, _}, point, scalar) do
     point
     |> Point.subtract(origin)
     |> Vector.multiply(scalar)
     |> Vector.add(origin)
   end
 
-  defp scale_vector(%Ray{direction: direction}, vector, scalar) do
+  defp scale_vector({_, direction}, vector, scalar) do
     vector
     |> Vector.subtract(direction)
     |> Vector.multiply(scalar)

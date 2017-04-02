@@ -16,38 +16,35 @@ defmodule Raytracer.TGAImageTest do
     end
 
     test "writes the image file header" do
-      image = %TGAImage{
-        id_length: 12,
-        color_map_type: 2,
-        image_type: 5,
-        color_map_specification: %{
-          first_entry_index: 1024,
-          num_entries: 2000,
-          entry_size: 24,
-        },
-        x_origin: 500,
-        y_origin: 600,
-        width: 1920,
-        height: 1200,
-        pixel_depth: 24,
-        descriptor: 1,
-      }
+      image = %TGAImage{id_length: 12,
+                        color_map_type: 2,
+                        image_type: 5,
+                        color_map_specification: %{first_entry_index: 1024,
+                                                   num_entries: 2000,
+                                                   entry_size: 24},
+                        x_origin: 500,
+                        y_origin: 600,
+                        width: 1920,
+                        height: 1200,
+                        pixel_depth: 24,
+                        descriptor: 1}
       test_file = @test_dir <> "test_file_2.tga"
 
       TGAImage.write(image, test_file, "")
-      <<id_length::little-8>> <>
-        <<color_map_type::little-8>> <>
-        <<image_type::little-8>> <>
-        <<color_map_first_entry_index::little-16>> <>
-        <<color_map_num_entries::little-16>> <>
-        <<color_map_entry_size::little-8>> <>
-        <<x_origin::little-16>> <>
-        <<y_origin::little-16>> <>
-        <<width::little-16>> <>
-        <<height::little-16>> <>
-        <<pixel_depth::little-8>> <>
-        <<descriptor::little-8>> <>
-        _ = File.read!(test_file)
+
+      <<id_length::little-8>>
+      <> <<color_map_type::little-8>>
+      <> <<image_type::little-8>>
+      <> <<color_map_first_entry_index::little-16>>
+      <> <<color_map_num_entries::little-16>>
+      <> <<color_map_entry_size::little-8>>
+      <> <<x_origin::little-16>>
+      <> <<y_origin::little-16>>
+      <> <<width::little-16>>
+      <> <<height::little-16>>
+      <> <<pixel_depth::little-8>>
+      <> <<descriptor::little-8>>
+      <> _ = File.read!(test_file)
 
       assert image.id_length == id_length
       assert image.color_map_type == color_map_type
@@ -81,6 +78,13 @@ defmodule Raytracer.TGAImageTest do
       File.rm!(test_file)
     end
 
+    defp format_pixels(pixels) do
+      for <<pixel::little-24 <- pixels>> do
+        <<pixel::24>>
+      end
+      |> Enum.join
+    end
+
     test "writes the file footer" do
       image = %TGAImage{}
       test_file = @test_dir <> "test_file_4.tga"
@@ -92,12 +96,5 @@ defmodule Raytracer.TGAImageTest do
 
       File.rm!(test_file)
     end
-  end
-
-  defp format_pixels(pixels) do
-    for <<pixel::little-24 <- pixels>> do
-      <<pixel::24>>
-    end
-    |> Enum.join
   end
 end

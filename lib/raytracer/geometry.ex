@@ -6,7 +6,6 @@ defmodule Raytracer.Geometry do
   @degrees_to_radians :math.pi() / 180.0
   @radians_to_degrees 180.0 / :math.pi()
 
-
   @doc """
   Check if `value` is between `min_value` and `max_value`. If `value` is less
   than `min_value` then `min_value` is returned. If `value` is greater than
@@ -17,13 +16,11 @@ defmodule Raytracer.Geometry do
   def clamp(value, _, max_value) when value > max_value, do: max_value
   def clamp(value, _, _), do: value
 
-
   @doc """
   Converts `degrees` to radians.
   """
   @spec degrees_to_radians(float) :: float
   def degrees_to_radians(degrees), do: @degrees_to_radians * degrees
-
 
   @doc """
   Linearly interpolates between `value1` and `value2` based on the value of `t`.
@@ -33,7 +30,6 @@ defmodule Raytracer.Geometry do
   def lerp(value1, _, 0), do: value1
   def lerp(_, value2, 1), do: value2
   def lerp(value1, value2, t), do: (1 - t) * value1 + t * value2
-
 
   @doc """
   Converts `radians` to degrees.

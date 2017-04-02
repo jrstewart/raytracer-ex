@@ -23,10 +23,8 @@ defmodule Raytracer.Geometry.BoundsTest do
       t = Transform.rotate(180.0, {1.0, 0.0, 0.0})
       delta = 1.0e-7
 
-      %Bounds{
-        min_point: {min_x, min_y, min_z},
-        max_point: {max_x, max_y, max_z},
-      } = Bounds.apply_transform(b, t)
+      %Bounds{min_point: {min_x, min_y, min_z},
+              max_point: {max_x, max_y, max_z}} = Bounds.apply_transform(b, t)
 
       assert_in_delta min_x, elem(b.min_point, 0), delta
       assert_in_delta min_y, elem(b.min_point, 1), delta
