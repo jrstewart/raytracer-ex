@@ -2,7 +2,7 @@ defmodule Raytracer.Geometry.Ray do
   @moduledoc """
   This module provides a set of functions for working with three-dimensional
   rays represented by a tuple consisting of an origin point and a direction
-  vector {origin, direction}.
+  vector `{origin, direction}`.
   """
 
   alias Raytracer.Geometry.Point
@@ -22,16 +22,18 @@ defmodule Raytracer.Geometry.Ray do
   end
 
   @doc """
-  Computes the point at `distance` on `ray`. An error is raised if `distance` is
-  less than 0.
+  Computes the point at `distance` on `ray` returning a tuple `{:ok, point}`
+  where `point` is the computed point. `{:error, :none}` is returned if
+  `distance` is less than 0.
   """
-  @spec point_at(t, number) :: Point.point3_t
-  def point_at(_ray, distance) when distance < 0 do
-    raise ArgumentError, message: "negative value given for distance"
-  end
+  @spec point_at(t, number) :: {atom, Point.point3_t | atom}
+  def point_at(ray, distance)
+  def point_at(_ray, distance) when distance < 0, do: {:error, :none}
   def point_at({origin, direction}, distance) do
-    direction
-    |> Vector.multiply(distance)
-    |> Vector.add(origin)
+    point =
+      direction
+      |> Vector.multiply(distance)
+      |> Vector.add(origin)
+    {:ok, point}
   end
 end

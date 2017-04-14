@@ -18,17 +18,16 @@ defmodule Raytracer.Geometry.RayTest do
     test "computes the point at a given distance along a ray" do
       r = {{1.0, 0.0, 1.0}, {1.0, 1.0, 1.0}}
       distance = 2.0
+      expected = {3.0, 2.0, 3.0}
 
-      assert Ray.point_at(r, distance) == {3.0, 2.0, 3.0}
+      assert Ray.point_at(r, distance) == {:ok, expected}
     end
 
-    test "raises an error when distance is negative" do
+    test "returns an error when the distance is negative" do
       r = {{1.0, 0.0, 1.0}, {1.0, 1.0, 1.0}}
       distance = -1.0
 
-      assert_raise ArgumentError, fn ->
-        Ray.point_at(r, distance)
-      end
+      assert Ray.point_at(r, distance) == {:error, :none}
     end
   end
 end
