@@ -6,6 +6,7 @@ defmodule Raytracer.Geometry.Vector do
   """
 
   alias __MODULE__
+  alias Raytracer.Geometry.Normal
   alias Raytracer.Geometry.Point
   alias Raytracer.Transform
 
@@ -38,26 +39,27 @@ defmodule Raytracer.Geometry.Vector do
   end
 
   @doc """
-  Computes the cross product of `vector1` and `vector2`.
+  Computes the cross product of two vectors or a vector and a normal and returns
+  the resulting vector.
   """
-  @spec cross(vector3_t, vector3_t) :: vector3_t
-  def cross(vector1, vector2)
+  @spec cross(vector3_t, vector3_t | Normal.t) :: vector3_t
+  def cross(vector, vector_or_normal)
   def cross({dx1, dy1, dz1}, {dx2, dy2, dz2}) do
     {(dy1 * dz2) - (dz1 * dy2), (dz1 * dx2) - (dx1 * dz2), (dx1 * dy2) - (dy1 * dx2)}
   end
 
   @doc """
   Divides each of the components of `vector` by `scalar` and returns the
-  resulting vector. An error is raised if `scalar` is equal to 0.
+  resulting vector.
   """
   @spec divide(t, number) :: t
   def divide(vector, scalar), do: Point.divide(vector, scalar)
 
   @doc """
-  Computes the dot product of `vector1` and `vector2`.
+  Computes the dot product of two vectors or a vector and a normal.
   """
-  @spec dot(t, t) :: number
-  def dot(vector1, vector2)
+  @spec dot(t, t | Normal.t) :: number
+  def dot(vector, vector_or_normal)
   def dot({dx1, dy1}, {dx2, dy2}), do: (dx1 * dx2) + (dy1 * dy2)
   def dot({dx1, dy1, dz1}, {dx2, dy2, dz2}), do: (dx1 * dx2) + (dy1 * dy2) + (dz1 * dz2)
 

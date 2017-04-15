@@ -5,7 +5,7 @@ defmodule Raytracer.Geometry.VectorTest do
   alias Raytracer.Transform
 
   describe "Raytracer.Geometry.Vector.abs/1" do
-    test "returns the vector with absolute value of each component" do
+    test "returns the vector with the absolute value of each component" do
       assert Vector.abs({-1.0, -2.0}) == {1.0, 2.0}
       assert Vector.abs({-1.0, -2.0, -3.0}) == {1.0, 2.0, 3.0}
     end
