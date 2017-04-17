@@ -114,8 +114,7 @@ defmodule Raytracer.Geometry.Bounds do
   """
   @spec inside_exclusive?(t, Point.t) :: boolean
   def inside_exclusive?(bounds, point)
-  def inside_exclusive?(%Bounds{min_point: {min_x, min_y}, max_point: {max_x, max_y}},
-                        {x, y}) do
+  def inside_exclusive?(%Bounds{min_point: {min_x, min_y}, max_point: {max_x, max_y}}, {x, y}) do
     x >= min_x && x < max_x && y >= min_y && y < max_y
   end
   def inside_exclusive?(%Bounds{min_point: {min_x, min_y, min_z}, max_point: {max_x, max_y, max_z}},

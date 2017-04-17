@@ -66,6 +66,19 @@ defmodule Raytracer.TransformTest do
     end
   end
 
+  describe "Raytracer.Transform.multiply/2" do
+    test "multiplies two transforms and returns the resulting transform" do
+      t1 = Transform.scale({2.0, 3.0, 4.0})
+      t2 = Transform.translate({2.0, 3.0, 4.0})
+      expected = Transform.from_matrix({2.0, 0.0, 0.0,  4.0,
+                                        0.0, 3.0, 0.0,  9.0,
+                                        0.0, 0.0, 4.0, 16.0,
+                                        0.0, 0.0, 0.0,  1.0})
+
+      assert Transform.multiply(t1, t2) == expected
+    end
+  end
+
   describe "Raytracer.Transform.rotate/2" do
     test "creates a rotation transform about the x-axis" do
       expected = {1.0, 0.0,  0.0, 0.0,

@@ -43,6 +43,15 @@ defmodule Raytracer.Transform do
   defp not_one?(value), do: value < 0.999 || value > 1.001
 
   @doc """
+  Creates a transform that is the inverse transform of `transform`.
+  """
+  @spec inverse(t) :: t
+  def inverse(transform)
+  def inverse(%Transform{matrix: matrix, inverse_matrix: inverse_matrix}) do
+    %Transform{matrix: inverse_matrix, inverse_matrix: matrix}
+  end
+
+  @doc """
   Computes a look at transformation for a camera at `position` focused on
   `center` and an orientation specified by the `up` vector.
   """
@@ -59,12 +68,14 @@ defmodule Raytracer.Transform do
   end
 
   @doc """
-  Creates a transform that is the inverse transform of `transform`.
+  Multiplies two transforms returning the resulting transform.
   """
-  @spec inverse(t) :: t
-  def inverse(transform)
-  def inverse(%Transform{matrix: matrix, inverse_matrix: inverse_matrix}) do
-    %Transform{matrix: inverse_matrix, inverse_matrix: matrix}
+  @spec multiply(t, t) :: t
+  def multiply(transform1, transform2)
+  def multiply(%Transform{matrix: m1, inverse_matrix: inverse_m1},
+               %Transform{matrix: m2, inverse_matrix: inverse_m2}) do
+    %Transform{matrix: Matrix.multiply(m1, m2),
+               inverse_matrix: Matrix.multiply(inverse_m2, inverse_m1)}
   end
 
   @doc """
