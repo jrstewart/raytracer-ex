@@ -173,6 +173,23 @@ defmodule Raytracer.TransformTest do
     end
   end
 
+  describe "Raytracer.Transform.swaps_handedness?/1" do
+    test "returns true if the transform changes the coordinate system handedness" do
+      t = Transform.from_matrix({1.0, 0.0, 0.0, 0.0,
+                                 0.0, 0.0, 1.0, 0.0,
+                                 0.0, 1.0, 0.0, 0.0,
+                                 0.0, 0.0, 0.0, 1.0})
+
+      assert Transform.swaps_handedness?(t) == true
+    end
+
+    test "returns false if the transform does not change the coordinate system handedness" do
+      t = Transform.scale({2.0, 3.0, 4.0})
+
+      assert Transform.swaps_handedness?(t) == false
+    end
+  end
+
   describe "Raytracer.Transform.translate/1" do
     test "creates a translation transform with the given deltas" do
       expected = {1.0, 0.0, 0.0, 2.0,

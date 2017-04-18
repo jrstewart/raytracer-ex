@@ -32,19 +32,20 @@ defmodule Raytracer.TGAImageTest do
 
       TGAImage.write(image, test_file, "")
 
-      <<id_length::little-8>>
-      <> <<color_map_type::little-8>>
-      <> <<image_type::little-8>>
-      <> <<color_map_first_entry_index::little-16>>
-      <> <<color_map_num_entries::little-16>>
-      <> <<color_map_entry_size::little-8>>
-      <> <<x_origin::little-16>>
-      <> <<y_origin::little-16>>
-      <> <<width::little-16>>
-      <> <<height::little-16>>
-      <> <<pixel_depth::little-8>>
-      <> <<descriptor::little-8>>
-      <> _ = File.read!(test_file)
+      <<id_length::little-8>> <>
+      <<color_map_type::little-8>> <>
+      <<image_type::little-8>> <>
+      <<color_map_first_entry_index::little-16>> <>
+      <<color_map_num_entries::little-16>> <>
+      <<color_map_entry_size::little-8>> <>
+      <<x_origin::little-16>> <>
+      <<y_origin::little-16>> <>
+      <<width::little-16>> <>
+      <<height::little-16>> <>
+      <<pixel_depth::little-8>> <>
+      <<descriptor::little-8>> <>
+      _ =
+        File.read!(test_file)
 
       assert image.id_length == id_length
       assert image.color_map_type == color_map_type

@@ -63,7 +63,7 @@ defmodule Raytracer.Transform do
     m = {elem(left, 0), elem(new_up, 0), elem(direction, 0), position_x,
          elem(left, 1), elem(new_up, 1), elem(direction, 1), position_y,
          elem(left, 2), elem(new_up, 2), elem(direction, 2), position_z,
-         0.0,           0.0,             0.0,                1.0}
+                   0.0,             0.0,                0.0,        1.0}
     %Transform{matrix: m, inverse_matrix: Matrix.inverse(m)}
   end
 
@@ -111,10 +111,10 @@ defmodule Raytracer.Transform do
     radian_angle = Geometry.degrees_to_radians(degrees)
     sin_angle = :math.sin(radian_angle)
     cos_angle = :math.cos(radian_angle)
-    m = {1.0, 0.0,       0.0,        0.0,
+    m = {1.0,       0.0,        0.0, 0.0,
          0.0, cos_angle, -sin_angle, 0.0,
-         0.0, sin_angle, cos_angle,  0.0,
-         0.0, 0.0,       0.0,        1.0}
+         0.0, sin_angle,  cos_angle, 0.0,
+         0.0,       0.0,        0.0, 1.0}
     %Transform{matrix: m, inverse_matrix: Matrix.transpose(m)}
   end
 
@@ -126,10 +126,10 @@ defmodule Raytracer.Transform do
     radian_angle = Geometry.degrees_to_radians(degrees)
     sin_angle = :math.sin(radian_angle)
     cos_angle = :math.cos(radian_angle)
-    m = {cos_angle,  0.0, sin_angle, 0.0,
-         0.0,        1.0, 0.0,       0.0,
+    m = { cos_angle, 0.0, sin_angle, 0.0,
+                0.0, 1.0,       0.0, 0.0,
          -sin_angle, 0.0, cos_angle, 0.0,
-         0.0,        0.0, 0.0,       1.0}
+                0.0, 0.0,       0.0, 1.0}
     %Transform{matrix: m, inverse_matrix: Matrix.transpose(m)}
   end
 
@@ -142,9 +142,9 @@ defmodule Raytracer.Transform do
     sin_angle = :math.sin(radian_angle)
     cos_angle = :math.cos(radian_angle)
     m = {cos_angle, -sin_angle, 0.0, 0.0,
-         sin_angle, cos_angle,  0.0, 0.0,
-         0.0,       0.0,        1.0, 0.0,
-         0.0,       0.0,        0.0, 1.0}
+         sin_angle,  cos_angle, 0.0, 0.0,
+               0.0,        0.0, 1.0, 0.0,
+               0.0,        0.0, 0.0, 1.0}
     %Transform{matrix: m, inverse_matrix: Matrix.transpose(m)}
   end
 
@@ -154,14 +154,31 @@ defmodule Raytracer.Transform do
   @spec scale({float, float, float}) :: t
   def scale(factors)
   def scale({sx, sy, sz}) do
-    %Transform{matrix: {sx,  0.0, 0.0, 0.0,
-                        0.0, sy,  0.0, 0.0,
-                        0.0, 0.0, sz,  0.0,
-                        0.0, 0.0, 0.0, 1.0,},
-               inverse_matrix: {1.0 / sx, 0.0,      0.0,      0.0,
-                                0.0,      1.0 / sy, 0.0,      0.0,
-                                0.0,      0.0,      1.0 / sz, 0.0,
-                                0.0,      0.0,      0.0,      1.0}}
+    %Transform{matrix: { sx, 0.0, 0.0, 0.0,
+                        0.0,  sy, 0.0, 0.0,
+                        0.0, 0.0,  sz, 0.0,
+                        0.0, 0.0, 0.0, 1.0},
+               inverse_matrix: {1.0 / sx,      0.0,      0.0, 0.0,
+                                     0.0, 1.0 / sy,      0.0, 0.0,
+                                     0.0,      0.0, 1.0 / sz, 0.0,
+                                     0.0,      0.0,      0.0, 1.0}}
+  end
+
+  @doc """
+  Tests if applying `transform` switches the handedness of the coordinate system
+  from left-handed to right-handed or vice versa.
+  """
+  @spec swaps_handedness?(t) :: boolean
+  def swaps_handedness?(transform)
+  def swaps_handedness?(%Transform{matrix: {m00, m01, m02, _,
+                                            m10, m11, m12, _,
+                                            m20, m21, m22, _,
+                                              _,   _,   _, _}}) do
+    det =
+      m00 * (m11 * m22 - m12 * m21) -
+      m01 * (m10 * m22 - m12 * m20) +
+      m02 * (m10 * m21 - m11 * m20)
+    det < 0
   end
 
   @doc """
