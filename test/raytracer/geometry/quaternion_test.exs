@@ -21,6 +21,12 @@ defmodule Raytracer.Geometry.QuaternionTest do
     end
   end
 
+  describe "Raytracer.Geometry.Quaternion.length/1" do
+    test "computes the length of a quaternion" do
+      assert Quaternion.length({2.0, 2.0, 2.0, 2.0}) == 4.0
+    end
+  end
+
   describe "Raytracer.Geometry.Quaternion.multiply/2" do
     test "multiplies a quaternion by a scalar value" do
       assert Quaternion.multiply({2.0, 4.0, 6.0, 8.0}, 2.0) == {4.0, 8.0, 12.0, 16.0}

@@ -4,6 +4,7 @@ defmodule Raytracer.Geometry.Quaternion do
   represented by a {x, y, z, w} tuple.
   """
 
+  alias __MODULE__
   alias Raytracer.Geometry
 
   @type t :: {float, float, float, float}
@@ -35,6 +36,14 @@ defmodule Raytracer.Geometry.Quaternion do
   end
 
   @doc """
+  Computes the length of `quaterion`.
+  """
+  @spec length(t) :: float
+  def length(quaternion) do
+    quaternion |> dot(quaternion) |> :math.sqrt
+  end
+
+  @doc """
   Multiplies `quaternion` by `scalar` and returns the resulting quaternion.
   """
   @spec multiply(t, float) :: t
@@ -48,7 +57,7 @@ defmodule Raytracer.Geometry.Quaternion do
   """
   @spec normalize(t) :: t
   def normalize(quaternion) do
-    divide(quaternion, quaternion |> dot(quaternion) |> :math.sqrt)
+    divide(quaternion, Quaternion.length(quaternion))
   end
 
   @doc """
