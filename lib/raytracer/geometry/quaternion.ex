@@ -6,6 +6,7 @@ defmodule Raytracer.Geometry.Quaternion do
 
   alias __MODULE__
   alias Raytracer.Geometry
+  alias Raytracer.Transform
 
   @type t :: {float, float, float, float}
 
@@ -33,6 +34,61 @@ defmodule Raytracer.Geometry.Quaternion do
   def dot(quaternion1, quaternion2)
   def dot({x1, y1, z1, w1}, {x2, y2, z2, w2}) do
     (x1 * x2) + (y1 * y2) + (z1 * z2) + (w1 * w2)
+  end
+
+  @doc """
+  Creates a quaternion from `transform`.
+  """
+  @spec from_transform(Transform.t) :: t
+  def from_transform(transform)
+  def from_transform(%Transform{matrix: {m00,   _,   _, _,
+                                           _, m11,   _, _,
+                                           _,   _, m22, _,
+                                           _,   _,   _, _}} = transform) do
+    trace = m00 + m11 + m22
+    if trace > 0.0 do
+      compute_from_trace(transform.matrix, trace)
+    else
+      compute_from_largest_trace_element(transform.matrix)
+    end
+  end
+
+  defp compute_from_trace({  _, m01, m02, _,
+                           m10,   _, m12, _,
+                           m20, m21,   _, _,
+                             _,   _,   _, _}, trace) do
+    s = :math.sqrt(trace + 1.0)
+    w = s / 2.0
+    s = 0.5 / s
+    {(m21 - m12) * s, (m02 - m20) * s, (m10 - m01) * s, w}
+  end
+
+  defp compute_from_largest_trace_element({m00, m01, m02, _,
+                                           m10, m11, m12, _,
+                                           m20, m21, m22, _,
+                                             _,   _,   _, _}) when m00 > m11 and m00 > m22 do
+    s = :math.sqrt((m00 - (m11 + m22)) + 1.0)
+    x = s * 0.5
+    s = 0.5 / s
+    {x, (m10 + m01) * s, (m20 + m02) * s, (m21 - m12) * s}
+  end
+  defp compute_from_largest_trace_element({m00, m01, m02, _,
+                                           m10, m11, m12, _,
+                                           m20, m21, m22, _,
+                                             _,   _,   _, _}) when m11 > m22 do
+    s = :math.sqrt((m11 - (m22 + m00)) + 1.0)
+    y = s * 0.5
+    s = 0.5 / s
+    {(m01 + m10) * s, y, (m21 + m12) * s, (m02 - m20) * s}
+  end
+  defp compute_from_largest_trace_element({m00, m01, m02, _,
+                                           m10, m11, m12, _,
+                                           m20, m21, m22, _,
+                                             _,   _,   _, _}) do
+    s = :math.sqrt((m22 - (m00 + m11)) + 1.0)
+    z = s * 0.5
+    s = 0.5 / s
+    {(m02 + m20) * s, (m12 + m21) * s, z, (m10 - m01) * s}
   end
 
   @doc """
