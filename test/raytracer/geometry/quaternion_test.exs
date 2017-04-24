@@ -1,6 +1,7 @@
 defmodule Raytracer.Geometry.QuaternionTest do
   use ExUnit.Case, async: true
 
+  alias Raytracer.Geometry.Matrix
   alias Raytracer.Geometry.Quaternion
   alias Raytracer.Transform
 
@@ -53,7 +54,8 @@ defmodule Raytracer.Geometry.QuaternionTest do
       assert_in_delta w, 0.0, delta
     end
 
-    test "creates a quaternion when the m11 element is the largest trace element and trace matrix is non-positive" do
+    test "creates a quaternion when the m11 element is the largest trace element and trace " <>
+         "matrix is non-positive" do
       t = Transform.from_matrix({-3.0,  2.0,  0.0, 0.0,
                                   2.0, -2.0,  1.0, 0.0,
                                   0.0,  1.0, -3.0, 0.0,
@@ -68,7 +70,8 @@ defmodule Raytracer.Geometry.QuaternionTest do
       assert_in_delta w, 0.0, delta
     end
 
-    test "creates a quaternion when the m22 element is the largest trace element and trace matrix is non-positive" do
+    test "creates a quaternion when the m22 element is the largest trace element and trace " <>
+         "matrix is non-positive" do
       t = Transform.from_matrix({-3.0,  2.0,  0.0, 0.0,
                                   2.0, -3.0,  1.0, 0.0,
                                   0.0,  1.0, -2.0, 0.0,
@@ -133,6 +136,19 @@ defmodule Raytracer.Geometry.QuaternionTest do
   describe "Raytracer.Geometry.Quaternion.subtract/2" do
     test "subtracts two quaternions" do
       assert Quaternion.subtract({5.0, 6.0, 7.0, 8.0}, {1.0, 2.0, 3.0, 4.0}) == {4.0, 4.0, 4.0, 4.0}
+    end
+  end
+
+  describe "Raytracer.Geometry.Quaternion.to_transform/1" do
+    test "converts a quaternion into a transform" do
+      q = {1.0, 2.0, 3.0, 4.0}
+      m = {-25.0, -20.0, 22.0, 0.0,
+            28.0, -19.0,  4.0, 0.0,
+           -10.0,  20.0, -9.0, 0.0,
+             0.0,   0.0,  0.0, 1.0}
+      expected = %Transform{matrix: m, inverse_matrix: Matrix.transpose(m)}
+
+      assert Quaternion.to_transform(q) == expected
     end
   end
 end
