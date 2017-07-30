@@ -10,14 +10,8 @@ defmodule Raytracer.Transform do
   alias Raytracer.Geometry.Point
   alias Raytracer.Geometry.Vector
 
-  defstruct matrix: {1.0, 0.0, 0.0, 0.0,
-                     0.0, 1.0, 0.0, 0.0,
-                     0.0, 0.0, 1.0, 0.0,
-                     0.0, 0.0, 0.0, 1.0},
-            inverse_matrix: {1.0, 0.0, 0.0, 0.0,
-                             0.0, 1.0, 0.0, 0.0,
-                             0.0, 0.0, 1.0, 0.0,
-                             0.0, 0.0, 0.0, 1.0}
+  defstruct matrix: Matrix.identity_matrix(),
+            inverse_matrix: Matrix.identity_matrix()
 
   @type t :: %Transform{matrix: Matrix.matrix4x4_t, inverse_matrix: Matrix.matrix4x4_t}
 
@@ -34,10 +28,13 @@ defmodule Raytracer.Transform do
   """
   @spec has_scale?(t) :: boolean
   def has_scale?(transform) do
-    length1 = {1, 0, 0} |> Vector.apply_transform(transform) |> Vector.length_squared
-    length2 = {0, 1, 0} |> Vector.apply_transform(transform) |> Vector.length_squared
-    length3 = {0, 0, 1} |> Vector.apply_transform(transform) |> Vector.length_squared
-    not_one?(length1) || not_one?(length2) || not_one?(length3)
+    {1, 0, 0} |> transformed_length_squared(transform) |> not_one? ||
+    {0, 1, 0} |> transformed_length_squared(transform) |> not_one? ||
+    {0, 0, 1} |> transformed_length_squared(transform) |> not_one?
+  end
+
+  defp transformed_length_squared(vector, transform) do
+    vector |> Vector.apply_transform(transform) |> Vector.length_squared
   end
 
   defp not_one?(value), do: value < 0.999 || value > 1.001
@@ -182,7 +179,8 @@ defmodule Raytracer.Transform do
   end
 
   @doc """
-  Creates a translation transform based on the dx, dy, and dz values of `deltas`.
+  Creates a translation transform based on the dx, dy, and dz values of
+  `deltas`.
   """
   @spec translate({float, float, float}) :: t
   def translate(deltas)
