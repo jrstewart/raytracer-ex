@@ -10,6 +10,30 @@ defmodule Raytracer.Geometry.Matrix do
                         float, float, float, float}
   @type t :: matrix4x4_t
 
+  @compile {:inline, elem: 3}
+
+  @doc """
+  Returns the matrix element at the given row, column index.
+  """
+  @spec elem(t, integer, integer) :: float
+  def elem(matrix, row, column)
+  def elem(matrix, 0, 0), do: Kernel.elem(matrix, 0)
+  def elem(matrix, 0, 1), do: Kernel.elem(matrix, 1)
+  def elem(matrix, 0, 2), do: Kernel.elem(matrix, 2)
+  def elem(matrix, 0, 3), do: Kernel.elem(matrix, 3)
+  def elem(matrix, 1, 0), do: Kernel.elem(matrix, 4)
+  def elem(matrix, 1, 1), do: Kernel.elem(matrix, 5)
+  def elem(matrix, 1, 2), do: Kernel.elem(matrix, 6)
+  def elem(matrix, 1, 3), do: Kernel.elem(matrix, 7)
+  def elem(matrix, 2, 0), do: Kernel.elem(matrix, 8)
+  def elem(matrix, 2, 1), do: Kernel.elem(matrix, 9)
+  def elem(matrix, 2, 2), do: Kernel.elem(matrix, 10)
+  def elem(matrix, 2, 3), do: Kernel.elem(matrix, 11)
+  def elem(matrix, 3, 0), do: Kernel.elem(matrix, 12)
+  def elem(matrix, 3, 1), do: Kernel.elem(matrix, 13)
+  def elem(matrix, 3, 2), do: Kernel.elem(matrix, 14)
+  def elem(matrix, 3, 3), do: Kernel.elem(matrix, 15)
+
   @doc """
   Multiplies two matrices and return the resulting matrix.
   """
