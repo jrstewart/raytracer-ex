@@ -30,10 +30,6 @@ defmodule Raytracer.Geometry.Ray do
   def point_at(ray, distance)
   def point_at(_ray, distance) when distance < 0, do: {:error, :none}
   def point_at({origin, direction}, distance) do
-    point =
-      direction
-      |> Vector.multiply(distance)
-      |> Vector.add(origin)
-    {:ok, point}
+    {:ok, direction |> Vector.multiply(distance) |> Vector.add(origin)}
   end
 end
