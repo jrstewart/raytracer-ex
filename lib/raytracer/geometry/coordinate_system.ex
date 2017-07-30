@@ -41,12 +41,10 @@ defmodule Raytracer.Geometry.CoordinateSystem do
   @spec create_from_normalized_vector(Vector.vector3_t) :: t
   def create_from_normalized_vector({dx, dy, dz} = vector) when abs(dx) > abs(dy) do
     v_axis = {-dz, 0.0, dx} |> Vector.divide(:math.sqrt(dx * dx + dz * dz))
-    w_axis = Vector.cross(vector, v_axis)
-    %CoordinateSystem{u_axis: vector, v_axis: v_axis, w_axis: w_axis}
+    %CoordinateSystem{u_axis: vector, v_axis: v_axis, w_axis: Vector.cross(vector, v_axis)}
   end
   def create_from_normalized_vector({_, dy, dz} = vector) do
     v_axis = {0.0, dz, -dy} |> Vector.divide(:math.sqrt(dy * dy + dz * dz))
-    w_axis = Vector.cross(vector, v_axis)
-    %CoordinateSystem{u_axis: vector, v_axis: v_axis, w_axis: w_axis}
+    %CoordinateSystem{u_axis: vector, v_axis: v_axis, w_axis: Vector.cross(vector, v_axis)}
   end
 end
