@@ -23,13 +23,9 @@ defmodule Raytracer.Mixfile do
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
-  defp escript_config do
-    [main_module: Raytracer]
-  end
+  defp escript_config, do: [main_module: Raytracer]
 
-  defp dialyzer_config do
-    [ignore_warnings: "config/dialyzer.ignore-warnings"]
-  end
+  defp dialyzer_config, do: [ignore_warnings: "config/dialyzer.ignore-warnings"]
 end
