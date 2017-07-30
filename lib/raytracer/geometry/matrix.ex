@@ -88,40 +88,45 @@ defmodule Raytracer.Geometry.Matrix do
                m20, m21, m22, m23,
                m30, m31, m32, m33}) do
     # Compute the 2x2 determinants of the matrix
-    det1 = m00 * m11 - m10 * m01
-    det2 = m00 * m12 - m02 * m10
-    det3 = m00 * m13 - m03 * m10
-    det4 = m01 * m12 - m02 * m11
-    det5 = m01 * m13 - m03 * m11
-    det6 = m02 * m13 - m03 * m12
-    det7 = m20 * m31 - m21 * m30
-    det8 = m20 * m32 - m22 * m30
-    det9 = m20 * m33 - m23 * m30
-    det10 = m21 * m32 - m22 * m31
-    det11 = m21 * m33 - m23 * m31
-    det12 = m22 * m33 - m32 * m23
+    determinant1 = m00 * m11 - m10 * m01
+    determinant2 = m00 * m12 - m02 * m10
+    determinant3 = m00 * m13 - m03 * m10
+    determinant4 = m01 * m12 - m02 * m11
+    determinant5 = m01 * m13 - m03 * m11
+    determinant6 = m02 * m13 - m03 * m12
+    determinant7 = m20 * m31 - m21 * m30
+    determinant8 = m20 * m32 - m22 * m30
+    determinant9 = m20 * m33 - m23 * m30
+    determinant10 = m21 * m32 - m22 * m31
+    determinant11 = m21 * m33 - m23 * m31
+    determinant12 = m22 * m33 - m32 * m23
 
-    # Compute the determinant of the matrix
-    det = det1 * det12 - det2 * det11 + det3 * det10 + det4 * det9 - det5 * det8 + det6 * det7
-    inverse_det = 1.0 / det
+    inverse_determinant =
+      1.0 /
+      (determinant1 * determinant12 -
+       determinant2 * determinant11 +
+       determinant3 * determinant10 +
+       determinant4 * determinant9 -
+       determinant5 * determinant8 +
+       determinant6 * determinant7)
 
     # Compute the adjoint matrix
-    {(m11 * det12 - m12 * det11 + m13 * det10) * inverse_det,
-     (m02 * det11 - m01 * det12 - m03 * det10) * inverse_det,
-     (m31 * det6 - m32 * det5 + m33 * det4) * inverse_det,
-     (m22 * det5 - m21 * det6 - m23 * det4) * inverse_det,
-     (m12 * det9 - m10 * det12 - m13 * det8) * inverse_det,
-     (m00 * det12 - m02 * det9 + m03 * det8) * inverse_det,
-     (m32 * det3 - m30 * det6 - m33 * det2) * inverse_det,
-     (m20 * det6 - m22 * det3 + m23 * det2) * inverse_det,
-     (m10 * det11 - m11 * det9 + m13 * det7) * inverse_det,
-     (m01 * det9 - m00 * det11 - m03 * det7) * inverse_det,
-     (m30 * det5 - m31 * det3 + m33 * det1) * inverse_det,
-     (m21 * det3 - m20 * det5 - m23 * det1) * inverse_det,
-     (m11 * det8 - m10 * det10 - m12 * det7) * inverse_det,
-     (m00 * det10 - m01 * det8 + m02 * det7) * inverse_det,
-     (m31 * det2 - m30 * det4 - m32 * det1) * inverse_det,
-     (m20 * det4 - m21 * det2 + m22 * det1) * inverse_det}
+    {(m11 * determinant12 - m12 * determinant11 + m13 * determinant10) * inverse_determinant,
+     (m02 * determinant11 - m01 * determinant12 - m03 * determinant10) * inverse_determinant,
+     (m31 * determinant6 - m32 * determinant5 + m33 * determinant4) * inverse_determinant,
+     (m22 * determinant5 - m21 * determinant6 - m23 * determinant4) * inverse_determinant,
+     (m12 * determinant9 - m10 * determinant12 - m13 * determinant8) * inverse_determinant,
+     (m00 * determinant12 - m02 * determinant9 + m03 * determinant8) * inverse_determinant,
+     (m32 * determinant3 - m30 * determinant6 - m33 * determinant2) * inverse_determinant,
+     (m20 * determinant6 - m22 * determinant3 + m23 * determinant2) * inverse_determinant,
+     (m10 * determinant11 - m11 * determinant9 + m13 * determinant7) * inverse_determinant,
+     (m01 * determinant9 - m00 * determinant11 - m03 * determinant7) * inverse_determinant,
+     (m30 * determinant5 - m31 * determinant3 + m33 * determinant1) * inverse_determinant,
+     (m21 * determinant3 - m20 * determinant5 - m23 * determinant1) * inverse_determinant,
+     (m11 * determinant8 - m10 * determinant10 - m12 * determinant7) * inverse_determinant,
+     (m00 * determinant10 - m01 * determinant8 + m02 * determinant7) * inverse_determinant,
+     (m31 * determinant2 - m30 * determinant4 - m32 * determinant1) * inverse_determinant,
+     (m20 * determinant4 - m21 * determinant2 + m22 * determinant1) * inverse_determinant}
   end
 
   @doc """
