@@ -8,9 +8,7 @@ defmodule Raytracer.CLI do
   """
   @spec run(term) :: term
   def run(argv) do
-    argv
-    |> parse_args
-    |> process
+    argv |> parse_args |> process
   end
 
   defp parse_args(argv) do
