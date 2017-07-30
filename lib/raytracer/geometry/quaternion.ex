@@ -38,19 +38,18 @@ defmodule Raytracer.Geometry.Quaternion do
   end
 
   @doc """
-  Converts `transform` into a quaternion.
+  Converts `matrix` into a quaternion.
   """
-  @spec from_transform(Transform.t) :: t
-  def from_transform(transform)
-  def from_transform(%Transform{matrix: {m00,   _,   _, _,
-                                           _, m11,   _, _,
-                                           _,   _, m22, _,
-                                           _,   _,   _, _}} = transform) do
+  @spec from_matrix(Matrix.matrix4x4_t) :: t
+  def from_matrix({m00,   _,   _, _,
+                     _, m11,   _, _,
+                     _,   _, m22, _,
+                     _,   _,   _, _} = matrix) do
     trace = m00 + m11 + m22
     if trace > 0.0 do
-      compute_from_trace(transform.matrix, trace)
+      compute_from_trace(matrix, trace)
     else
-      compute_from_largest_trace_element(transform.matrix)
+      compute_from_largest_trace_element(matrix)
     end
   end
 
@@ -93,6 +92,13 @@ defmodule Raytracer.Geometry.Quaternion do
   end
 
   @doc """
+  Converts `transform` into a quaternion.
+  """
+  @spec from_transform(Transform.t) :: t
+  def from_transform(transform)
+  def from_transform(%Transform{matrix: matrix}), do: from_matrix(matrix)
+
+  @doc """
   Computes the length of `quaterion`.
   """
   @spec length(t) :: float
@@ -133,8 +139,7 @@ defmodule Raytracer.Geometry.Quaternion do
     |> normalize
   end
   defp do_slerp(quaternion1, quaternion2, t, cos_theta) do
-    theta = cos_theta |> Geometry.clamp(-1.0, 1.0) |> :math.acos
-    theta_p = theta * t
+    theta_p = (cos_theta |> Geometry.clamp(-1.0, 1.0) |> :math.acos) * t
     q_perpendicular = compute_perpendicular(quaternion1, quaternion2, cos_theta)
     add(multiply(quaternion1, :math.cos(theta_p)), multiply(q_perpendicular, :math.sin(theta_p)))
   end

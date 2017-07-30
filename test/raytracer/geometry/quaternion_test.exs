@@ -1,6 +1,8 @@
 defmodule Raytracer.Geometry.QuaternionTest do
   use ExUnit.Case, async: true
 
+  import Raytracer.GeometryTestHelpers
+
   alias Raytracer.Geometry.Matrix
   alias Raytracer.Geometry.Quaternion
   alias Raytracer.Transform
@@ -23,67 +25,58 @@ defmodule Raytracer.Geometry.QuaternionTest do
     end
   end
 
+  describe "Raytracer.Geometry.Quaternion.from_matrix/1" do
+    test "creates a quaternion when the trace matrix is positive" do
+      m = {1.0, 0.0, 0.0, 0.0,
+           0.0, 1.0, 0.0, 0.0,
+           0.0, 0.0, 1.0, 0.0,
+           0.0, 0.0, 0.0, 1.0}
+
+      assert_equal_within_delta Quaternion.from_matrix(m), {0.0, 0.0, 0.0, 1.0}
+    end
+
+    test "creates a quaternion when the m00 element is the largest trace element and trace " <>
+         "matrix is non-positive" do
+      m = {-2.0,  2.0,  0.0, 0.0,
+            2.0, -3.0,  1.0, 0.0,
+            0.0,  1.0, -3.0, 0.0,
+            0.0,  0.0,  0.0, 1.0}
+
+      assert_equal_within_delta Quaternion.from_matrix(m),
+                                {1.118033988749895, 0.8944271909999159, 0.0, 0.0}
+    end
+
+    test "creates a quaternion when the m11 element is the largest trace element and trace " <>
+         "matrix is non-positive" do
+      m = {-3.0,  2.0,  0.0, 0.0,
+            2.0, -2.0,  1.0, 0.0,
+            0.0,  1.0, -3.0, 0.0,
+            0.0,  0.0,  0.0, 1.0}
+
+      assert_equal_within_delta Quaternion.from_matrix(m),
+                                {0.8944271909999159, 1.118033988749895, 0.4472135954999579, 0.0}
+    end
+
+    test "creates a quaternion when the m22 element is the largest trace element and trace " <>
+         "matrix is non-positive" do
+      m = {-3.0,  2.0,  0.0, 0.0,
+            2.0, -3.0,  1.0, 0.0,
+            0.0,  1.0, -2.0, 0.0,
+            0.0,  0.0,  0.0, 1.0}
+
+      assert_equal_within_delta Quaternion.from_matrix(m),
+                                {0.0, 0.4472135954999579, 1.118033988749895, 0.0}
+    end
+  end
+
   describe "Raytracer.Geometry.Quaternion.from_transform/1" do
     test "creates a quaternion when the trace matrix of the transform is positive" do
       t = Transform.from_matrix({1.0, 0.0, 0.0, 0.0,
                                  0.0, 1.0, 0.0, 0.0,
                                  0.0, 0.0, 1.0, 0.0,
                                  0.0, 0.0, 0.0, 1.0})
-      delta = 1.0e-7
 
-      {x, y, z, w} = Quaternion.from_transform(t)
-
-      assert_in_delta x, 0.0, delta
-      assert_in_delta y, 0.0, delta
-      assert_in_delta z, 0.0, delta
-      assert_in_delta w, 1.0, delta
-    end
-
-    test "creates a quaternion when the m00 element is the largest trace element and trace matrix is non-positive" do
-      t = Transform.from_matrix({-2.0,  2.0,  0.0, 0.0,
-                                  2.0, -3.0,  1.0, 0.0,
-                                  0.0,  1.0, -3.0, 0.0,
-                                  0.0,  0.0,  0.0, 1.0})
-      delta = 1.0e-7
-
-      {x, y, z, w} = Quaternion.from_transform(t)
-
-      assert_in_delta x, 1.118033988749895, delta
-      assert_in_delta y, 0.8944271909999159, delta
-      assert_in_delta z, 0.0, delta
-      assert_in_delta w, 0.0, delta
-    end
-
-    test "creates a quaternion when the m11 element is the largest trace element and trace " <>
-         "matrix is non-positive" do
-      t = Transform.from_matrix({-3.0,  2.0,  0.0, 0.0,
-                                  2.0, -2.0,  1.0, 0.0,
-                                  0.0,  1.0, -3.0, 0.0,
-                                  0.0,  0.0,  0.0, 1.0})
-      delta = 1.0e-7
-
-      {x, y, z, w} = Quaternion.from_transform(t)
-
-      assert_in_delta x, 0.8944271909999159, delta
-      assert_in_delta y, 1.118033988749895, delta
-      assert_in_delta z, 0.4472135954999579, delta
-      assert_in_delta w, 0.0, delta
-    end
-
-    test "creates a quaternion when the m22 element is the largest trace element and trace " <>
-         "matrix is non-positive" do
-      t = Transform.from_matrix({-3.0,  2.0,  0.0, 0.0,
-                                  2.0, -3.0,  1.0, 0.0,
-                                  0.0,  1.0, -2.0, 0.0,
-                                  0.0,  0.0,  0.0, 1.0})
-      delta = 1.0e-7
-
-      {x, y, z, w} = Quaternion.from_transform(t)
-
-      assert_in_delta x, 0.0, delta
-      assert_in_delta y, 0.4472135954999579, delta
-      assert_in_delta z, 1.118033988749895, delta
-      assert_in_delta w, 0.0, delta
+      assert_equal_within_delta Quaternion.from_transform(t), {0.0, 0.0, 0.0, 1.0}
     end
   end
 
@@ -110,26 +103,16 @@ defmodule Raytracer.Geometry.QuaternionTest do
 
   describe "Raytracer.Geometry.Quaternion.slerp/3" do
     test "computes the spherical linear interpolates between two quaternions" do
-      delta = 1.0e-7
       q1 = {1.0, 1.0, 0.0, 1.0}
       q2 = {-1.0, -1.0, 0.0, 1.0}
 
-      result = Quaternion.slerp(q1, q2, 0.5)
-
-      assert_in_delta elem(result, 0), 0.0, delta
-      assert_in_delta elem(result, 1), 0.0, delta
-      assert_in_delta elem(result, 2), 0.0, delta
-      assert_in_delta elem(result, 3), 2.0, delta
+      assert_equal_within_delta Quaternion.slerp(q1, q2, 0.5), {0.0, 0.0, 0.0, 2.0}
 
       q1 = {2.0, 0.0, 0.0, 1.0}
       q2 = {0.0, 2.0, 0.0, 1.0}
 
-      result = Quaternion.slerp(q1, q2, 0.5)
-
-      assert_in_delta elem(result, 0), 0.5773502691896258, delta
-      assert_in_delta elem(result, 1), 0.5773502691896258, delta
-      assert_in_delta elem(result, 2), 0.0, delta
-      assert_in_delta elem(result, 3), 0.5773502691896258, delta
+      assert_equal_within_delta Quaternion.slerp(q1, q2, 0.5),
+                                {0.5773502691896258, 0.5773502691896258, 0.0, 0.5773502691896258}
     end
   end
 
