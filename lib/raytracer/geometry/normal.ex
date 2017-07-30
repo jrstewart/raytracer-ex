@@ -28,10 +28,13 @@ defmodule Raytracer.Geometry.Normal do
   """
   @spec apply_transform(t, Transform.t) :: t
   def apply_transform(normal, transform)
-  def apply_transform({dx, dy, dz}, %Transform{inverse_matrix: m}) do
-    {elem(m, 0) * dx + elem(m, 4) * dy + elem(m, 8) * dz,
-     elem(m, 1) * dx + elem(m, 5) * dy + elem(m, 9) * dz,
-     elem(m, 2) * dx + elem(m, 6) * dy + elem(m, 10) * dz}
+  def apply_transform({dx, dy, dz}, %Transform{inverse_matrix: {m00, m01, m02, _,
+                                                                m10, m11, m12, _,
+                                                                m20, m21, m22, _,
+                                                                  _,   _,   _, _}}) do
+    {m00 * dx + m10 * dy + m20 * dz,
+     m01 * dx + m11 * dy + m21 * dz,
+     m02 * dx + m12 * dy + m22 * dz}
   end
 
   @doc """
