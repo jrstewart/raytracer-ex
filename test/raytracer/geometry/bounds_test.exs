@@ -1,37 +1,37 @@
 defmodule Raytracer.Geometry.BoundsTest do
   use ExUnit.Case, async: true
 
+  import Raytracer.GeometryTestHelpers
+
   alias Raytracer.Geometry.Bounds
   alias Raytracer.Transform
 
   describe "Raytracer.Geometry.Bounds.apply_transform/2" do
     test "transforms a bounding box and returns the result" do
+      b = %Bounds{min_point: {-1.0, -2.0, -3.0}, max_point: {1.0, 2.0, 3.0}}
+
       #
       # Test scale transform
       #
 
       t = Transform.scale({2.0, 3.0, 4.0})
-      b = %Bounds{min_point: {-1.0, -2.0, -3.0}, max_point: {1.0, 2.0, 3.0}}
       expected = %Bounds{min_point: {-2.0, -6.0, -12.0}, max_point: {2.0, 6.0, 12.0}}
 
-      assert Bounds.apply_transform(b, t) == expected
+      result = Bounds.apply_transform(b, t)
+
+      assert_equal_within_delta result.min_point, expected.min_point
+      assert_equal_within_delta result.max_point, expected.max_point
 
       #
       # Test rotation transform
       #
 
       t = Transform.rotate(180.0, {1.0, 0.0, 0.0})
-      delta = 1.0e-7
 
-      %Bounds{min_point: {min_x, min_y, min_z},
-              max_point: {max_x, max_y, max_z}} = Bounds.apply_transform(b, t)
+      result = Bounds.apply_transform(b, t)
 
-      assert_in_delta min_x, elem(b.min_point, 0), delta
-      assert_in_delta min_y, elem(b.min_point, 1), delta
-      assert_in_delta min_z, elem(b.min_point, 2), delta
-      assert_in_delta max_x, elem(b.max_point, 0), delta
-      assert_in_delta max_y, elem(b.max_point, 1), delta
-      assert_in_delta max_z, elem(b.max_point, 2), delta
+      assert_equal_within_delta result.min_point, b.min_point
+      assert_equal_within_delta result.max_point, b.max_point
     end
   end
 

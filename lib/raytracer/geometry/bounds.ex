@@ -20,8 +20,7 @@ defmodule Raytracer.Geometry.Bounds do
   """
   @spec apply_transform(t, Transform.t) :: t
   def apply_transform(%Bounds{min_point: {min_x, min_y, min_z},
-                              max_point: {max_x, max_y, max_z}} = bounds,
-                      transform) do
+                              max_point: {max_x, max_y, max_z}} = bounds, transform) do
     bounds
     |> union(Point.apply_transform({min_x, min_y, min_z}, transform))
     |> union(Point.apply_transform({max_x, min_y, min_z}, transform))
@@ -43,17 +42,17 @@ defmodule Raytracer.Geometry.Bounds do
   def corner(%Bounds{min_point: {_, y_min}, max_point: {x_max, _}}, 1) do
     {x_max, y_min}
   end
-  def corner(%Bounds{min_point: {_, y_min, z_min}, max_point: {x_max, _, _}}, 1) do
-    {x_max, y_min, z_min}
-  end
   def corner(%Bounds{min_point: {x_min, _}, max_point: {_, y_max}}, 2) do
     {x_min, y_max}
   end
-  def corner(%Bounds{min_point: {x_min, _, z_min}, max_point: {_, y_max, _}}, 2) do
-    {x_min, y_max, z_min}
-  end
   def corner(%Bounds{min_point: {_, _}, max_point: {x_max, y_max}}, 3) do
     {x_max, y_max}
+  end
+  def corner(%Bounds{min_point: {_, y_min, z_min}, max_point: {x_max, _, _}}, 1) do
+    {x_max, y_min, z_min}
+  end
+  def corner(%Bounds{min_point: {x_min, _, z_min}, max_point: {_, y_max, _}}, 2) do
+    {x_min, y_max, z_min}
   end
   def corner(%Bounds{min_point: {_, _, z_min}, max_point: {x_max, y_max, _}}, 3) do
     {x_max, y_max, z_min}
@@ -229,9 +228,9 @@ defmodule Raytracer.Geometry.Bounds do
   end
   def overlap?(%Bounds{min_point: {min_x1, min_y1, min_z1}, max_point: {max_x1, max_y1, max_z1}},
                %Bounds{min_point: {min_x2, min_y2, min_z2}, max_point: {max_x2, max_y2, max_z2}}) do
-    max_x1 >= min_x2 && min_x1 <= max_x2
-    && max_y1 >= min_y2 && min_y1 <= max_y2
-    && max_z1 >= min_z2 && min_z1 <= max_z2
+    max_x1 >= min_x2 && min_x1 <= max_x2 &&
+    max_y1 >= min_y2 && min_y1 <= max_y2 &&
+    max_z1 >= min_z2 && min_z1 <= max_z2
   end
 
   @doc """
