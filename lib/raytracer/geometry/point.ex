@@ -33,16 +33,18 @@ defmodule Raytracer.Geometry.Point do
   """
   @spec apply_transform(point3_t, Transform.t) :: point3_t
   def apply_transform(point, transform)
-  def apply_transform({x, y, z}, %Transform{matrix: m}) do
-    new_point = {elem(m, 0) * x + elem(m, 1) * y + elem(m, 2) * z + elem(m, 3),
-                 elem(m, 4) * x + elem(m, 5) * y + elem(m, 6) * z + elem(m, 7),
-                 elem(m, 8) * x + elem(m, 9) * y + elem(m, 10) * z + elem(m, 11)}
-    w = elem(m, 12) * x + elem(m, 13) * y + elem(m, 14) * z + elem(m, 15)
-    convert_to_nonhomogeneous(new_point, w)
+  def apply_transform({x, y, z}, %Transform{matrix: {m00, m01, m02, m03,
+                                                     m10, m11, m12, m13,
+                                                     m20, m21, m22, m23,
+                                                     m30, m31, m32, m33}}) do
+    convert_to_nonhomogeneous({m00 * x + m01 * y + m02 * z + m03,
+                               m10 * x + m11 * y + m12 * z + m13,
+                               m20 * x + m21 * y + m22 * z + m23},
+                              m30 * x + m31 * y + m32 * z + m33)
   end
 
-  defp convert_to_nonhomogeneous(p, w) when w == 1.0, do: p
-  defp convert_to_nonhomogeneous(p, w), do: Point.divide(p, w)
+  defp convert_to_nonhomogeneous(point, w) when w == 1.0, do: point
+  defp convert_to_nonhomogeneous(point, w), do: Point.divide(point, w)
 
   @doc """
   Computes the distance between `point1` and `point2`.
