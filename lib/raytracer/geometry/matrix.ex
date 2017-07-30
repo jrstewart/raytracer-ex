@@ -10,7 +10,12 @@ defmodule Raytracer.Geometry.Matrix do
                         float, float, float, float}
   @type t :: matrix4x4_t
 
-  @compile {:inline, elem: 3}
+  @compile {:inline, elem: 3, identity_matrix: 0}
+
+  @identity_matrix {1.0, 0.0, 0.0, 0.0,
+                    0.0, 1.0, 0.0, 0.0,
+                    0.0, 0.0, 1.0, 0.0,
+                    0.0, 0.0, 0.0, 1.0}
 
   @doc """
   Returns the matrix element at the given row, column index.
@@ -33,6 +38,12 @@ defmodule Raytracer.Geometry.Matrix do
   def elem(matrix, 3, 1), do: Kernel.elem(matrix, 13)
   def elem(matrix, 3, 2), do: Kernel.elem(matrix, 14)
   def elem(matrix, 3, 3), do: Kernel.elem(matrix, 15)
+
+  @doc """
+  Returns an identity matrix.
+  """
+  @spec identity_matrix() :: t
+  def identity_matrix, do: @identity_matrix
 
   @doc """
   Multiplies two matrices and return the resulting matrix.

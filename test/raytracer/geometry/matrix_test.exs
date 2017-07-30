@@ -1,7 +1,7 @@
 defmodule Raytracer.Geometry.MatrixTest do
   use ExUnit.Case, async: true
 
-  import Raytracer.MatrixTestHelpers
+  import Raytracer.GeometryTestHelpers
 
   alias Raytracer.Geometry.Matrix
 
@@ -28,6 +28,17 @@ defmodule Raytracer.Geometry.MatrixTest do
       assert Matrix.elem(m, 3, 1) == 14.0
       assert Matrix.elem(m, 3, 2) == 15.0
       assert Matrix.elem(m, 3, 3) == 16.0
+    end
+  end
+
+  describe "Raytracer.Geometry.Matrix.identity_matrix/0" do
+    test "returns the identity matrix" do
+      m = {1.0, 0.0, 0.0, 0.0,
+           0.0, 1.0, 0.0, 0.0,
+           0.0, 0.0, 1.0, 0.0,
+           0.0, 0.0, 0.0, 1.0}
+
+      assert Matrix.identity_matrix() == m
     end
   end
 
@@ -60,7 +71,7 @@ defmodule Raytracer.Geometry.MatrixTest do
       # Computing the inverse twice returns the original matrix
       result = m |> Matrix.inverse |> Matrix.inverse
 
-      assert_matrices_equal_within_delta result, m
+      assert_equal_within_delta result, m
     end
   end
 
