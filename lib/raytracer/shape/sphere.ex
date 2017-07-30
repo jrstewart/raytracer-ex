@@ -4,6 +4,7 @@ defmodule Raytracer.Shape.Sphere do
   """
 
   alias __MODULE__
+  alias Raytracer.Geometry.Normal
   alias Raytracer.Geometry.Point
   alias Raytracer.Geometry.Vector
   alias Raytracer.Shape
@@ -16,31 +17,23 @@ defmodule Raytracer.Shape.Sphere do
   defimpl Shape do
     def compute_intersection(%Sphere{center: center, radius: radius}, {origin, direction}) do
       origin_to_center_vector = Point.subtract(origin, center)
-      b =
-        direction
-        |> Vector.multiply(2.0)
-        |> Vector.dot(origin_to_center_vector)
+      b = direction |> Vector.multiply(2.0) |> Vector.dot(origin_to_center_vector)
       c = Vector.dot(origin_to_center_vector, origin_to_center_vector) - radius * radius
 
       # Use the quadratic formula with a = 1.0 to compute the
       # intesection distance.
-      radical_part = b * b - 4.0 * c
-      compute_intersection_distance(b, radical_part)
+      compute_intersection_distance(b, b * b - 4.0 * c)
     end
 
-    defp compute_intersection_distance(_b, radical_part) when radical_part < 0.0, do: nil
+    defp compute_intersection_distance(_, radical_part) when radical_part < 0.0, do: nil
     defp compute_intersection_distance(b, radical_part), do: (-b - :math.sqrt(radical_part)) / 2.0
 
     def compute_inward_normal(%Sphere{center: center}, point) do
-      center
-      |> Point.subtract(point)
-      |> Vector.normalize
+      center |> Point.subtract(point) |> Normal.normalize
     end
 
     def compute_outward_normal(%Sphere{center: center}, point) do
-      point
-      |> Point.subtract(center)
-      |> Vector.normalize
+      point |> Point.subtract(center) |> Normal.normalize
     end
   end
 end
