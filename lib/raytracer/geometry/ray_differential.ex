@@ -11,7 +11,7 @@ defmodule Raytracer.Geometry.RayDifferential do
   alias Raytracer.Geometry.Vector
   alias Raytracer.Transform
 
-  defstruct ray: {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}},
+  defstruct ray: %Ray{},
             x_origin: {0.0, 0.0, 0.0},
             y_origin: {0.0, 0.0, 0.0},
             x_direction: {0.0, 0.0, 0.0},
@@ -47,23 +47,23 @@ defmodule Raytracer.Geometry.RayDifferential do
   def scale(ray_differential, scalar)
   def scale(%RayDifferential{} = rd, scalar) do
     rd
-    |> Map.put(:x_origin, scale_point(rd.ray, rd.x_origin, scalar))
-    |> Map.put(:y_origin, scale_point(rd.ray, rd.y_origin, scalar))
-    |> Map.put(:x_direction, scale_vector(rd.ray, rd.x_direction, scalar))
-    |> Map.put(:y_direction, scale_vector(rd.ray, rd.y_direction, scalar))
+    |> Map.put(:x_origin, scale_point(rd.ray.origin, rd.x_origin, scalar))
+    |> Map.put(:y_origin, scale_point(rd.ray.origin, rd.y_origin, scalar))
+    |> Map.put(:x_direction, scale_vector(rd.ray.direction, rd.x_direction, scalar))
+    |> Map.put(:y_direction, scale_vector(rd.ray.direction, rd.y_direction, scalar))
   end
 
-  defp scale_point({origin, _}, point, scalar) do
+  defp scale_point(ray_origin, point, scalar) do
     point
-    |> Point.subtract(origin)
+    |> Point.subtract(ray_origin)
     |> Vector.multiply(scalar)
-    |> Vector.add(origin)
+    |> Vector.add(ray_origin)
   end
 
-  defp scale_vector({_, direction}, vector, scalar) do
+  defp scale_vector(ray_direction, vector, scalar) do
     vector
-    |> Vector.subtract(direction)
+    |> Vector.subtract(ray_direction)
     |> Vector.multiply(scalar)
-    |> Vector.add(direction)
+    |> Vector.add(ray_direction)
   end
 end
