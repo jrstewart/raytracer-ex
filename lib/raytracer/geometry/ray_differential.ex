@@ -6,8 +6,8 @@ defmodule Raytracer.Geometry.RayDifferential do
   """
 
   alias __MODULE__
-  alias Raytracer.Geometry.Ray
   alias Raytracer.Geometry.Point
+  alias Raytracer.Geometry.Ray
   alias Raytracer.Geometry.Vector
   alias Raytracer.Transform
 
@@ -29,14 +29,13 @@ defmodule Raytracer.Geometry.RayDifferential do
   Applies `transform` to `ray` and returns the resulting ray differential.
   """
   @spec apply_transform(t, Transform.t) :: t
-  def apply_transform(ray_differential, transform)
-  def apply_transform(%RayDifferential{} = rd, transform) do
-    rd
-    |> Map.put(:ray, Ray.apply_transform(rd.ray, transform))
-    |> Map.put(:x_origin, Point.apply_transform(rd.x_origin, transform))
-    |> Map.put(:y_origin, Point.apply_transform(rd.y_origin, transform))
-    |> Map.put(:x_direction, Vector.apply_transform(rd.x_direction, transform))
-    |> Map.put(:y_direction, Vector.apply_transform(rd.y_direction, transform))
+  def apply_transform(ray_differential, transform) do
+    ray_differential
+    |> Map.put(:ray, Ray.apply_transform(ray_differential.ray, transform))
+    |> Map.put(:x_origin, Point.apply_transform(ray_differential.x_origin, transform))
+    |> Map.put(:y_origin, Point.apply_transform(ray_differential.y_origin, transform))
+    |> Map.put(:x_direction, Vector.apply_transform(ray_differential.x_direction, transform))
+    |> Map.put(:y_direction, Vector.apply_transform(ray_differential.y_direction, transform))
   end
 
   @doc """
@@ -44,26 +43,25 @@ defmodule Raytracer.Geometry.RayDifferential do
   `scalar` value.
   """
   @spec scale(t, number) :: t
-  def scale(ray_differential, scalar)
-  def scale(%RayDifferential{} = rd, scalar) do
-    rd
-    |> Map.put(:x_origin, scale_point(rd.ray.origin, rd.x_origin, scalar))
-    |> Map.put(:y_origin, scale_point(rd.ray.origin, rd.y_origin, scalar))
-    |> Map.put(:x_direction, scale_vector(rd.ray.direction, rd.x_direction, scalar))
-    |> Map.put(:y_direction, scale_vector(rd.ray.direction, rd.y_direction, scalar))
+  def scale(ray_differential, scalar) do
+    ray_differential
+    |> Map.put(:x_origin, scale_point(ray_differential.ray, ray_differential.x_origin, scalar))
+    |> Map.put(:y_origin, scale_point(ray_differential.ray, ray_differential.y_origin, scalar))
+    |> Map.put(:x_direction, scale_vector(ray_differential.ray, ray_differential.x_direction, scalar))
+    |> Map.put(:y_direction, scale_vector(ray_differential.ray, ray_differential.y_direction, scalar))
   end
 
-  defp scale_point(ray_origin, point, scalar) do
+  defp scale_point(ray, point, scalar) do
     point
-    |> Point.subtract(ray_origin)
+    |> Point.subtract(ray.origin)
     |> Vector.multiply(scalar)
-    |> Vector.add(ray_origin)
+    |> Vector.add(ray.origin)
   end
 
-  defp scale_vector(ray_direction, vector, scalar) do
+  defp scale_vector(ray, vector, scalar) do
     vector
-    |> Vector.subtract(ray_direction)
+    |> Vector.subtract(ray.direction)
     |> Vector.multiply(scalar)
-    |> Vector.add(ray_direction)
+    |> Vector.add(ray.direction)
   end
 end

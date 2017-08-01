@@ -29,7 +29,6 @@ defmodule Raytracer.Geometry.Ray do
   `distance` is less than 0.
   """
   @spec point_at(t, number) :: {atom, Point.point3_t | atom}
-  def point_at(ray, distance)
   def point_at(_, distance) when distance < 0, do: {:error, :none}
   def point_at(ray, distance) do
     {:ok, ray.direction |> Vector.multiply(distance) |> Vector.add(ray.origin)}
