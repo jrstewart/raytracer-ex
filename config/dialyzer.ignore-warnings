@@ -9,3 +9,15 @@ Unknown function 'Elixir.Raytracer.Shape.PID':'__impl__'/1
 Unknown function 'Elixir.Raytracer.Shape.Port':'__impl__'/1
 Unknown function 'Elixir.Raytracer.Shape.Reference':'__impl__'/1
 Unknown function 'Elixir.Raytracer.Shape.Tuple':'__impl__'/1
+
+Unknown function 'Elixir.Raytracer.Transformable.Atom':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.BitString':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.Float':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.Function':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.Integer':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.List':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.Map':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.PID':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.Port':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.Reference':'__impl__'/1
+Unknown function 'Elixir.Raytracer.Transformable.Tuple':'__impl__'/1
