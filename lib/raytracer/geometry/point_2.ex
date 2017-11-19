@@ -23,6 +23,8 @@ defmodule Raytracer.Geometry.Point2 do
   Adds two points or a point and a vector and returns the resulting point.
   """
   @spec add(t, t | Vector2.t()) :: t
+  def add(point, point_or_vector)
+
   def add(%Point2{} = point1, %Point2{} = point2) do
     %Point2{x: point1.x + point2.x, y: point1.y + point2.y}
   end
@@ -87,6 +89,8 @@ defmodule Raytracer.Geometry.Point2 do
   a vector returning the resulting point.
   """
   @spec subtract(t, t | Vector2.t()) :: t | Vector2.t()
+  def subtract(point, point_or_vector)
+
   def subtract(%Point2{} = point1, %Point2{} = point2) do
     %Vector2{dx: point1.x - point2.x, dy: point1.y - point2.y}
   end

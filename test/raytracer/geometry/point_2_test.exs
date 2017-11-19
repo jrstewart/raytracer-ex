@@ -1,12 +1,13 @@
 defmodule Raytracer.Geometry.Point2Test do
   use ExUnit.Case, async: true
 
-  alias Raytracer.Geometry.Point2
-  alias Raytracer.Geometry.Vector2
+  alias Raytracer.Geometry.{Point2, Vector2}
 
   describe "Raytracer.Geometry.Point2.abs/1" do
     test "returns the point with absolute value of each coordinate" do
-      assert Point2.abs(%Point2{x: -1.0, y: -2.0}) == %Point2{x: 1.0, y: 2.0}
+      point = %Point2{x: -1.0, y: -2.0}
+
+      assert Point2.abs(point) == %Point2{x: 1.0, y: 2.0}
     end
   end
 
@@ -29,18 +30,18 @@ defmodule Raytracer.Geometry.Point2Test do
   describe "Raytracer.Geometry.Point2.distance_between/2" do
     test "computes the distance between two points" do
       point1 = %Point2{x: 0.0, y: 0.0}
-      point2 = %Point2{x: 2.0, y: 0.0}
+      point2 = %Point2{x: 1.0, y: 2.0}
 
-      assert Point2.distance_between(point1, point2) == 2.0
+      assert_in_delta Point2.distance_between(point1, point2), 2.236067977, 1.0e-7
     end
   end
 
   describe "Raytracer.Geometry.Point2.distance_between_squared/2" do
     test "computes the squared distance between two points" do
       point1 = %Point2{x: 0.0, y: 0.0}
-      point2 = %Point2{x: 2.0, y: 0.0}
+      point2 = %Point2{x: 1.0, y: 2.0}
 
-      assert Point2.distance_between_squared(point1, point2) == 4.0
+      assert_in_delta Point2.distance_between_squared(point1, point2), 5.0, 1.0e-7
     end
   end
 
