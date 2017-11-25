@@ -2,15 +2,17 @@ defmodule Raytracer.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :raytracer,
-     version: "0.1.0",
-     elixir: "~> 1.4",
-     elixirc_paths: elixirc_paths(Mix.env),
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps(),
-     escript: escript_config(),
-     dialyzer: dialyzer_config()]
+    [
+      app: :raytracer,
+      version: "0.1.0",
+      elixir: "~> 1.5",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+      escript: escript_config(),
+      dialyzer: dialyzer_config()
+    ]
   end
 
   def application do
@@ -18,8 +20,10 @@ defmodule Raytracer.Mixfile do
   end
 
   defp deps do
-    [{:credo, "~> 0.7", only: [:dev]},
-     {:dialyxir, "~> 0.4", only: [:dev]}]
+    [
+      {:credo, "~> 0.7", only: [:dev], runtime: false},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
+    ]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
@@ -27,5 +31,10 @@ defmodule Raytracer.Mixfile do
 
   defp escript_config, do: [main_module: Raytracer]
 
-  defp dialyzer_config, do: [ignore_warnings: "config/dialyzer.ignore-warnings"]
+  defp dialyzer_config do
+    [
+      ignore_warnings: "config/dialyzer.ignore-warnings",
+      plt_add_deps: :transitive
+    ]
+  end
 end
