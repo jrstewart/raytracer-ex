@@ -6,6 +6,8 @@ defmodule Raytracer.GeometryTestHelpers do
 
   import ExUnit.Assertions, only: [assert_in_delta: 3]
 
+  alias Raytracer.Geometry.Point3
+
   @doc """
   Asserts the elements of `value1` and `value2` are equal within `delta`.
   """
@@ -39,15 +41,23 @@ defmodule Raytracer.GeometryTestHelpers do
     assert_in_delta m1_32, m2_32, delta
     assert_in_delta m1_33, m2_33, delta
   end
+
   defp do_assert_equal_within_delta({x1, y1, z1, w1}, {x2, y2, z2, w2}, delta) do
     assert_in_delta x1, x2, delta
     assert_in_delta y1, y2, delta
     assert_in_delta z1, z2, delta
     assert_in_delta w1, w2, delta
   end
+
   defp do_assert_equal_within_delta({x1, y1, z1}, {x2, y2, z2}, delta) do
     assert_in_delta x1, x2, delta
     assert_in_delta y1, y2, delta
     assert_in_delta z1, z2, delta
+  end
+
+  defp do_assert_equal_within_delta(%Point3{} = point1, %Point3{} = point2, delta) do
+    assert_in_delta point1.x, point2.x, delta
+    assert_in_delta point1.y, point2.y, delta
+    assert_in_delta point1.z, point2.z, delta
   end
 end
