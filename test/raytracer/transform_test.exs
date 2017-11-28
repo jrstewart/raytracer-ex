@@ -3,221 +3,282 @@ defmodule Raytracer.TransformTest do
 
   import Raytracer.GeometryTestHelpers
 
-  alias Raytracer.Geometry.Matrix
   alias Raytracer.Transform
+  alias Raytracer.Geometry.{Matrix4x4, Point3, Vector3}
 
   describe "Raytracer.Transform.from_matrix/1" do
     test "creates a transform from a matrix" do
-      m = {1.0, 0.0, 0.0, 1.0,
-           0.0, 1.0, 0.0, 1.0,
-           0.0, 0.0, 1.0, 1.0,
-           0.0, 0.0, 0.0, 1.0}
+      matrix =
+        Matrix4x4.new(
+          {1.0, 0.0, 0.0, 1.0},
+          {0.0, 1.0, 0.0, 1.0},
+          {0.0, 0.0, 1.0, 1.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      t = Transform.from_matrix(m)
+      transform = Transform.from_matrix(matrix)
 
-      assert t.matrix == m
-      assert t.inverse_matrix == Matrix.inverse(m)
+      assert transform.matrix == matrix
+      assert transform.inverse_matrix == Matrix4x4.inverse(matrix)
     end
   end
 
   describe "Raytracer.Transform.has_scale?/1" do
     test "returns true if the transform is a scaling transform" do
-      t = Transform.scale({2.0, 3.0, 4.0})
+      transform = Transform.scale(2.0, 3.0, 4.0)
 
-      assert Transform.has_scale?(t)
+      assert Transform.has_scale?(transform)
     end
 
     test "returns false if the transform is not a scaling transform" do
-      t = Transform.translate({2.0, 3.0, 4.0})
+      transform = Transform.translate(2.0, 3.0, 4.0)
 
-      refute Transform.has_scale?(t)
+      refute Transform.has_scale?(transform)
     end
   end
 
   describe "Raytracer.Transform.inverse/1" do
     test "computes the inverse of a transform" do
-      t = Transform.from_matrix({1.0, 0.0, 0.0, 1.0,
-                                 0.0, 1.0, 0.0, 1.0,
-                                 0.0, 0.0, 1.0, 1.0,
-                                 0.0, 0.0, 0.0, 1.0})
+      transform =
+        Transform.from_matrix(
+          Matrix4x4.new(
+            {1.0, 0.0, 0.0, 1.0},
+            {0.0, 1.0, 0.0, 1.0},
+            {0.0, 0.0, 1.0, 1.0},
+            {0.0, 0.0, 0.0, 1.0}
+          )
+        )
 
-      inverse_t = Transform.inverse(t)
+      inverse = Transform.inverse(transform)
 
-      assert inverse_t.matrix == t.inverse_matrix
-      assert inverse_t.inverse_matrix == t.matrix
+      assert inverse.matrix == transform.inverse_matrix
+      assert inverse.inverse_matrix == transform.matrix
     end
   end
 
   describe "Raytracer.Transform.look_at/3" do
     test "creates a look at transform" do
-      position = {0.0, 0.0, 0.0}
-      center = {0.0, 0.0, -10.0}
-      up = {0.0, 1.0, 0.0}
-      expected = {-1.0, 0.0,  0.0, 0.0,
-                   0.0, 1.0,  0.0, 0.0,
-                   0.0, 0.0, -1.0, 0.0,
-                   0.0, 0.0,  0.0, 1.0}
+      position = %Point3{x: 0.0, y: 0.0, z: 0.0}
+      center = %Point3{x: 0.0, y: 0.0, z: -10.0}
+      up = %Vector3{dx: 0.0, dy: 1.0, dz: 0.0}
 
-      t = Transform.look_at(position, center, up)
+      expected =
+        Matrix4x4.new(
+          {-1.0, 0.0, 0.0, 0.0},
+          {0.0, 1.0, 0.0, 0.0},
+          {0.0, 0.0, -1.0, 0.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      assert_equal_within_delta t.matrix, expected
-      assert_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
+      transform = Transform.look_at(position, center, up)
+
+      assert_equal_within_delta(transform.matrix, expected)
+      assert_equal_within_delta(transform.inverse_matrix, Matrix4x4.inverse(expected))
     end
   end
 
   describe "Raytracer.Transform.multiply/2" do
     test "multiplies two transforms and returns the resulting transform" do
-      t1 = Transform.scale({2.0, 3.0, 4.0})
-      t2 = Transform.translate({2.0, 3.0, 4.0})
-      expected = Transform.from_matrix({2.0, 0.0, 0.0,  4.0,
-                                        0.0, 3.0, 0.0,  9.0,
-                                        0.0, 0.0, 4.0, 16.0,
-                                        0.0, 0.0, 0.0,  1.0})
+      transform1 = Transform.scale(2.0, 3.0, 4.0)
+      transform2 = Transform.translate(2.0, 3.0, 4.0)
 
-      assert Transform.multiply(t1, t2) == expected
+      expected =
+        Transform.from_matrix(
+          Matrix4x4.new(
+            {2.0, 0.0, 0.0, 4.0},
+            {0.0, 3.0, 0.0, 9.0},
+            {0.0, 0.0, 4.0, 16.0},
+            {0.0, 0.0, 0.0, 1.0}
+          )
+        )
+
+      assert Transform.multiply(transform1, transform2) == expected
     end
   end
 
   describe "Raytracer.Transform.rotate/2" do
     test "creates a rotation transform about the x-axis" do
-      expected = {1.0, 0.0,  0.0, 0.0,
-                  0.0, 0.0, -1.0, 0.0,
-                  0.0, 1.0,  0.0, 0.0,
-                  0.0, 0.0,  0.0, 1.0}
+      expected =
+        Matrix4x4.new(
+          {1.0, 0.0, 0.0, 0.0},
+          {0.0, 0.0, -1.0, 0.0},
+          {0.0, 1.0, 0.0, 0.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      t = Transform.rotate(90.0, {1.0, 0.0, 0.0})
+      axis = %Vector3{dx: 1.0, dy: 0.0, dz: 0.0}
 
-      assert_equal_within_delta t.matrix, expected
-      assert_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
+      transform = Transform.rotate(90.0, axis)
+
+      assert_equal_within_delta(transform.matrix, expected)
+      assert_equal_within_delta(transform.inverse_matrix, Matrix4x4.inverse(expected))
     end
 
     test "creates a rotation transform about the y-axis" do
-      expected = { 0.0, 0.0, 1.0, 0.0,
-                   0.0, 1.0, 0.0, 0.0,
-                  -1.0, 0.0, 0.0, 0.0,
-                   0.0, 0.0, 0.0, 1.0}
+      expected =
+        Matrix4x4.new(
+          {0.0, 0.0, 1.0, 0.0},
+          {0.0, 1.0, 0.0, 0.0},
+          {-1.0, 0.0, 0.0, 0.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      t = Transform.rotate(90.0, {0.0, 1.0, 0.0})
+      axis = %Vector3{dx: 0.0, dy: 1.0, dz: 0.0}
 
-      assert_equal_within_delta t.matrix, expected
-      assert_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
+      transform = Transform.rotate(90.0, axis)
+
+      assert_equal_within_delta(transform.matrix, expected)
+      assert_equal_within_delta(transform.inverse_matrix, Matrix4x4.inverse(expected))
     end
 
     test "creates a rotation transform about the z-axis" do
-      expected = {0.0, -1.0, 0.0, 0.0,
-                  1.0,  0.0, 0.0, 0.0,
-                  0.0,  0.0, 1.0, 0.0,
-                  0.0,  0.0, 0.0, 1.0}
+      expected =
+        Matrix4x4.new(
+          {0.0, -1.0, 0.0, 0.0},
+          {1.0, 0.0, 0.0, 0.0},
+          {0.0, 0.0, 1.0, 0.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      t = Transform.rotate(90.0, {0.0, 0.0, 1.0})
+      axis = %Vector3{dx: 0.0, dy: 0.0, dz: 1.0}
 
-      assert_equal_within_delta t.matrix, expected
-      assert_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
+      transform = Transform.rotate(90.0, axis)
+
+      assert_equal_within_delta(transform.matrix, expected)
+      assert_equal_within_delta(transform.inverse_matrix, Matrix4x4.inverse(expected))
     end
   end
 
   describe "Raytracer.Transform.rotate_x/1" do
     test "creates a rotation transform about the x-axis" do
-      expected = {1.0, 0.0,  0.0, 0.0,
-                  0.0, 0.0, -1.0, 0.0,
-                  0.0, 1.0,  0.0, 0.0,
-                  0.0, 0.0,  0.0, 1.0}
+      expected =
+        Matrix4x4.new(
+          {1.0, 0.0, 0.0, 0.0},
+          {0.0, 0.0, -1.0, 0.0},
+          {0.0, 1.0, 0.0, 0.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      t = Transform.rotate_x(90.0)
+      transform = Transform.rotate_x(90.0)
 
-      assert_equal_within_delta t.matrix, expected
-      assert_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
+      assert_equal_within_delta(transform.matrix, expected)
+      assert_equal_within_delta(transform.inverse_matrix, Matrix4x4.inverse(expected))
     end
   end
 
   describe "Raytracer.Transform.rotate_y/1" do
     test "creates a rotation transform about the y-axis" do
-      expected = { 0.0, 0.0, 1.0, 0.0,
-                   0.0, 1.0, 0.0, 0.0,
-                  -1.0, 0.0, 0.0, 0.0,
-                   0.0, 0.0, 0.0, 1.0}
+      expected =
+        Matrix4x4.new(
+          {0.0, 0.0, 1.0, 0.0},
+          {0.0, 1.0, 0.0, 0.0},
+          {-1.0, 0.0, 0.0, 0.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      t = Transform.rotate_y(90.0)
+      transform = Transform.rotate_y(90.0)
 
-      assert_equal_within_delta t.matrix, expected
-      assert_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
+      assert_equal_within_delta(transform.matrix, expected)
+      assert_equal_within_delta(transform.inverse_matrix, Matrix4x4.inverse(expected))
     end
   end
 
   describe "Raytracer.Transform.rotate_z/1" do
     test "creates a rotation transform about the z-axis" do
-      expected = {0.0, -1.0, 0.0, 0.0,
-                  1.0,  0.0, 0.0, 0.0,
-                  0.0,  0.0, 1.0, 0.0,
-                  0.0,  0.0, 0.0, 1.0}
+      expected =
+        Matrix4x4.new(
+          {0.0, -1.0, 0.0, 0.0},
+          {1.0, 0.0, 0.0, 0.0},
+          {0.0, 0.0, 1.0, 0.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      t = Transform.rotate_z(90.0)
+      transform = Transform.rotate_z(90.0)
 
-      assert_equal_within_delta t.matrix, expected
-      assert_equal_within_delta t.inverse_matrix, Matrix.inverse(expected)
+      assert_equal_within_delta(transform.matrix, expected)
+      assert_equal_within_delta(transform.inverse_matrix, Matrix4x4.inverse(expected))
     end
   end
 
   describe "Raytracer.Transform.scale/1" do
     test "creates a scaling transform with the given scale factors" do
-      expected = {2.0, 0.0, 0.0, 0.0,
-                  0.0, 3.0, 0.0, 0.0,
-                  0.0, 0.0, 4.0, 0.0,
-                  0.0, 0.0, 0.0, 1.0}
+      expected =
+        Matrix4x4.new(
+          {2.0, 0.0, 0.0, 0.0},
+          {0.0, 3.0, 0.0, 0.0},
+          {0.0, 0.0, 4.0, 0.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      t = Transform.scale({2.0, 3.0, 4.0})
+      transform = Transform.scale(2.0, 3.0, 4.0)
 
-      assert t.matrix == expected
-      assert t.inverse_matrix == Matrix.inverse(expected)
+      assert_equal_within_delta(transform.matrix, expected)
+      assert_equal_within_delta(transform.inverse_matrix, Matrix4x4.inverse(expected))
     end
   end
 
   describe "Raytracer.Transform.swaps_handedness?/1" do
     test "returns true if the transform changes the coordinate system handedness" do
-      t = Transform.from_matrix({1.0, 0.0, 0.0, 0.0,
-                                 0.0, 0.0, 1.0, 0.0,
-                                 0.0, 1.0, 0.0, 0.0,
-                                 0.0, 0.0, 0.0, 1.0})
+      transform =
+        Transform.from_matrix(
+          Matrix4x4.new(
+            {1.0, 0.0, 0.0, 0.0},
+            {0.0, 0.0, 1.0, 0.0},
+            {0.0, 1.0, 0.0, 0.0},
+            {0.0, 0.0, 0.0, 1.0}
+          )
+        )
 
-      assert Transform.swaps_handedness?(t) == true
+      assert Transform.swaps_handedness?(transform)
     end
 
     test "returns false if the transform does not change the coordinate system handedness" do
-      t = Transform.scale({2.0, 3.0, 4.0})
+      transform = Transform.scale(2.0, 3.0, 4.0)
 
-      assert Transform.swaps_handedness?(t) == false
+      refute Transform.swaps_handedness?(transform)
     end
   end
 
   describe "Raytracer.Transform.translate/1" do
     test "creates a translation transform with the given deltas" do
-      expected = {1.0, 0.0, 0.0, 2.0,
-                  0.0, 1.0, 0.0, 3.0,
-                  0.0, 0.0, 1.0, 4.0,
-                  0.0, 0.0, 0.0, 1.0}
+      expected =
+        Matrix4x4.new(
+          {1.0, 0.0, 0.0, 2.0},
+          {0.0, 1.0, 0.0, 3.0},
+          {0.0, 0.0, 1.0, 4.0},
+          {0.0, 0.0, 0.0, 1.0}
+        )
 
-      t = Transform.translate({2.0, 3.0, 4.0})
+      transform = Transform.translate(2.0, 3.0, 4.0)
 
-      assert t.matrix == expected
-      assert t.inverse_matrix == Matrix.inverse(expected)
+      assert transform.matrix == expected
+      assert transform.inverse_matrix == Matrix4x4.inverse(expected)
     end
   end
 
   describe "Raytracer.Transform.transpose/1" do
     test "transposes the matrix of a transformation" do
-      t = %Transform{matrix: {1.0, 0.0, 0.0, 1.0,
-                              0.0, 1.0, 0.0, 1.0,
-                              0.0, 0.0, 1.0, 1.0,
-                              0.0, 0.0, 0.0, 1.0},
-                     inverse_matrix: {1.0, 0.0, 0.0, -1.0,
-                                      0.0, 1.0, 0.0, -1.0,
-                                      0.0, 0.0, 1.0, -1.0,
-                                      0.0, 0.0, 0.0,  1.0}}
+      transform = %Transform{
+        matrix:
+          Matrix4x4.new(
+            {1.0, 0.0, 0.0, 1.0},
+            {0.0, 1.0, 0.0, 1.0},
+            {0.0, 0.0, 1.0, 1.0},
+            {0.0, 0.0, 0.0, 1.0}
+          ),
+        inverse_matrix:
+          Matrix4x4.new(
+            {1.0, 0.0, 0.0, -1.0},
+            {0.0, 1.0, 0.0, -1.0},
+            {0.0, 0.0, 1.0, -1.0},
+            {0.0, 0.0, 0.0, 1.0}
+          )
+      }
 
-      transpose_t = Transform.transpose(t)
+      transpose = Transform.transpose(transform)
 
-      assert transpose_t.matrix == Matrix.transpose(t.matrix)
-      assert transpose_t.inverse_matrix == Matrix.transpose(t.inverse_matrix)
+      assert transpose.matrix == Matrix4x4.transpose(transform.matrix)
+      assert transpose.inverse_matrix == Matrix4x4.transpose(transform.inverse_matrix)
     end
   end
 end

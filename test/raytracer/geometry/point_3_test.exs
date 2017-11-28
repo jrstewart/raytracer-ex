@@ -1,7 +1,7 @@
 defmodule Raytracer.Geometry.Point3Test do
   use ExUnit.Case, async: true
 
-  alias Raytracer.Geometry.{Point3, Vector3}
+  alias Raytracer.Geometry.{Matrix4x4, Point3, Vector3}
   alias Raytracer.{Transform, Transformable}
 
   describe "Raytracer.Geometry.Point3.abs/1" do
@@ -93,19 +93,14 @@ defmodule Raytracer.Geometry.Point3Test do
 
   describe "Raytracer.Transformable.apply_transform/2" do
     test "transforms a point and returns the result" do
-      transform = Transform.translate({2.0, 3.0, 4.0})
+      transform = Transform.translate(2.0, 3.0, 4.0)
       point = %Point3{x: 2.0, y: 3.0, z: 4.0}
 
       assert Transformable.apply_transform(point, transform) == %Point3{x: 4.0, y: 6.0, z: 8.0}
     end
 
     test "transforms a point with a transform that has a non-homogeneous weight" do
-      transform = Transform.from_matrix({
-        4.0, 0.0, 0.0, 0.0,
-        0.0, 4.0, 0.0, 0.0,
-        0.0, 0.0, 4.0, 0.0,
-        0.0, 0.0, 0.0, 2.0
-      })
+      transform = Matrix4x4.diagonal_matrix(4.0, 4.0, 4.0, 2.0) |> Transform.from_matrix()
       point = %Point3{x: 2.0, y: 3.0, z: 4.0}
 
       assert Transformable.apply_transform(point, transform) == %Point3{x: 4.0, y: 6.0, z: 8.0}

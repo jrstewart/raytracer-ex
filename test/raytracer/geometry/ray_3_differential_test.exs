@@ -30,7 +30,7 @@ defmodule Raytracer.Geometry.Ray3DifferentialTest do
 
   describe "Raytracer.Transformable.apply_transform/2" do
     test "transforms a ray differential and returns the result" do
-      transform = Transform.scale({2.0, 3.0, 4.0})
+      transform = Transform.scale(2.0, 3.0, 4.0)
 
       ray_differential = %Ray3Differential{
         ray: %Ray3{
@@ -43,13 +43,14 @@ defmodule Raytracer.Geometry.Ray3DifferentialTest do
         y_direction: %Vector3{dx: -3.0, dy: -3.0, dz: -3.0}
       }
 
+      expected = %Ray3{
+        origin: %Point3{x: 2.0, y: 3.0, z: 4.0},
+        direction: %Vector3{dx: -2.0, dy: -3.0, dz: -4.0}
+      }
+
       result = Transformable.apply_transform(ray_differential, transform)
 
-      assert result.ray == %Ray3{
-               origin: %Point3{x: 2.0, y: 3.0, z: 4.0},
-               direction: %Vector3{dx: -2.0, dy: -3.0, dz: -4.0}
-             }
-
+      assert result.ray == expected
       assert result.x_origin == %Point3{x: 4.0, y: 6.0, z: 8.0}
       assert result.y_origin == %Point3{x: -4.0, y: -6.0, z: -8.0}
       assert result.x_direction == %Vector3{dx: 6.0, dy: 9.0, dz: 12.0}

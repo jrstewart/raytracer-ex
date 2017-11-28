@@ -10,6 +10,7 @@ defmodule Raytracer.Geometry.Ray3Test do
         origin: %Point3{x: 1.0, y: 0.0, z: 1.0},
         direction: %Vector3{dx: 1.0, dy: 1.0, dz: 1.0}
       }
+
       distance = 2.0
       expected = %Point3{x: 3.0, y: 2.0, z: 3.0}
 
@@ -21,6 +22,7 @@ defmodule Raytracer.Geometry.Ray3Test do
         origin: %Point3{x: 1.0, y: 0.0, z: 1.0},
         direction: %Vector3{dx: 1.0, dy: 1.0, dz: 1.0}
       }
+
       distance = -1.0
 
       assert Ray3.point_at(ray, distance) == {:error, :none}
@@ -29,11 +31,13 @@ defmodule Raytracer.Geometry.Ray3Test do
 
   describe "Raytracer.Transformable.apply_transform/2" do
     test "transforms a ray and returns the result" do
-      transform = Transform.scale({2.0, 3.0, 4.0})
+      transform = Transform.scale(2.0, 3.0, 4.0)
+
       ray = %Ray3{
         origin: %Point3{x: 2.0, y: 3.0, z: 4.0},
         direction: %Vector3{dx: 2.0, dy: 3.0, dz: 4.0}
       }
+
       expected = %Ray3{
         origin: %Point3{x: 4.0, y: 9.0, z: 16.0},
         direction: %Vector3{dx: 4.0, dy: 9.0, dz: 16.0}

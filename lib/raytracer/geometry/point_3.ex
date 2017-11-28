@@ -5,8 +5,7 @@ defmodule Raytracer.Geometry.Point3 do
   """
 
   alias __MODULE__
-  alias Raytracer.Geometry.Matrix, as: Matrix4x4
-  alias Raytracer.Geometry.Vector3
+  alias Raytracer.Geometry.{Matrix4x4, Vector3}
   alias Raytracer.{Transform, Transformable}
 
   defstruct x: 0.0, y: 0.0, z: 0.0

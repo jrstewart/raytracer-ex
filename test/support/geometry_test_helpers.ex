@@ -6,7 +6,7 @@ defmodule Raytracer.GeometryTestHelpers do
 
   import ExUnit.Assertions, only: [assert_in_delta: 3]
 
-  alias Raytracer.Geometry.Point3
+  alias Raytracer.Geometry.{Matrix4x4, Point3, Quaternion, Vector3}
 
   @doc """
   Asserts the elements of `value1` and `value2` are equal within `delta`.
@@ -15,49 +15,41 @@ defmodule Raytracer.GeometryTestHelpers do
     do_assert_equal_within_delta(value1, value2, delta)
   end
 
-  defp do_assert_equal_within_delta({m1_00, m1_01, m1_02, m1_03,
-                                     m1_10, m1_11, m1_12, m1_13,
-                                     m1_20, m1_21, m1_22, m1_23,
-                                     m1_30, m1_31, m1_32, m1_33},
-                                    {m2_00, m2_01, m2_02, m2_03,
-                                     m2_10, m2_11, m2_12, m2_13,
-                                     m2_20, m2_21, m2_22, m2_23,
-                                     m2_30, m2_31, m2_32, m2_33},
-                                    delta) do
-    assert_in_delta m1_00, m2_00, delta
-    assert_in_delta m1_01, m2_01, delta
-    assert_in_delta m1_02, m2_02, delta
-    assert_in_delta m1_03, m2_03, delta
-    assert_in_delta m1_10, m2_10, delta
-    assert_in_delta m1_11, m2_11, delta
-    assert_in_delta m1_12, m2_12, delta
-    assert_in_delta m1_13, m2_13, delta
-    assert_in_delta m1_20, m2_20, delta
-    assert_in_delta m1_21, m2_21, delta
-    assert_in_delta m1_22, m2_22, delta
-    assert_in_delta m1_23, m2_23, delta
-    assert_in_delta m1_30, m2_30, delta
-    assert_in_delta m1_31, m2_31, delta
-    assert_in_delta m1_32, m2_32, delta
-    assert_in_delta m1_33, m2_33, delta
+  defp do_assert_equal_within_delta(%Matrix4x4{} = m1, %Matrix4x4{} = m2, delta) do
+    assert_in_delta Matrix4x4.elem(m1, 0, 0), Matrix4x4.elem(m2, 0, 0), delta
+    assert_in_delta Matrix4x4.elem(m1, 0, 1), Matrix4x4.elem(m2, 0, 1), delta
+    assert_in_delta Matrix4x4.elem(m1, 0, 2), Matrix4x4.elem(m2, 0, 2), delta
+    assert_in_delta Matrix4x4.elem(m1, 0, 3), Matrix4x4.elem(m2, 0, 3), delta
+    assert_in_delta Matrix4x4.elem(m1, 1, 0), Matrix4x4.elem(m2, 1, 0), delta
+    assert_in_delta Matrix4x4.elem(m1, 1, 1), Matrix4x4.elem(m2, 1, 1), delta
+    assert_in_delta Matrix4x4.elem(m1, 1, 2), Matrix4x4.elem(m2, 1, 2), delta
+    assert_in_delta Matrix4x4.elem(m1, 1, 3), Matrix4x4.elem(m2, 1, 3), delta
+    assert_in_delta Matrix4x4.elem(m1, 2, 0), Matrix4x4.elem(m2, 2, 0), delta
+    assert_in_delta Matrix4x4.elem(m1, 2, 1), Matrix4x4.elem(m2, 2, 1), delta
+    assert_in_delta Matrix4x4.elem(m1, 2, 2), Matrix4x4.elem(m2, 2, 2), delta
+    assert_in_delta Matrix4x4.elem(m1, 2, 3), Matrix4x4.elem(m2, 2, 3), delta
+    assert_in_delta Matrix4x4.elem(m1, 3, 0), Matrix4x4.elem(m2, 3, 0), delta
+    assert_in_delta Matrix4x4.elem(m1, 3, 1), Matrix4x4.elem(m2, 3, 1), delta
+    assert_in_delta Matrix4x4.elem(m1, 3, 2), Matrix4x4.elem(m2, 3, 2), delta
+    assert_in_delta Matrix4x4.elem(m1, 3, 3), Matrix4x4.elem(m2, 3, 3), delta
   end
 
-  defp do_assert_equal_within_delta({x1, y1, z1, w1}, {x2, y2, z2, w2}, delta) do
-    assert_in_delta x1, x2, delta
-    assert_in_delta y1, y2, delta
-    assert_in_delta z1, z2, delta
-    assert_in_delta w1, w2, delta
+  defp do_assert_equal_within_delta(%Point3{} = p1, %Point3{} = p2, delta) do
+    assert_in_delta p1.x, p2.x, delta
+    assert_in_delta p1.y, p2.y, delta
+    assert_in_delta p1.z, p2.z, delta
   end
 
-  defp do_assert_equal_within_delta({x1, y1, z1}, {x2, y2, z2}, delta) do
-    assert_in_delta x1, x2, delta
-    assert_in_delta y1, y2, delta
-    assert_in_delta z1, z2, delta
+  defp do_assert_equal_within_delta(%Quaternion{} = q1, %Quaternion{} = q2, delta) do
+    assert_in_delta q1.x, q2.x, delta
+    assert_in_delta q1.y, q2.y, delta
+    assert_in_delta q1.z, q2.z, delta
+    assert_in_delta q1.w, q2.w, delta
   end
 
-  defp do_assert_equal_within_delta(%Point3{} = point1, %Point3{} = point2, delta) do
-    assert_in_delta point1.x, point2.x, delta
-    assert_in_delta point1.y, point2.y, delta
-    assert_in_delta point1.z, point2.z, delta
+  defp do_assert_equal_within_delta(%Vector3{} = v1, %Vector3{} = v2, delta) do
+    assert_in_delta v1.dx, v2.dx, delta
+    assert_in_delta v1.dy, v2.dy, delta
+    assert_in_delta v1.dz, v2.dz, delta
   end
 end

@@ -134,7 +134,7 @@ defmodule Raytracer.Geometry.Vector3Test do
 
   describe "Raytracer.Transformable.apply_transform/2" do
     test "transforms a vector and returns the result" do
-      transform = Transform.scale({2.0, 3.0, 4.0})
+      transform = Transform.scale(2.0, 3.0, 4.0)
       vector = %Vector3{dx: 2.0, dy: 3.0, dz: 4.0}
 
       assert Transformable.apply_transform(vector, transform) ==

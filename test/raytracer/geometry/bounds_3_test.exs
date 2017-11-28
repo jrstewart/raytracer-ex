@@ -267,7 +267,7 @@ defmodule Raytracer.Geometry.Bounds3Test do
       # Test scale transform
       #
 
-      transform = Transform.scale({2.0, 3.0, 4.0})
+      transform = Transform.scale(2.0, 3.0, 4.0)
 
       expected = %Bounds3{
         min: %Point3{x: -2.0, y: -6.0, z: -12.0},
@@ -283,7 +283,7 @@ defmodule Raytracer.Geometry.Bounds3Test do
       # Test rotation transform
       #
 
-      transform = Transform.rotate(180.0, {1.0, 0.0, 0.0})
+      transform = Transform.rotate(180.0, %Vector3{dx: 1.0, dy: 0.0, dz: 0.0})
 
       result = Transformable.apply_transform(bounds, transform)
 
