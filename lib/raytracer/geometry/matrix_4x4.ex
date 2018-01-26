@@ -6,46 +6,44 @@ defmodule Raytracer.Geometry.Matrix4x4 do
 
   alias __MODULE__
 
-  defstruct elements:
-              {
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-              }
+  defstruct elements: {
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            }
 
   @type t :: %Matrix4x4{
-          elements:
-            {
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number(),
-              number()
-            }
+          elements: {
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number(),
+            number()
+          }
         }
 
   @compile {:inline, elem: 3, identity_matrix: 0}

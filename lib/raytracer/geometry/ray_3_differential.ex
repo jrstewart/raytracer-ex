@@ -35,13 +35,13 @@ defmodule Raytracer.Geometry.Ray3Differential do
     |> Map.put(:x_origin, scale_point(ray_differential.ray, ray_differential.x_origin, scalar))
     |> Map.put(:y_origin, scale_point(ray_differential.ray, ray_differential.y_origin, scalar))
     |> Map.put(
-         :x_direction,
-         scale_vector(ray_differential.ray, ray_differential.x_direction, scalar)
-       )
+      :x_direction,
+      scale_vector(ray_differential.ray, ray_differential.x_direction, scalar)
+    )
     |> Map.put(
-         :y_direction,
-         scale_vector(ray_differential.ray, ray_differential.y_direction, scalar)
-       )
+      :y_direction,
+      scale_vector(ray_differential.ray, ray_differential.y_direction, scalar)
+    )
   end
 
   defp scale_point(ray, point, scalar) do
@@ -65,13 +65,13 @@ defmodule Raytracer.Geometry.Ray3Differential do
       |> Map.put(:x_origin, Transformable.apply_transform(ray_differential.x_origin, transform))
       |> Map.put(:y_origin, Transformable.apply_transform(ray_differential.y_origin, transform))
       |> Map.put(
-           :x_direction,
-           Transformable.apply_transform(ray_differential.x_direction, transform)
-         )
+        :x_direction,
+        Transformable.apply_transform(ray_differential.x_direction, transform)
+      )
       |> Map.put(
-           :y_direction,
-           Transformable.apply_transform(ray_differential.y_direction, transform)
-         )
+        :y_direction,
+        Transformable.apply_transform(ray_differential.y_direction, transform)
+      )
     end
   end
 end
