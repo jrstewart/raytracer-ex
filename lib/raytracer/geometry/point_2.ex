@@ -62,10 +62,10 @@ defmodule Raytracer.Geometry.Point2 do
   Linearly interpolates between `point1` and `point2` by the value of `t`.
   `point1` is returned when `t = 0` and `point2` is returned when `t = 1`.
   """
-  @spec lerp(t(), t(), number()) :: t()
-  def lerp(%Point2{} = point1, _, 0), do: point1
+  @spec lerp(t(), t(), float()) :: t()
+  def lerp(%Point2{} = point1, _, 0.0), do: point1
 
-  def lerp(_, %Point2{} = point2, 1), do: point2
+  def lerp(_, %Point2{} = point2, 1.0), do: point2
 
   def lerp(%Point2{} = point1, %Point2{} = point2, t) do
     point1 |> multiply(1 - t) |> add(multiply(point2, t))

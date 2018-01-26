@@ -5,8 +5,8 @@ defmodule Raytracer.Geometry.Point3 do
   """
 
   alias __MODULE__
-  alias Raytracer.Geometry.{Matrix4x4, Vector3}
   alias Raytracer.{Transform, Transformable}
+  alias Raytracer.Geometry.{Matrix4x4, Vector3}
 
   defstruct x: 0.0, y: 0.0, z: 0.0
 
@@ -63,10 +63,10 @@ defmodule Raytracer.Geometry.Point3 do
   Linearly interpolates between `point1` and `point2` by the value of `t`.
   `point1` is returned when `t = 0` and `point2` is returned when `t = 1`.
   """
-  @spec lerp(t(), t(), number()) :: t()
-  def lerp(%Point3{} = point1, _, 0), do: point1
+  @spec lerp(t(), t(), float()) :: t()
+  def lerp(%Point3{} = point1, _, 0.0), do: point1
 
-  def lerp(_, %Point3{} = point2, 1), do: point2
+  def lerp(_, %Point3{} = point2, 1.0), do: point2
 
   def lerp(%Point3{} = point1, %Point3{} = point2, t) do
     point1 |> multiply(1 - t) |> add(multiply(point2, t))
