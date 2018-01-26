@@ -11,7 +11,14 @@ defmodule Raytracer.Mixfile do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       escript: escript_config(),
-      dialyzer: dialyzer_config()
+      dialyzer: dialyzer_config(),
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -22,7 +29,8 @@ defmodule Raytracer.Mixfile do
   defp deps do
     [
       {:credo, "~> 0.7", only: [:dev], runtime: false},
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:excoveralls, "~> 0.7.5", only: [:dev, :test], runtime: false}
     ]
   end
 
