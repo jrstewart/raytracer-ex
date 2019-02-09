@@ -1,7 +1,7 @@
 defmodule Raytracer.Geometry.Matrix4x4 do
   @moduledoc """
-  This module provides a set of functions for working with 4x4 matrices. The
-  matrix elements for the defined struct are stored in row-major order.
+  This module provides a set of functions for working with 4x4 matrices. The matrix elements for the
+  defined struct are stored in row-major order.
   """
 
   alias __MODULE__
@@ -27,31 +27,30 @@ defmodule Raytracer.Geometry.Matrix4x4 do
 
   @type t :: %Matrix4x4{
           elements: {
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number(),
-            number()
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number,
+            number
           }
         }
 
   @compile {:inline, elem: 3, identity_matrix: 0}
 
   @doc """
-  Returns a diagonal matrix with the diagonal elements set to the given values.
-  A diagonal matrix is a matrix in which the elements outside the main diagonal
-  equal zero.
+  Returns a diagonal matrix with the diagonal elements set to the given values. A diagonal matrix is
+  a matrix in which the elements outside the main diagonal equal zero.
   """
   @spec diagonal_matrix(number, number, number, number) :: t
   def diagonal_matrix(m00, m11, m22, m33) do
@@ -64,9 +63,46 @@ defmodule Raytracer.Geometry.Matrix4x4 do
   end
 
   @doc """
+  Computes the determinant of `matrix`
+  """
+  @spec determinant(t) :: float
+  def determinant(matrix)
+
+  def determinant(%Matrix4x4{} = m) do
+    # (elem(m, 0, 0) * elem(m, 1, 1) - elem(m, 1, 0) * elem(m, 0, 1)) *
+    # (elem(m, 2, 2) * elem(m, 3, 3) - elem(m, 3, 2) * elem(m, 2, 3)) -
+    # (elem(m, 0, 0) * elem(m, 1, 2) - elem(m, 0, 2) * elem(m, 1, 0)) *
+    # (elem(m, 2, 1) * elem(m, 3, 3) - elem(m, 2, 3) * elem(m, 3, 1)) +
+    # det3 = elem(m, 0, 0) * elem(m, 1, 3) - elem(m, 0, 3) * elem(m, 1, 0)
+    # det4 = elem(m, 0, 1) * elem(m, 1, 2) - elem(m, 0, 2) * elem(m, 1, 1)
+    # det5 = elem(m, 0, 1) * elem(m, 1, 3) - elem(m, 0, 3) * elem(m, 1, 1)
+    # det6 = elem(m, 0, 2) * elem(m, 1, 3) - elem(m, 0, 3) * elem(m, 1, 2)
+    # det7 = elem(m, 2, 0) * elem(m, 3, 1) - elem(m, 2, 1) * elem(m, 3, 0)
+    # det8 = elem(m, 2, 0) * elem(m, 3, 2) - elem(m, 2, 2) * elem(m, 3, 0)
+    # det9 = elem(m, 2, 0) * elem(m, 3, 3) - elem(m, 2, 3) * elem(m, 3, 0)
+    # det10 = elem(m, 2, 1) * elem(m, 3, 2) - elem(m, 2, 2) * elem(m, 3, 1)
+
+    # Compute the 2x2 determinants of the matrix
+    det1 = elem(m, 0, 0) * elem(m, 1, 1) - elem(m, 1, 0) * elem(m, 0, 1)
+    det2 = elem(m, 0, 0) * elem(m, 1, 2) - elem(m, 0, 2) * elem(m, 1, 0)
+    det3 = elem(m, 0, 0) * elem(m, 1, 3) - elem(m, 0, 3) * elem(m, 1, 0)
+    det4 = elem(m, 0, 1) * elem(m, 1, 2) - elem(m, 0, 2) * elem(m, 1, 1)
+    det5 = elem(m, 0, 1) * elem(m, 1, 3) - elem(m, 0, 3) * elem(m, 1, 1)
+    det6 = elem(m, 0, 2) * elem(m, 1, 3) - elem(m, 0, 3) * elem(m, 1, 2)
+    det7 = elem(m, 2, 0) * elem(m, 3, 1) - elem(m, 2, 1) * elem(m, 3, 0)
+    det8 = elem(m, 2, 0) * elem(m, 3, 2) - elem(m, 2, 2) * elem(m, 3, 0)
+    det9 = elem(m, 2, 0) * elem(m, 3, 3) - elem(m, 2, 3) * elem(m, 3, 0)
+    det10 = elem(m, 2, 1) * elem(m, 3, 2) - elem(m, 2, 2) * elem(m, 3, 1)
+    det11 = elem(m, 2, 1) * elem(m, 3, 3) - elem(m, 2, 3) * elem(m, 3, 1)
+    det12 = elem(m, 2, 2) * elem(m, 3, 3) - elem(m, 3, 2) * elem(m, 2, 3)
+
+    det1 * det12 - det2 * det11 + det3 * det10 + det4 * det9 - det5 * det8 + det6 * det7
+  end
+
+  @doc """
   Returns the matrix element at the given row, column index.
   """
-  @spec elem(t(), 0..3, 0..3) :: number()
+  @spec elem(t, 0..3, 0..3) :: number()
   def elem(matrix, row, column)
   def elem(%Matrix4x4{} = matrix, 0, 0), do: Kernel.elem(matrix.elements, 0)
   def elem(%Matrix4x4{} = matrix, 0, 1), do: Kernel.elem(matrix.elements, 1)
@@ -88,7 +124,7 @@ defmodule Raytracer.Geometry.Matrix4x4 do
   @doc """
   Returns an identity matrix.
   """
-  @spec identity_matrix() :: t()
+  @spec identity_matrix() :: t
   def identity_matrix do
     Matrix4x4.new(
       {1.0, 0.0, 0.0, 0.0},
@@ -103,7 +139,7 @@ defmodule Raytracer.Geometry.Matrix4x4 do
 
   An `ArithmeticError` is raised if `matrix` cannot be inverted.
   """
-  @spec inverse(t()) :: t()
+  @spec inverse(t) :: t
   def inverse(matrix)
 
   def inverse(%Matrix4x4{} = m) do
@@ -122,7 +158,7 @@ defmodule Raytracer.Geometry.Matrix4x4 do
     det12 = elem(m, 2, 2) * elem(m, 3, 3) - elem(m, 3, 2) * elem(m, 2, 3)
 
     inverse_det =
-      1.0 / (det1 * det12 - det2 * det11 + det3 * det10 + det4 * det9 - det5 * det8 + det6 * det7)
+      1 / (det1 * det12 - det2 * det11 + det3 * det10 + det4 * det9 - det5 * det8 + det6 * det7)
 
     # Compute the adjoint matrix
     Matrix4x4.new(
@@ -148,7 +184,7 @@ defmodule Raytracer.Geometry.Matrix4x4 do
   @doc """
   Multiplies two matrices and return the resulting matrix.
   """
-  @spec multiply(t(), t()) :: t()
+  @spec multiply(t, t) :: t
   def multiply(matrix1, matrix2)
 
   def multiply(%Matrix4x4{} = m1, %Matrix4x4{} = m2) do
@@ -192,23 +228,23 @@ defmodule Raytracer.Geometry.Matrix4x4 do
   Creates a new matrix from the given individual element values.
   """
   @spec new(
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number(),
-          number()
-        ) :: t()
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number
+        ) :: t
   def new(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) do
     %Matrix4x4{
       elements: {m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33}
@@ -219,11 +255,11 @@ defmodule Raytracer.Geometry.Matrix4x4 do
   Creates a new matrix from the given row tuple values.
   """
   @spec new(
-          {number(), number(), number(), number()},
-          {number(), number(), number(), number()},
-          {number(), number(), number(), number()},
-          {number(), number(), number(), number()}
-        ) :: t()
+          {number, number, number, number},
+          {number, number, number, number},
+          {number, number, number, number},
+          {number, number, number, number}
+        ) :: t
   def new(row1, row2, row3, row4)
 
   def new({m00, m01, m02, m03}, {m10, m11, m12, m13}, {m20, m21, m22, m23}, {m30, m31, m32, m33}) do
@@ -235,7 +271,7 @@ defmodule Raytracer.Geometry.Matrix4x4 do
   @doc """
   Transposes `matrix` and returns the resulting matrix.
   """
-  @spec transpose(t()) :: t()
+  @spec transpose(t) :: t
   def transpose(matrix)
 
   def transpose(%Matrix4x4{} = m) do

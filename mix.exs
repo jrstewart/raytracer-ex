@@ -28,9 +28,11 @@ defmodule Raytracer.Mixfile do
 
   defp deps do
     [
-      {:credo, "~> 0.7", only: [:dev], runtime: false},
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
-      {:excoveralls, "~> 0.7.5", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.0", only: :dev, runtime: false},
+      {:dialyzex, "~> 1.2.0", only: :dev},
+      {:excoveralls, "~> 0.10", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
+      {:propcheck, "~> 1.1", only: [:dev, :test]}
     ]
   end
 
@@ -41,8 +43,8 @@ defmodule Raytracer.Mixfile do
 
   defp dialyzer_config do
     [
-      ignore_warnings: "config/dialyzer.ignore-warnings",
-      plt_add_deps: :transitive
+      # ignore_warnings: "config/dialyzer.ignore-warnings",
+      # plt_add_deps: :transitive
     ]
   end
 end
