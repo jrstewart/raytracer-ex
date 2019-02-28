@@ -2,11 +2,23 @@ defmodule Raytracer.Generators do
   use PropCheck
   alias Raytracer.Geometry.{Matrix4x4, Point3, Vector3}
 
-  def non_zero_number, do: such_that(n <- number(), when: n != 0)
+  def non_zero_float, do: such_that(n <- float(), when: n != 0.0)
 
   #
   # Matrix generators
   #
+
+  def affine_matrix4x4 do
+    let {m00, m01, m02, m10, m11, m12, m20, m21, m22} <-
+          {float(), float(), float(), float(), float(), float(), float(), float(), float()} do
+      Matrix4x4.new(
+        {m00, m01, m02, 0.0},
+        {m10, m11, m12, 0.0},
+        {m20, m21, m22, 0.0},
+        {0.0, 0.0, 0.0, 1.0}
+      )
+    end
+  end
 
   def invertable_matrix4x4, do: such_that(m <- matrix4x4(), when: Matrix4x4.determinant(m) != 0)
 

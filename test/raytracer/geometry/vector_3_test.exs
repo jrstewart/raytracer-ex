@@ -1,144 +1,263 @@
 defmodule Raytracer.Geometry.Vector3Test do
   use ExUnit.Case, async: true
-
+  use PropCheck
+  import Raytracer.{GeometryTestHelpers, Generators}
   alias Raytracer.{Transform, Transformable}
   alias Raytracer.Geometry.{Normal3, Point3, Vector3}
 
-  describe "Raytracer.Geometry.Vector3.abs/1" do
-    test "returns the vector with absolute value of each coordinate" do
-      vector = %Vector3{dx: -1.0, dy: -2.0, dz: -3.0}
+  @delta 1.0e-7
 
-      assert Vector3.abs(vector) == %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+  doctest Vector3
+
+  describe "Raytracer.Geometry.Vector3.abs/1" do
+    property "computes the absolute value of the vector components" do
+      forall v <- vector3() do
+        result = Vector3.abs(v)
+        assert result.dx == if(v.dx >= 0.0, do: v.dx, else: -v.dx)
+        assert result.dy == if(v.dy >= 0.0, do: v.dy, else: -v.dy)
+        assert result.dz == if(v.dz >= 0.0, do: v.dz, else: -v.dz)
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.add/2" do
-    test "adds two vectors and returns the resulting vector" do
-      vector1 = %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
-      vector2 = %Vector3{dx: 4.0, dy: 5.0, dz: 6.0}
-
-      assert Vector3.add(vector1, vector2) == %Vector3{dx: 5.0, dy: 7.0, dz: 9.0}
+    property "subtracing one of the vectors from the resulting vector returns the other vector" do
+      forall {v1, v2} <- {vector3(), vector3()} do
+        result = Vector3.add(v1, v2)
+        assert_in_delta result.dx - v2.dx, v1.dx, @delta
+        assert_in_delta result.dy - v2.dy, v1.dy, @delta
+        assert_in_delta result.dz - v2.dz, v1.dz, @delta
+      end
     end
 
-    test "adds a vector and a point and returns the resulting point" do
-      vector = %Vector3{dx: 4.0, dy: 5.0, dz: 6.0}
-      point = %Point3{x: 1.0, y: 2.0, z: 3.0}
-
-      assert Vector3.add(vector, point) == %Point3{x: 5.0, y: 7.0, z: 9.0}
+    property "subtracing the vector from the resulting point returns the original point" do
+      forall {v, p} <- {vector3(), point3()} do
+        result = Vector3.add(v, p)
+        assert_in_delta result.x - v.dx, p.x, @delta
+        assert_in_delta result.y - v.dy, p.y, @delta
+        assert_in_delta result.z - v.dz, p.z, @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.cross/2" do
-    test "computes the cross product of two vectors" do
-      vector1 = %Vector3{dx: 2.0, dy: 3.0, dz: 4.0}
-      vector2 = %Vector3{dx: 5.0, dy: 6.0, dz: 7.0}
+    property "cross products of standard basis vectors" do
+      i = %Vector3{dx: 1.0, dy: 0.0, dz: 0.0}
+      j = %Vector3{dx: 0.0, dy: 1.0, dz: 0.0}
+      k = %Vector3{dx: 0.0, dy: 0.0, dz: 1.0}
 
-      assert Vector3.cross(vector1, vector2) == %Vector3{dx: -3.0, dy: 6.0, dz: -3.0}
+      assert_equal_within_delta Vector3.cross(i, j), k
+      assert_equal_within_delta Vector3.cross(j, k), i
+      assert_equal_within_delta Vector3.cross(k, i), j
+
+      assert_equal_within_delta Vector3.cross(j, i), Vector3.negate(k)
+      assert_equal_within_delta Vector3.cross(k, j), Vector3.negate(i)
+      assert_equal_within_delta Vector3.cross(i, k), Vector3.negate(j)
     end
 
-    test "computes the cross product of a vector and a normal" do
-      vector = %Vector3{dx: 2.0, dy: 3.0, dz: 4.0}
-      normal = %Normal3{dx: 5.0, dy: 6.0, dz: 7.0}
-
-      assert Vector3.cross(vector, normal) == %Vector3{dx: -3.0, dy: 6.0, dz: -3.0}
+    property "a vector crossed with itself returns the zero vector" do
+      forall v <- vector3() do
+        assert_equal_within_delta Vector3.cross(v, v), Vector3.zero()
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.divide/2" do
-    test "divides a vector by a scalar value" do
-      vector = %Vector3{dx: 2.0, dy: 4.0, dz: 6.0}
-      scalar = 2.0
-
-      assert Vector3.divide(vector, scalar) == %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+    property "multiplying the resulting vector by the scalar returns the original vector" do
+      forall {v, scalar} <- {vector3(), non_zero_float()} do
+        result = Vector3.divide(v, scalar)
+        assert_in_delta result.dx * scalar, v.dx, @delta
+        assert_in_delta result.dy * scalar, v.dy, @delta
+        assert_in_delta result.dz * scalar, v.dz, @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.dot/2" do
-    test "computes the dot product of two vectors" do
-      vector1 = %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
-      vector2 = %Vector3{dx: 4.0, dy: 5.0, dz: 6.0}
+    property "the dot product is commutative" do
+      forall {v1, v2} <- {vector3(), vector3()} do
+        assert_in_delta Vector3.dot(v1, v2), Vector3.dot(v2, v1), @delta
+      end
+    end
 
-      assert Vector3.dot(vector1, vector2) == 32.0
+    property "the dot product is distributive" do
+      forall {v1, v2, v3} <- {vector3(), vector3(), vector3()} do
+        result1 = Vector3.dot(v1, Vector3.add(v2, v3))
+        result2 = Vector3.dot(v1, v2) + Vector3.dot(v1, v3)
+        assert_in_delta result1, result2, @delta
+      end
+    end
+
+    property "the dot product is billinear" do
+      forall {v1, v2, v3, scalar} <- {vector3(), vector3(), vector3(), float()} do
+        result1 = Vector3.dot(v1, Vector3.add(Vector3.multiply(v2, scalar), v3))
+        result2 = scalar * Vector3.dot(v1, v2) + Vector3.dot(v1, v3)
+        assert_in_delta result1, result2, @delta
+      end
+    end
+
+    property "associative law for scalar and dot product" do
+      forall {v1, v2, scalar1, scalar2} <- {vector3(), vector3(), float(), float()} do
+        result1 = Vector3.dot(Vector3.multiply(v1, scalar1), Vector3.multiply(v2, scalar2))
+        result2 = scalar1 * scalar2 * Vector3.dot(v1, v2)
+        assert_in_delta result1, result2, @delta
+      end
+    end
+
+    property "the dot product of orthogonal vectors is 0" do
+      forall value <- float() do
+        v1 = %Vector3{dx: value, dy: 0.0, dz: 0.0}
+        v2 = %Vector3{dx: 0.0, dy: value, dz: 0.0}
+        v3 = %Vector3{dx: 0.0, dy: 0.0, dz: value}
+        assert_in_delta Vector3.dot(v1, v2), 0.0, @delta
+        assert_in_delta Vector3.dot(v1, v3), 0.0, @delta
+        assert_in_delta Vector3.dot(v2, v3), 0.0, @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.length/1" do
-    test "computes the length of a vector" do
-      vector = %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+    property "the length of the zero vector is 0" do
+      v = %Vector3{dx: 0.0, dy: 0.0, dz: 0.0}
+      assert Vector3.length(v) == 0.0
+    end
 
-      assert_in_delta Vector3.length(vector), 3.7416573, 1.0e-7
+    property "the length of a unit vector is 1" do
+      forall v <- vector3() do
+        v = Vector3.normalize(v)
+        assert_in_delta Vector3.length(v), 1.0, @delta
+      end
+    end
+
+    property "changing the direction of a vector does not change its length" do
+      forall v <- vector3() do
+        length1 = Vector3.length(v)
+        length2 = %Vector3{dx: v.dy, dy: v.dz, dz: v.dx} |> Vector3.length()
+        length3 = %Vector3{dx: v.dz, dy: v.dx, dz: v.dy} |> Vector3.length()
+        assert_in_delta length1, length2, @delta
+        assert_in_delta length1, length3, @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.length_squared/1" do
-    test "computes the squared length of a vector" do
-      vector = %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+    property "the squared length of the zero vector is 0" do
+      v = %Vector3{dx: 0.0, dy: 0.0, dz: 0.0}
+      assert Vector3.length_squared(v) == 0.0
+    end
 
-      assert_in_delta Vector3.length_squared(vector), 14.0, 1.0e-7
+    property "the squared length of a unit vector is 1" do
+      forall v <- vector3() do
+        v = Vector3.normalize(v)
+        assert_in_delta Vector3.length_squared(v), 1.0, @delta
+      end
+    end
+
+    property "changing the direction of a vector does not change its squared length" do
+      forall v <- vector3() do
+        length1 = Vector3.length_squared(v)
+        length2 = %Vector3{dx: v.dy, dy: v.dz, dz: v.dx} |> Vector3.length_squared()
+        length3 = %Vector3{dx: v.dz, dy: v.dx, dz: v.dy} |> Vector3.length_squared()
+        assert_in_delta length1, length2, @delta
+        assert_in_delta length1, length3, @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.max_component/1" do
-    test "returns the largest component value of a vector" do
-      assert Vector3.max_component(%Vector3{dx: 1.0, dy: 2.0, dz: 3.0}) == 3.0
-      assert Vector3.max_component(%Vector3{dx: 2.0, dy: 4.0, dz: -1.0}) == 4.0
-      assert Vector3.max_component(%Vector3{dx: 5.0, dy: 1.0, dz: -2.0}) == 5.0
+    property "returns the largest component value of a vector" do
+      forall v <- vector3() do
+        cond do
+          v.dx > v.dy && v.dx > v.dz ->
+            assert Vector3.max_component(v) == v.dx
+
+          v.dy > v.dz ->
+            assert Vector3.max_component(v) == v.dy
+
+          true ->
+            assert Vector3.max_component(v) == v.dz
+        end
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.min_component/1" do
-    test "returns the smallest component value of a vector" do
-      assert Vector3.min_component(%Vector3{dx: 1.0, dy: 2.0, dz: 3.0}) == 1.0
-      assert Vector3.min_component(%Vector3{dx: 2.0, dy: 4.0, dz: -1.0}) == -1.0
-      assert Vector3.min_component(%Vector3{dx: 5.0, dy: -1.0, dz: 2.0}) == -1.0
+    property "returns the smallest component value of a vector" do
+      forall v <- vector3() do
+        cond do
+          v.dx < v.dy && v.dx < v.dz ->
+            assert Vector3.min_component(v) == v.dx
+
+          v.dy < v.dz ->
+            assert Vector3.min_component(v) == v.dy
+
+          true ->
+            assert Vector3.min_component(v) == v.dz
+        end
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.multiply/2" do
-    test "multiplies a point by a scalar value" do
-      vector = %Vector3{dx: 2.0, dy: 4.0, dz: 6.0}
-      scalar = 2.0
-
-      assert Vector3.multiply(vector, scalar) == %Vector3{dx: 4.0, dy: 8.0, dz: 12.0}
-    end
-  end
-
-  describe "Raytracer.Geometry.Vector3.negate/1" do
-    test "returns the vector pointing in the opposite direction of the given vector" do
-      vector = %Vector3{dx: 1.0, dy: 2.0, dz: -1.0}
-
-      assert Vector3.negate(vector) == %Vector3{dx: -1.0, dy: -2.0, dz: 1.0}
+    property "dividing the resulting vector by the scalar returns the original vector" do
+      forall {v, scalar} <- {vector3(), non_zero_float()} do
+        result = Vector3.multiply(v, scalar)
+        assert_in_delta result.dx / scalar, v.dx, @delta
+        assert_in_delta result.dy / scalar, v.dy, @delta
+        assert_in_delta result.dz / scalar, v.dz, @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.normalize/1" do
-    test "normalizes a vector" do
-      vector = %Vector3{dx: 10.0, dy: 8.0, dz: 5.0}
+    property "a normalized vector has a length of 1" do
+      forall v <- vector3() do
+        assert_in_delta v |> Vector3.normalize() |> Vector3.length(), 1.0, @delta
+      end
+    end
 
-      result = Vector3.normalize(vector)
-
-      assert_in_delta result.dx, 0.72739297, 1.0e-7
-      assert_in_delta result.dy, 0.58191437, 1.0e-7
-      assert_in_delta result.dz, 0.36369648, 1.0e-7
+    property "multiplying a normalized vector by its original length returns the original vector" do
+      forall v <- vector3() do
+        length = Vector3.length(v)
+        assert_equal_within_delta v |> Vector3.normalize() |> Vector3.multiply(length), v
+      end
     end
   end
 
   describe "Raytracer.Geometry.Vector3.subtract/2" do
-    test "subtracts two vectors" do
-      vector1 = %Vector3{dx: 1.0, dy: 5.0, dz: 4.0}
-      vector2 = %Vector3{dx: 2.0, dy: 3.0, dz: 7.0}
-
-      assert Vector3.subtract(vector1, vector2) == %Vector3{dx: -1.0, dy: 2.0, dz: -3.0}
+    property "adding the second vector to the resulting vector returns the first vector" do
+      forall {v1, v2} <- {vector3(), vector3()} do
+        result = Vector3.subtract(v1, v2)
+        assert_in_delta result.dx + v2.dx, v1.dx, @delta
+        assert_in_delta result.dy + v2.dy, v1.dy, @delta
+        assert_in_delta result.dz + v2.dz, v1.dz, @delta
+      end
     end
   end
 
   describe "Raytracer.Transformable.apply_transform/2" do
-    test "transforms a vector and returns the result" do
-      transform = Transform.scale(2.0, 3.0, 4.0)
-      vector = %Vector3{dx: 2.0, dy: 3.0, dz: 4.0}
+    property "applying the inverse transformation to a transformed vector produces the original vector" do
+      forall {v, m} <- {vector3(), affine_matrix4x4()} do
+        t = Transform.from_matrix(m)
+        inverse_t = Transform.inverse(t)
 
-      assert Transformable.apply_transform(vector, transform) ==
-               %Vector3{dx: 4.0, dy: 9.0, dz: 16.0}
+        result =
+          v
+          |> Transformable.apply_transform(t)
+          |> Transformable.apply_transform(inverse_t)
+
+        assert_equal_within_delta v, result
+      end
+    end
+
+    property "applying a scale transformation scales the vector components" do
+      forall {v, sx, sy, sz} <- {vector3(), non_zero_float(), non_zero_float(), non_zero_float()} do
+        t = Transform.scale(sx, sy, sz)
+        result = Transformable.apply_transform(v, t)
+        assert_in_delta result.dx, v.dx * sx, @delta
+        assert_in_delta result.dy, v.dy * sy, @delta
+        assert_in_delta result.dz, v.dz * sz, @delta
+      end
     end
   end
 end
