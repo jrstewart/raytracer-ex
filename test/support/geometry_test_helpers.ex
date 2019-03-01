@@ -6,7 +6,14 @@ defmodule Raytracer.GeometryTestHelpers do
 
   import ExUnit.Assertions, only: [assert_in_delta: 3]
 
-  alias Raytracer.Geometry.{Matrix4x4, Point3, Quaternion, Vector3}
+  alias Raytracer.Geometry.{
+    Matrix4x4,
+    Point2,
+    Point3,
+    Quaternion,
+    Vector2,
+    Vector3
+  }
 
   @doc """
   Asserts the elements of `value1` and `value2` are equal within `delta`.
@@ -34,6 +41,11 @@ defmodule Raytracer.GeometryTestHelpers do
     assert_in_delta Matrix4x4.elem(m1, 3, 3), Matrix4x4.elem(m2, 3, 3), delta
   end
 
+  defp do_assert_equal_within_delta(%Point2{} = p1, %Point2{} = p2, delta) do
+    assert_in_delta p1.x, p2.x, delta
+    assert_in_delta p1.y, p2.y, delta
+  end
+
   defp do_assert_equal_within_delta(%Point3{} = p1, %Point3{} = p2, delta) do
     assert_in_delta p1.x, p2.x, delta
     assert_in_delta p1.y, p2.y, delta
@@ -45,6 +57,11 @@ defmodule Raytracer.GeometryTestHelpers do
     assert_in_delta q1.y, q2.y, delta
     assert_in_delta q1.z, q2.z, delta
     assert_in_delta q1.w, q2.w, delta
+  end
+
+  defp do_assert_equal_within_delta(%Vector2{} = v1, %Vector2{} = v2, delta) do
+    assert_in_delta v1.dx, v2.dx, delta
+    assert_in_delta v1.dy, v2.dy, delta
   end
 
   defp do_assert_equal_within_delta(%Vector3{} = v1, %Vector3{} = v2, delta) do

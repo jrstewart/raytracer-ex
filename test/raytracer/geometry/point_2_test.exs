@@ -1,92 +1,143 @@
 defmodule Raytracer.Geometry.Point2Test do
   use ExUnit.Case, async: true
-
+  use PropCheck
+  import Raytracer.{Generators, GeometryTestHelpers}
   alias Raytracer.Geometry.{Point2, Vector2}
 
-  describe "Raytracer.Geometry.Point2.abs/1" do
-    test "returns the point with absolute value of each coordinate" do
-      point = %Point2{x: -1.0, y: -2.0}
+  @delta 1.0e-7
 
-      assert Point2.abs(point) == %Point2{x: 1.0, y: 2.0}
+  doctest Point2
+
+  describe "Raytracer.Geometry.Point2.abs/1" do
+    property "computes the absolute value of the point coordinates" do
+      forall p <- point2() do
+        result = Point2.abs(p)
+        assert result.x == if(p.x >= 0.0, do: p.x, else: -p.x)
+        assert result.y == if(p.y >= 0.0, do: p.y, else: -p.y)
+      end
     end
   end
 
   describe "Raytracer.Geometry.Point2.add/2" do
-    test "adds two points and returns the resulting point" do
-      point1 = %Point2{x: 1.0, y: 2.0}
-      point2 = %Point2{x: 4.0, y: 5.0}
-
-      assert Point2.add(point1, point2) == %Point2{x: 5.0, y: 7.0}
+    property "subtracting one of the points from the resulting point returns the other point" do
+      forall {p1, p2} <- {point2(), point2()} do
+        result = Point2.add(p1, p2)
+        assert_in_delta result.x - p2.x, p1.x, @delta
+        assert_in_delta result.y - p2.y, p1.y, @delta
+      end
     end
 
-    test "adds a point and a vector and returns the resulting point" do
-      point = %Point2{x: 1.0, y: 2.0}
-      vector = %Vector2{dx: 4.0, dy: 5.0}
-
-      assert Point2.add(point, vector) == %Point2{x: 5.0, y: 7.0}
+    property "subtracting the vector from the resulting point returns the original point" do
+      forall {p, v} <- {point2(), vector2()} do
+        result = Point2.add(p, v)
+        assert_in_delta result.x - v.dx, p.x, @delta
+        assert_in_delta result.y - v.dy, p.y, @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Point2.distance_between/2" do
-    test "computes the distance between two points" do
-      point1 = %Point2{x: 0.0, y: 0.0}
-      point2 = %Point2{x: 1.0, y: 2.0}
+    property "the distance between two points is non-negative" do
+      forall {p1, p2} <- {point2(), point2()} do
+        assert Point2.distance_between(p1, p2) >= 0.0
+      end
+    end
 
-      assert_in_delta Point2.distance_between(point1, point2), 2.236067977, 1.0e-7
+    property "the distance between a point and itself is 0" do
+      forall p <- point2() do
+        assert_in_delta Point2.distance_between(p, p), 0.0, @delta
+      end
+    end
+
+    property "the distance is the square root of the squared distance between two points" do
+      forall {p1, p2} <- {point2(), point2()} do
+        assert_in_delta Point2.distance_between(p1, p2),
+                        Point2.distance_between_squared(p1, p2) |> :math.sqrt(),
+                        @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Point2.distance_between_squared/2" do
-    test "computes the squared distance between two points" do
-      point1 = %Point2{x: 0.0, y: 0.0}
-      point2 = %Point2{x: 1.0, y: 2.0}
+    property "the squared distance between two points is non-negative" do
+      forall {p1, p2} <- {point2(), point2()} do
+        assert Point2.distance_between_squared(p1, p2) >= 0.0
+      end
+    end
 
-      assert_in_delta Point2.distance_between_squared(point1, point2), 5.0, 1.0e-7
+    property "the squared distance between a point and itself is 0" do
+      forall p <- point2() do
+        assert_in_delta Point2.distance_between_squared(p, p), 0.0, @delta
+      end
+    end
+
+    property "the squared distance is the distance between two points squared" do
+      forall {p1, p2} <- {point2(), point2()} do
+        assert_in_delta Point2.distance_between_squared(p1, p2),
+                        Point2.distance_between(p1, p2) |> :math.pow(2),
+                        @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Point2.divide/2" do
-    test "divides a point by a scalar value" do
-      point = %Point2{x: 2.0, y: 4.0}
-      scalar = 2.0
-
-      assert Point2.divide(point, scalar) == %Point2{x: 1.0, y: 2.0}
+    property "multiplying the resulting point by the scalar returns the original point" do
+      forall {p, scalar} <- {point2(), non_zero_float()} do
+        result = Point2.divide(p, scalar)
+        assert_in_delta result.x * scalar, p.x, @delta
+        assert_in_delta result.y * scalar, p.y, @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Point2.lerp/3" do
-    test "linearly interpolates between two points" do
-      point1 = %Point2{x: 1.0, y: 1.0}
-      point2 = %Point2{x: -1.0, y: -1.0}
+    property "computes the point between two points at position t" do
+      forall {p1, p2, t} <- {point2(), point2(), float(0.0, 1.0)} do
+        assert_equal_within_delta Point2.lerp(p1, p2, t),
+                                  Point2.add(p1, Vector2.multiply(Point2.subtract(p2, p1), t))
+      end
+    end
 
-      assert Point2.lerp(point1, point2, 0.5) == %Point2{x: 0.0, y: 0.0}
-      assert Point2.lerp(point1, point2, 0.0) == point1
-      assert Point2.lerp(point1, point2, 1.0) == point2
+    property "when t = 0 the first point is returned" do
+      forall {p1, p2} <- {point2(), point2()} do
+        result = Point2.lerp(p1, p2, 0.0)
+        assert result == p1
+      end
+    end
+
+    property "when t = 1 the second point is returned" do
+      forall {p1, p2} <- {point2(), point2()} do
+        result = Point2.lerp(p1, p2, 1.0)
+        assert result == p2
+      end
     end
   end
 
   describe "Raytracer.Geometry.Point2.multiply/2" do
-    test "multiplies a point by a scalar value" do
-      point = %Point2{x: 2.0, y: 4.0}
-      scalar = 2.0
-
-      assert Point2.multiply(point, scalar) == %Point2{x: 4.0, y: 8.0}
+    property "dividing the resulting point by the scalar returns the original point" do
+      forall {p, scalar} <- {point2(), non_zero_float()} do
+        result = Point2.multiply(p, scalar)
+        assert_in_delta result.x / scalar, p.x, @delta
+        assert_in_delta result.y / scalar, p.y, @delta
+      end
     end
   end
 
   describe "Raytracer.Geometry.Point2.subtract/2" do
-    test "subtracts two points and returns the resulting vector" do
-      point1 = %Point2{x: 1.0, y: 2.0}
-      point2 = %Point2{x: 4.0, y: 5.0}
-
-      assert Point2.subtract(point1, point2) == %Vector2{dx: -3.0, dy: -3.0}
+    property "adding the second point to the resulting vector returns the first point" do
+      forall {p1, p2} <- {point2(), point2()} do
+        result = Point2.subtract(p1, p2)
+        assert_in_delta result.dx + p2.x, p1.x, @delta
+        assert_in_delta result.dy + p2.y, p1.y, @delta
+      end
     end
 
-    test "subtracts a point and a vector and returns the resulting point" do
-      point = %Point2{x: 1.0, y: 2.0}
-      vector = %Vector2{dx: 4.0, dy: 5.0}
-
-      assert Point2.subtract(point, vector) == %Point2{x: -3.0, y: -3.0}
+    property "subtracting the resulting point from the point returns the vector" do
+      forall {p, v} <- {point2(), vector2()} do
+        result = Point2.subtract(p, v)
+        assert_in_delta p.x - result.x, v.dx, @delta
+        assert_in_delta p.y - result.y, v.dy, @delta
+      end
     end
   end
 end

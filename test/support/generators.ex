@@ -1,6 +1,6 @@
 defmodule Raytracer.Generators do
   use PropCheck
-  alias Raytracer.Geometry.{Matrix4x4, Point3, Vector3}
+  alias Raytracer.Geometry.{Matrix4x4, Point2, Point3, Vector2, Vector3}
 
   def non_zero_float, do: such_that(n <- float(), when: n != 0.0)
 
@@ -39,9 +39,21 @@ defmodule Raytracer.Generators do
   # Point and vector generators
   #
 
+  def point2 do
+    let {x, y} <- {float(), float()} do
+      %Point2{x: x, y: y}
+    end
+  end
+
   def point3 do
     let {x, y, z} <- {float(), float(), float()} do
       %Point3{x: x, y: y, z: z}
+    end
+  end
+
+  def vector2 do
+    let {dx, dy} <- {float(), float()} do
+      %Vector2{dx: dx, dy: dy}
     end
   end
 
