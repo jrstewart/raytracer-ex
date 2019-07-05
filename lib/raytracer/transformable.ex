@@ -1,7 +1,7 @@
 defprotocol Raytracer.Transformable do
   @moduledoc """
-  A protocol that defines an interface for working with items that can have a
-  transform applied to them.
+  A protocol that defines an interface for working with items that can have a transform applied to
+  them.
   """
 
   alias Raytracer.Transform

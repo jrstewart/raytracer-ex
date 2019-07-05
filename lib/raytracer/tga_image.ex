@@ -1,7 +1,6 @@
 defmodule Raytracer.TGAImage do
   @moduledoc """
-  This module provides a struct and a set of functions for working with TARGA
-  image files.
+  This module provides a struct and a set of functions for working with TARGA image files.
   """
 
   alias __MODULE__
@@ -37,8 +36,8 @@ defmodule Raytracer.TGAImage do
   @doc """
   Writes the `image` and `pixels` data to the file at the specified `path`.
   """
-  @spec write(t(), Path.t(), iodata()) :: :ok | {:error, File.posix()}
-  def write(%TGAImage{} = image, path, pixels) do
+  @spec write(t, Path.t(), iodata) :: :ok | {:error, File.posix()}
+  def write(image, path, pixels) do
     File.write(path, file_data(image, pixels), [:binary, :raw])
   end
 
@@ -55,7 +54,9 @@ defmodule Raytracer.TGAImage do
       <<image.height::little-16>> <>
       <<image.pixel_depth::little-8>> <>
       <<image.descriptor::little-8>> <>
-      format_pixels(image, pixels, "") <> "TRUEVISION-XFILE." <> :binary.copy(<<0>>, 9)
+      format_pixels(image, pixels, "") <>
+      "TRUEVISION-XFILE." <>
+      :binary.copy(<<0>>, 9)
   end
 
   defp format_pixels(_, "", acc), do: acc

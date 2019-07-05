@@ -7,10 +7,36 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+
       - run: mix local.hex --force
       - run: mix local.rebar --force
-      - run: mix deps.get
-      - run: MIX_ENV=test mix coveralls.json
+
+      - restore_cache:
+          keys:
+            - deps-cache-{{ checksum "mix.lock" }}
+      - run: mix do deps.get, deps.compile
+      - save_cache:
+          key: deps-cache-{{ checksum "mix.lock" }}
+          paths:
+            - deps
+            - ~/.mix
+            - _build
+
+      - run: mix compile
+
+      - run: echo "$OTP_VERSION $ELIXIR_VERSION" > .version_file
+      - restore_cache:
+          keys:
+            - plt-cache-{{ checksum ".version_file" }}-{{ checksum "mix.lock" }}
+      - run: mix dialyzer --plt
+      - save_cache:
+          key: plt-cache-{{ checksum ".version_file"  }}-{{ checksum "mix.lock" }}
+          paths:
+            - _build
+            - deps
+            - ~/.mix
+
       - run: mix format --check-formatted
-      - run: mix dialyzer
+
+      - run: MIX_ENV=test mix coveralls.json
       - run: bash <(curl -s https://codecov.io/bash)

@@ -9,13 +9,13 @@ defmodule Raytracer.Geometry.Quaternion do
 
   defstruct x: 0.0, y: 0.0, z: 0.0, w: 0.0
 
-  @type t :: %Quaternion{x: number(), y: number(), z: number(), w: number()}
+  @type t :: %Quaternion{x: float, y: float, z: float, w: float}
 
   @doc """
   Adds two quaternions and returns the resulting quaternion.
   """
-  @spec add(t(), t()) :: t()
-  def add(%Quaternion{} = quaternion1, %Quaternion{} = quaternion2) do
+  @spec add(t, t) :: t
+  def add(quaternion1, quaternion2) do
     %Quaternion{
       x: quaternion1.x + quaternion2.x,
       y: quaternion1.y + quaternion2.y,
@@ -27,25 +27,25 @@ defmodule Raytracer.Geometry.Quaternion do
   @doc """
   Divides `quaternion` by `scalar` and returns the resulting quaternion.
   """
-  @spec divide(t(), float()) :: t()
-  def divide(%Quaternion{} = quaternion, scalar) do
-    multiply(quaternion, 1.0 / scalar)
-  end
+  @spec divide(t, float) :: t
+  def divide(quaternion, scalar), do: multiply(quaternion, 1.0 / scalar)
 
   @doc """
   Computes the dot product of `quaternion1` and `quaternion2`.
   """
-  @spec dot(t(), t()) :: float()
-  def dot(%Quaternion{} = quaternion1, %Quaternion{} = quaternion2) do
-    quaternion1.x * quaternion2.x + quaternion1.y * quaternion2.y + quaternion1.z * quaternion2.z +
+  @spec dot(t, t) :: float
+  def dot(quaternion1, quaternion2) do
+    quaternion1.x * quaternion2.x +
+      quaternion1.y * quaternion2.y +
+      quaternion1.z * quaternion2.z +
       quaternion1.w * quaternion2.w
   end
 
   @doc """
   Converts `matrix` into a quaternion.
   """
-  @spec from_matrix(Matrix4x4.t()) :: t()
-  def from_matrix(%Matrix4x4{} = matrix) do
+  @spec from_matrix(Matrix4x4.t()) :: t
+  def from_matrix(matrix) do
     trace =
       Matrix4x4.elem(matrix, 0, 0) + Matrix4x4.elem(matrix, 1, 1) + Matrix4x4.elem(matrix, 2, 2)
 
@@ -96,22 +96,20 @@ defmodule Raytracer.Geometry.Quaternion do
   @doc """
   Converts `transform` into a quaternion.
   """
-  @spec from_transform(Transform.t()) :: t()
-  def from_transform(%Transform{} = transform), do: from_matrix(transform.matrix)
+  @spec from_transform(Transform.t()) :: t
+  def from_transform(transform), do: from_matrix(transform.matrix)
 
   @doc """
   Computes the length of `quaternion`.
   """
-  @spec length(t()) :: float()
-  def length(%Quaternion{} = quaternion) do
-    quaternion |> dot(quaternion) |> :math.sqrt()
-  end
+  @spec length(t) :: float
+  def length(quaternion), do: quaternion |> dot(quaternion) |> :math.sqrt()
 
   @doc """
   Multiplies `quaternion` by `scalar` and returns the resulting quaternion.
   """
-  @spec multiply(t(), float()) :: t()
-  def multiply(%Quaternion{} = quaternion, scalar) do
+  @spec multiply(t, float) :: t
+  def multiply(quaternion, scalar) do
     %Quaternion{
       x: quaternion.x * scalar,
       y: quaternion.y * scalar,
@@ -123,19 +121,16 @@ defmodule Raytracer.Geometry.Quaternion do
   @doc """
   Normalizes `quaternion` and returns the resulting quaternion.
   """
-  @spec normalize(t()) :: t()
-  def normalize(%Quaternion{} = quaternion) do
-    divide(quaternion, Quaternion.length(quaternion))
-  end
+  @spec normalize(t) :: t
+  def normalize(quaternion), do: divide(quaternion, Quaternion.length(quaternion))
 
   @doc """
   Computes the spherical linear interpolation from `quaternion1` to `quaternion2`
   by the value `t`.
   """
-  @spec slerp(t(), t(), float()) :: t()
-  def slerp(%Quaternion{} = quaternion1, %Quaternion{} = quaternion2, t) do
-    do_slerp(quaternion1, quaternion2, t, dot(quaternion1, quaternion2))
-  end
+  @spec slerp(t, t, float) :: t
+  def slerp(quaternion1, quaternion2, t),
+    do: do_slerp(quaternion1, quaternion2, t, dot(quaternion1, quaternion2))
 
   defp do_slerp(quaternion1, quaternion2, t, cos_theta) when cos_theta > 0.9995 do
     quaternion1
@@ -157,8 +152,8 @@ defmodule Raytracer.Geometry.Quaternion do
   @doc """
   Subtracts two quaternions and returns the resulting quaternion.
   """
-  @spec subtract(t(), t()) :: t()
-  def subtract(%Quaternion{} = quaternion1, %Quaternion{} = quaternion2) do
+  @spec subtract(t, t) :: t
+  def subtract(quaternion1, quaternion2) do
     %Quaternion{
       x: quaternion1.x - quaternion2.x,
       y: quaternion1.y - quaternion2.y,
@@ -170,8 +165,8 @@ defmodule Raytracer.Geometry.Quaternion do
   @doc """
   Converts `quaternion` to a transform.
   """
-  @spec to_transform(t()) :: Transform.t()
-  def to_transform(%Quaternion{} = quaternion) do
+  @spec to_transform(t) :: Transform.t()
+  def to_transform(quaternion) do
     xx = quaternion.x * quaternion.x
     xy = quaternion.x * quaternion.y
     xz = quaternion.x * quaternion.z

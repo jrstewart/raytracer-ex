@@ -1,12 +1,11 @@
 defmodule Raytracer.Geometry.Ray3Differential do
   @moduledoc """
-  Ray differentials provide two auxiliary rays in addition to a primary ray to
-  allow additional information to be used in computations such as antialiasing
-  and texture mapping.
+  Ray differentials provide two auxiliary rays in addition to a primary ray to allow additional
+  information to be used in computations such as antialiasing and texture mapping.
   """
 
   alias __MODULE__
-  alias Raytracer.{Transform, Transformable}
+  alias Raytracer.Transformable
   alias Raytracer.Geometry.{Point3, Ray3, Vector3}
 
   defstruct ray: %Ray3{},
@@ -26,22 +25,15 @@ defmodule Raytracer.Geometry.Ray3Differential do
         }
 
   @doc """
-  Scales the auxiliary ray information of `ray_differential` by the given
-  `scalar` value.
+  Scales the auxiliary ray information of ray differential `rd` by the given `scalar` value.
   """
-  @spec scale(t(), number()) :: t()
-  def scale(%Ray3Differential{} = ray_differential, scalar) do
-    ray_differential
-    |> Map.put(:x_origin, scale_point(ray_differential.ray, ray_differential.x_origin, scalar))
-    |> Map.put(:y_origin, scale_point(ray_differential.ray, ray_differential.y_origin, scalar))
-    |> Map.put(
-      :x_direction,
-      scale_vector(ray_differential.ray, ray_differential.x_direction, scalar)
-    )
-    |> Map.put(
-      :y_direction,
-      scale_vector(ray_differential.ray, ray_differential.y_direction, scalar)
-    )
+  @spec scale(t, float) :: t
+  def scale(rd, scalar) do
+    rd
+    |> Map.put(:x_origin, scale_point(rd.ray, rd.x_origin, scalar))
+    |> Map.put(:y_origin, scale_point(rd.ray, rd.y_origin, scalar))
+    |> Map.put(:x_direction, scale_vector(rd.ray, rd.x_direction, scalar))
+    |> Map.put(:y_direction, scale_vector(rd.ray, rd.y_direction, scalar))
   end
 
   defp scale_point(ray, point, scalar) do
@@ -59,19 +51,13 @@ defmodule Raytracer.Geometry.Ray3Differential do
   end
 
   defimpl Transformable do
-    def apply_transform(%Ray3Differential{} = ray_differential, %Transform{} = transform) do
-      ray_differential
-      |> Map.put(:ray, Transformable.apply_transform(ray_differential.ray, transform))
-      |> Map.put(:x_origin, Transformable.apply_transform(ray_differential.x_origin, transform))
-      |> Map.put(:y_origin, Transformable.apply_transform(ray_differential.y_origin, transform))
-      |> Map.put(
-        :x_direction,
-        Transformable.apply_transform(ray_differential.x_direction, transform)
-      )
-      |> Map.put(
-        :y_direction,
-        Transformable.apply_transform(ray_differential.y_direction, transform)
-      )
+    def apply_transform(rd, transform) do
+      rd
+      |> Map.put(:ray, Transformable.apply_transform(rd.ray, transform))
+      |> Map.put(:x_origin, Transformable.apply_transform(rd.x_origin, transform))
+      |> Map.put(:y_origin, Transformable.apply_transform(rd.y_origin, transform))
+      |> Map.put(:x_direction, Transformable.apply_transform(rd.x_direction, transform))
+      |> Map.put(:y_direction, Transformable.apply_transform(rd.y_direction, transform))
     end
   end
 end
