@@ -1,9 +1,30 @@
 defmodule Raytracer.Geometry.Matrix4x4Test do
   use ExUnit.Case, async: true
-
-  import Raytracer.GeometryTestHelpers
-
+  use PropCheck
+  import Raytracer.{GeometryTestHelpers, Generators}
   alias Raytracer.Geometry.Matrix4x4
+
+  @delta 1.0e-5
+
+  describe "Raytracer.Geometry.Matrix4x4.determinant/1" do
+    test "the determinant of the identity matrix is 1" do
+      assert_in_delta Matrix4x4.identity_matrix() |> Matrix4x4.determinant(), 1.0, @delta
+    end
+
+    property "the determinant of a matrix equals the determinant of the transpose of that matrix" do
+      forall {m} <- {matrix4x4()} do
+        transpose_m = Matrix4x4.transpose(m)
+        assert_in_delta Matrix4x4.determinant(m), Matrix4x4.determinant(transpose_m), @delta
+      end
+    end
+
+    property "1 divided by the determinant of a matrix is equal to the determinant of the inverse of that matrix" do
+      forall {m} <- {invertable_matrix4x4()} do
+        inverse_m = Matrix4x4.inverse(m)
+        assert_in_delta 1 / Matrix4x4.determinant(m), Matrix4x4.determinant(inverse_m), @delta
+      end
+    end
+  end
 
   describe "Raytracer.Geometry.Matrix4x4.diagonal_matrix/4" do
     test "returns a diagonal matrix with the given elements" do

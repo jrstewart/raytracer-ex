@@ -1,8 +1,27 @@
 defmodule Raytracer.Generators do
   use PropCheck
-  alias Raytracer.Geometry.{Matrix4x4, Point2, Point3, Vector2, Vector3}
+
+  alias Raytracer.Geometry.{
+    Bounds2,
+    Matrix4x4,
+    Point2,
+    Point3,
+    Vector2,
+    Vector3
+  }
 
   def non_zero_float, do: such_that(n <- float(), when: n != 0.0)
+
+  #
+  # Bounding box generators
+  #
+
+  def bounds2 do
+    let {x1, x2, y1, y2} <- {float(), float(), float(), float()} do
+      {:ok, bounds} = Bounds2.new(min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2))
+      bounds
+    end
+  end
 
   #
   # Matrix generators
