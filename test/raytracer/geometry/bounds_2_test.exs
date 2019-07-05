@@ -1,24 +1,37 @@
 defmodule Raytracer.Geometry.Bounds2Test do
   use ExUnit.Case, async: true
-
+  use PropCheck
+  import Raytracer.{Generators, GeometryTestHelpers}
   alias Raytracer.Geometry.{Bounds2, Point2, Vector2}
 
-  describe "Raytracer.Geometry.Bounds2.corner/2" do
-    test "returns the coordinates of the given corner index" do
-      bounds = %Bounds2{min: %Point2{x: 0.0, y: 0.0}, max: %Point2{x: 1.0, y: 1.0}}
+  @delta 1.0e-7
 
-      assert Bounds2.corner(bounds, 0) == %Point2{x: 0.0, y: 0.0}
-      assert Bounds2.corner(bounds, 1) == %Point2{x: 1.0, y: 0.0}
-      assert Bounds2.corner(bounds, 2) == %Point2{x: 0.0, y: 1.0}
-      assert Bounds2.corner(bounds, 3) == %Point2{x: 1.0, y: 1.0}
+  doctest Bounds2
+
+  describe "Raytracer.Geometry.Bounds2.corner/2" do
+    property "returns the coordinates of the given corner index" do
+      forall b <- bounds2() do
+        assert Bounds2.corner(b, 0).x == b.min.x
+        assert Bounds2.corner(b, 0).y == b.min.y
+
+        assert Bounds2.corner(b, 1).x == b.max.x
+        assert Bounds2.corner(b, 1).y == b.min.y
+
+        assert Bounds2.corner(b, 2).x == b.min.x
+        assert Bounds2.corner(b, 2).y == b.max.y
+
+        assert Bounds2.corner(b, 3).x == b.max.x
+        assert Bounds2.corner(b, 3).y == b.max.y
+      end
     end
   end
 
   describe "Raytracer.Geometry.Bounds2.diagonal/1" do
-    test "returns a vector pointing from the min point to the max point" do
-      bounds = %Bounds2{min: %Point2{x: -1.0, y: -1.0}, max: %Point2{x: 1.0, y: 1.0}}
-
-      assert Bounds2.diagonal(bounds) == %Vector2{dx: 2.0, dy: 2.0}
+    property "adding the min point and the diagonal vector returns the max point" do
+      forall b <- bounds2() do
+        diagonal = Bounds2.diagonal(b)
+        assert_equal_within_delta Point2.add(b.min, diagonal), b.max, @delta
+      end
     end
   end
 
