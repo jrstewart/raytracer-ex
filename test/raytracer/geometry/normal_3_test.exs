@@ -1,6 +1,5 @@
 defmodule Raytracer.Geometry.Normal3Test do
   use ExUnit.Case, async: true
-
   alias Raytracer.{Transform, Transformable}
   alias Raytracer.Geometry.{Normal3, Vector3}
 
@@ -114,14 +113,12 @@ defmodule Raytracer.Geometry.Normal3Test do
       transform = Transform.translate(2.0, 3.0, 4.0)
       normal = %Normal3{dx: 2.0, dy: 3.0, dz: 4.0}
 
-      assert Transformable.apply_transform(normal, transform) ==
-               %Normal3{dx: 2.0, dy: 3.0, dz: 4.0}
+      assert Transformable.apply_transform(normal, transform) == %Normal3{dx: 2.0, dy: 3.0, dz: 4.0}
 
       transform = Transform.scale(2.0, 3.0, 4.0)
       normal = %Normal3{dx: 2.0, dy: 3.0, dz: 4.0}
 
-      assert Transformable.apply_transform(normal, transform) ==
-               %Normal3{dx: 1.0, dy: 1.0, dz: 1.0}
+      assert Transformable.apply_transform(normal, transform) == %Normal3{dx: 1.0, dy: 1.0, dz: 1.0}
     end
   end
 end
