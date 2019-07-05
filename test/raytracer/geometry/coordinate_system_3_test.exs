@@ -1,6 +1,5 @@
 defmodule Raytracer.Geometry.CoordinateSystem3Test do
   use ExUnit.Case, async: true
-
   alias Raytracer.Geometry.{CoordinateSystem3, Vector3}
 
   describe "Raytracer.Geometry.CoordinateSystem3.create_from_vector/1" do
