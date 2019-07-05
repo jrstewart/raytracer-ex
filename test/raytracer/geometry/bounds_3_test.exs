@@ -1,8 +1,6 @@
 defmodule Raytracer.Geometry.Bounds3Test do
   use ExUnit.Case, async: true
-
   import Raytracer.GeometryTestHelpers
-
   alias Raytracer.{Transform, Transformable}
   alias Raytracer.Geometry.{Bounds3, Point3, Vector3}
 
