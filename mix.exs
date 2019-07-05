@@ -11,7 +11,6 @@ defmodule Raytracer.Mixfile do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       escript: escript_config(),
-      dialyzer: dialyzer_config(),
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
@@ -40,11 +39,4 @@ defmodule Raytracer.Mixfile do
   defp elixirc_paths(_), do: ["lib"]
 
   defp escript_config, do: [main_module: Raytracer]
-
-  defp dialyzer_config do
-    [
-      # ignore_warnings: "config/dialyzer.ignore-warnings",
-      # plt_add_deps: :transitive
-    ]
-  end
 end
