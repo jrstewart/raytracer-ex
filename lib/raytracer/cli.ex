@@ -6,7 +6,7 @@ defmodule Raytracer.CLI do
   @doc """
   Runs the Raytracer program with given arguments.
   """
-  @spec run(term) :: term
+  @spec run([binary]) :: :ok
   def run(argv) do
     argv |> parse_args |> process
   end
