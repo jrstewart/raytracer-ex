@@ -1,6 +1,8 @@
 defmodule Raytracer.Generators do
   use PropCheck
 
+  alias Raytracer.ColorRGB
+
   alias Raytracer.Geometry.{
     Bounds2,
     Matrix4x4,
@@ -21,6 +23,21 @@ defmodule Raytracer.Generators do
       {:ok, bounds} = Bounds2.new(min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2))
       bounds
     end
+  end
+
+  #
+  # Color generators
+  #
+
+  def color_rgb do
+    let {r, g, b} <- {float(0.0, :inf), float(0.0, :inf), float(0.0, :inf)} do
+      %ColorRGB{red: r, green: g, blue: b}
+    end
+  end
+
+  def unbound_color_rgb do
+    such_that %ColorRGB{red: r, green: g, blue: b} <- color_rgb(),
+              when: r > 1.0 or g > 1.0 or b > 1.0
   end
 
   #
