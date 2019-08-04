@@ -1,6 +1,7 @@
 locals_without_parens = [
   assert_equal_within_delta: 2,
-  assert_equal_within_delta: 3
+  assert_equal_within_delta: 3,
+  such_that: 2
 ]
 
 [
