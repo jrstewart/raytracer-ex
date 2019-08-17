@@ -30,6 +30,18 @@ defmodule Raytracer.ColorRGB do
   end
 
   @doc """
+  Returns the ColorRGB representation of the color black.
+
+  ## Examples
+
+      iex> ColorRGB.black()
+      %ColorRGB{red: 0.0, green: 0.0, blue: 0.0}
+
+  """
+  @spec black() :: t()
+  def black(), do: %ColorRGB{red: 0.0, green: 0.0, blue: 0.0}
+
+  @doc """
   Checks if any of the RGB values of `color` are greater than 1.0 and scales the color based on the
   largest value.
 
@@ -93,4 +105,16 @@ defmodule Raytracer.ColorRGB do
       blue: color.blue * scalar
     }
   end
+
+  @doc """
+  Returns the ColorRGB representation of the color white.
+
+  ## Examples
+
+      iex> ColorRGB.white()
+      %ColorRGB{red: 1.0, green: 1.0, blue: 1.0}
+
+  """
+  @spec white() :: t()
+  def white(), do: %ColorRGB{red: 1.0, green: 1.0, blue: 1.0}
 end
