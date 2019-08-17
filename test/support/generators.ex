@@ -98,4 +98,10 @@ defmodule Raytracer.Generators do
       %Vector3{dx: dx, dy: dy, dz: dz}
     end
   end
+
+  def non_zero_vector3 do
+    let {dx, dy, dz} <- {non_zero_float(), non_zero_float(), non_zero_float()} do
+      %Vector3{dx: dx, dy: dy, dz: dz}
+    end
+  end
 end

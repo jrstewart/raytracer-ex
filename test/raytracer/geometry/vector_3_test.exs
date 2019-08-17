@@ -62,6 +62,15 @@ defmodule Raytracer.Geometry.Vector3Test do
     end
   end
 
+  describe "Raytracer.Geometry.Vector3.decompose/2" do
+    property "adding the parallel and perpendicular vectors returns the original vector" do
+      forall {v1, v2} <- {non_zero_vector3(), non_zero_vector3()} do
+        {parallel, perpendicular} = Vector3.decompose(v1, v2)
+        assert_equal_within_delta Vector3.add(parallel, perpendicular), v2
+      end
+    end
+  end
+
   describe "Raytracer.Geometry.Vector3.divide/2" do
     property "multiplying the resulting vector by the scalar returns the original vector" do
       forall {v, scalar} <- {vector3(), non_zero_float()} do
