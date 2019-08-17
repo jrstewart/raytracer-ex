@@ -20,7 +20,7 @@ defmodule Raytracer.SceneTest do
                %LightSource{
                  color: %ColorRGB{red: 0.5, green: 0.25, blue: 0.1},
                  light: %DirectionalLight{
-                   direction: %Vector3{dx: 1.0, dy: -1.0, dz: -0.5},
+                   direction: %Vector3{dx: 1.0, dy: 0.0, dz: 0.0},
                    solid_angle: 0.1
                  }
                },

@@ -19,8 +19,8 @@ defmodule Raytracer.Lighting.DirectionalLight do
   def parse(contents) do
     with {:ok, [dx, dy, dz]} <- Map.fetch(contents, "direction"),
          {:ok, solid_angle} <- Map.fetch(contents, "solid_angle") do
-      {:ok,
-       %DirectionalLight{direction: %Vector3{dx: dx, dy: dy, dz: dz}, solid_angle: solid_angle}}
+      direction = %Vector3{dx: dx, dy: dy, dz: dz} |> Vector3.normalize()
+      {:ok, %DirectionalLight{direction: direction, solid_angle: solid_angle}}
     else
       :error ->
         {:error, "error parsing directional light"}

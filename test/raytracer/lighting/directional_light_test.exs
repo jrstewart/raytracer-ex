@@ -1,5 +1,6 @@
 defmodule Raytracer.Lighting.DirectionalLightTest do
   use ExUnit.Case, async: true
+  import Raytracer.GeometryTestHelpers
   alias Raytracer.Geometry.{Point3, Vector3}
   alias Raytracer.Lighting.{Light, DirectionalLight}
 
@@ -7,7 +8,10 @@ defmodule Raytracer.Lighting.DirectionalLightTest do
     test "parses the light data from the given map" do
       data = %{"direction" => [1.0, 2.0, 3.0], "solid_angle" => 4.0}
       assert {:ok, light} = DirectionalLight.parse(data)
-      assert light.direction == %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+
+      assert_equal_within_delta light.direction,
+                                %Vector3{dx: 1.0, dy: 2.0, dz: 3.0} |> Vector3.normalize()
+
       assert light.solid_angle == 4.0
     end
 

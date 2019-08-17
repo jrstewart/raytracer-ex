@@ -21,12 +21,12 @@ defmodule Raytracer.Lighting.LightSourceTest do
     test "parses a directional light source" do
       data = %{
         "type" => "directional",
-        "data" => %{"direction" => [1.0, 2.0, 3.0], "solid_angle" => 2.0},
+        "data" => %{"direction" => [1.0, 0.0, 0.0], "solid_angle" => 2.0},
         "color" => [1.0, 0.5, 0.25]
       }
 
       assert {:ok, light_source} = LightSource.parse(data)
-      assert light_source.light.direction == %Vector3{dx: 1.0, dy: 2.0, dz: 3.0}
+      assert light_source.light.direction == %Vector3{dx: 1.0, dy: 0.0, dz: 0.0}
       assert light_source.light.solid_angle == 2.0
       assert light_source.color == %ColorRGB{red: 1.0, green: 0.5, blue: 0.25}
     end
