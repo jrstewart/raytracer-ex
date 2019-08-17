@@ -1,6 +1,5 @@
 defmodule Raytracer.TGAImageTest do
   use ExUnit.Case, async: true
-
   alias Raytracer.TGAImage
 
   @test_dir "test/support/test_data/"

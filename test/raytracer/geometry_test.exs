@@ -1,6 +1,5 @@
 defmodule Raytracer.GeometryTest do
   use ExUnit.Case, async: true
-
   alias Raytracer.Geometry
 
   describe "Raytracer.Geometry.clamp/3" do

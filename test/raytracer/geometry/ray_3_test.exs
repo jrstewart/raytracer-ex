@@ -1,6 +1,5 @@
 defmodule Raytracer.Geometry.Ray3Test do
   use ExUnit.Case, async: true
-
   alias Raytracer.{Transform, Transformable}
   alias Raytracer.Geometry.{Ray3, Point3, Vector3}
 

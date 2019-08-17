@@ -1,8 +1,6 @@
 defmodule Raytracer.Geometry.QuaternionTest do
   use ExUnit.Case, async: true
-
   import Raytracer.GeometryTestHelpers
-
   alias Raytracer.Transform
   alias Raytracer.Geometry.{Matrix4x4, Quaternion}
 
