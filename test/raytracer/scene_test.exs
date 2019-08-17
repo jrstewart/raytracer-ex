@@ -45,15 +45,11 @@ defmodule Raytracer.SceneTest do
                    shininess: 0.2,
                    reflected_scale_factor: 0.8,
                    transmitted_scale_factor: 0.1,
-                   normal_reflectances: [
-                     0.460,
-                     0.420,
-                     0.410,
-                     0.350,
-                     0.180,
-                     0.080,
-                     0.050
-                   ]
+                   normal_reflectances: %{
+                     red: [0.460, 0.420, 0.410],
+                     green: [0.350, 0.180],
+                     blue: [0.080, 0.050]
+                   }
                  }
                }
              ]

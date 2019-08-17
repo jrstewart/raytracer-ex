@@ -7,16 +7,26 @@ defmodule Raytracer.Material do
   alias __MODULE__
   alias Raytracer.Parser
 
-  defstruct diffuse: 0.0,
-            normal_reflectances: [],
-            reflected_scale_factor: 0.0,
-            shininess: 0.0,
-            specular: 0.0,
-            transmitted_scale_factor: 0.0
+  @enforce_keys [
+    :diffuse,
+    :normal_reflectances,
+    :reflected_scale_factor,
+    :shininess,
+    :specular,
+    :transmitted_scale_factor
+  ]
+  defstruct [
+    :diffuse,
+    :normal_reflectances,
+    :reflected_scale_factor,
+    :shininess,
+    :specular,
+    :transmitted_scale_factor
+  ]
 
   @type t :: %Material{
           diffuse: float(),
-          normal_reflectances: list(float()),
+          normal_reflectances: %{red: [float(), ...], green: [float(), ...], blue: [float(), ...]},
           reflected_scale_factor: float(),
           shininess: float(),
           specular: float(),
@@ -30,15 +40,28 @@ defmodule Raytracer.Material do
   material.
   """
   @spec index_of_refraction(t()) :: float()
-  def index_of_refraction(%Material{normal_reflectances: []}), do: 0.0
-
   def index_of_refraction(material) do
-    sum =
-      Enum.reduce(material.normal_reflectances, 0.0, fn r, acc ->
-        acc + (1 + :math.sqrt(r)) / (1 - :math.sqrt(r))
-      end)
+    count = normal_reflectance_count(material)
+    red_sum = sum_normal_reflectances(material.normal_reflectances.red)
+    green_sum = sum_normal_reflectances(material.normal_reflectances.green)
+    blue_sum = sum_normal_reflectances(material.normal_reflectances.blue)
+    (red_sum + green_sum + blue_sum) / count
+  end
 
-    sum / length(material.normal_reflectances)
+  defp sum_normal_reflectances(normal_reflectances) do
+    Enum.reduce(normal_reflectances, 0.0, fn nr, acc ->
+      acc + (1.0 + :math.sqrt(nr)) / (1.0 - :math.sqrt(nr))
+    end)
+  end
+
+  @doc """
+  Returns the total number of normal reflectance values stored for `material`.
+  """
+  @spec normal_reflectance_count(t()) :: integer()
+  def normal_reflectance_count(material) do
+    length(material.normal_reflectances.red) +
+      length(material.normal_reflectances.green) +
+      length(material.normal_reflectances.blue)
   end
 
   @doc """
@@ -52,6 +75,11 @@ defmodule Raytracer.Material do
          {:ok, reflected_scale_factor} <- Map.fetch(contents, "reflected_scale_factor"),
          {:ok, transmitted_scale_factor} <- Map.fetch(contents, "transmitted_scale_factor"),
          {:ok, normal_reflectances} <- Map.fetch(contents, "normal_reflectances") do
+      count = length(normal_reflectances)
+      red_count = (count / 3) |> Float.ceil() |> trunc()
+      blue_count = (count / 3) |> Float.floor() |> trunc()
+      green_count = count - red_count - blue_count
+
       {:ok,
        %Material{
          diffuse: diffuse,
@@ -59,7 +87,11 @@ defmodule Raytracer.Material do
          shininess: shininess,
          reflected_scale_factor: reflected_scale_factor,
          transmitted_scale_factor: transmitted_scale_factor,
-         normal_reflectances: normal_reflectances
+         normal_reflectances: %{
+           red: Enum.slice(normal_reflectances, 0, red_count),
+           green: Enum.slice(normal_reflectances, red_count, green_count),
+           blue: Enum.slice(normal_reflectances, red_count + green_count, blue_count)
+         }
        }}
     else
       :error ->

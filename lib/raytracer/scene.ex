@@ -7,7 +7,7 @@ defmodule Raytracer.Scene do
 
   defstruct light_sources: [], models: []
 
-  @type t :: %Scene{light_sources: list(LightSource.t()), models: list(Model.t())}
+  @type t :: %Scene{light_sources: [LightSource.t()], models: [Model.t()]}
 
   @doc """
   Builds a scene struct from the data in the given file `path`.

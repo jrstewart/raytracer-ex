@@ -52,16 +52,9 @@ defmodule Raytracer.ModelTest do
       assert model.material.shininess == 0.2
       assert model.material.reflected_scale_factor == 0.8
       assert model.material.transmitted_scale_factor == 0.1
-
-      assert model.material.normal_reflectances == [
-               0.460,
-               0.420,
-               0.410,
-               0.350,
-               0.180,
-               0.080,
-               0.050
-             ]
+      assert model.material.normal_reflectances.red == [0.460, 0.420, 0.410]
+      assert model.material.normal_reflectances.green == [0.350, 0.180]
+      assert model.material.normal_reflectances.blue == [0.080, 0.050]
     end
   end
 end
