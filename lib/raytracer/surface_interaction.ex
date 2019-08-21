@@ -6,10 +6,10 @@ defmodule Raytracer.SurfaceInteraction do
 
   alias __MODULE__
   alias Raytracer.Model
-  alias Raytracer.Geometry.{Normal3, Point3}
+  alias Raytracer.Geometry.{Point3, Vector3}
 
   @enforce_keys [:model, :normal, :point]
   defstruct [:model, :normal, :point]
 
-  @type t :: %SurfaceInteraction{model: Model.t(), normal: Normal3.t(), point: Point3.t()}
+  @type t :: %SurfaceInteraction{model: Model.t(), normal: Vector3.t(), point: Point3.t()}
 end
