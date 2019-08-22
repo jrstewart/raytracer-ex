@@ -5,6 +5,38 @@ defmodule Raytracer.CameraTest do
 
   @delta 1.0e-7
 
+  describe "parse/1" do
+    test "parses the camera data from the given map" do
+      data = %{
+        "center" => [-10.0, -11.0, -12.0],
+        "distance" => 50.0,
+        "eye" => [5.0, 6.0, 7.0],
+        "height" => 256,
+        "width" => 512,
+        "wc_window" => [-10.0, 10.0, -20.0, 20.0],
+        "up" => [0.0, 2.0, 0.0]
+      }
+
+      assert {:ok, camera} = Camera.parse(data)
+      assert camera.center == %Point3{x: -10.0, y: -11.0, z: -12.0}
+      assert camera.distance == 50.0
+      assert camera.eye == %Point3{x: 5.0, y: 6.0, z: 7.0}
+      assert camera.height == 256
+      assert camera.width == 512
+      assert camera.wc_window.u_min == -10.0
+      assert camera.wc_window.u_max == 10.0
+      assert camera.wc_window.v_min == -20.0
+      assert camera.wc_window.v_max == 20.0
+      assert camera.up == %Vector3{dx: 0.0, dy: 1.0, dz: 0.0}
+    end
+
+    test "returns an error if parsing failed" do
+      data = %{"distance" => 20.0}
+      assert {:error, message} = Camera.parse(data)
+      assert message == "error parsing camera"
+    end
+  end
+
   describe "pixel_grid/1" do
     test "returns the grid of the camera" do
       camera = %Camera{
@@ -13,7 +45,7 @@ defmodule Raytracer.CameraTest do
         eye: %Point3{x: 0.0, y: 0.0, z: 10.0},
         height: 4,
         width: 5,
-        world_coordinates_window: {-10.0, 10.0, -10.0, 10.0},
+        wc_window: %{u_min: -10.0, u_max: 10.0, v_min: -10.0, v_max: 10.0},
         up: %Vector3{dx: 0.0, dy: 1.0, dz: 0.0}
       }
 
@@ -54,7 +86,7 @@ defmodule Raytracer.CameraTest do
         eye: %Point3{x: 0.0, y: 0.0, z: 10.0},
         height: 75,
         width: 50,
-        world_coordinates_window: {-10.0, 10.0, -20.0, 20.0},
+        wc_window: %{u_min: -10.0, u_max: 10.0, v_min: -20.0, v_max: 20.0},
         up: %Vector3{dx: 0.0, dy: 1.0, dz: 0.0}
       }
 
