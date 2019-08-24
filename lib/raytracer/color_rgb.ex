@@ -107,6 +107,21 @@ defmodule Raytracer.ColorRGB do
   end
 
   @doc """
+  Converts the RGB values of `color` into binary with color values between 0 and 255.
+
+  ## Examples
+
+      iex> c = %ColorRGB{red: 0.5, green: 0.3, blue: 0.1}
+      iex> ColorRGB.to_binary(c)
+      <<127, 76, 25>>
+
+  """
+  @spec to_binary(t()) :: binary()
+  def to_binary(color) do
+    <<trunc(color.red * 255), trunc(color.green * 255), trunc(color.blue * 255)>>
+  end
+
+  @doc """
   Returns the ColorRGB representation of the color white.
 
   ## Examples
