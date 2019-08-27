@@ -3,18 +3,17 @@ defmodule Raytracer.Camera do
 
   alias __MODULE__
   alias Raytracer.Parser
-  alias Raytracer.Geometry.{Point3, Vector3}
+  alias Raytracer.Geometry.{CoordinateSystem3, Point3, Vector3}
 
-  @enforce_keys [:center, :distance, :eye, :height, :width, :up, :wc_window]
-  defstruct [:center, :distance, :eye, :height, :width, :up, :wc_window]
+  @enforce_keys [:coords, :distance, :eye, :height, :width, :wc_window]
+  defstruct [:coords, :distance, :eye, :height, :width, :wc_window]
 
   @type t :: %Camera{
-          center: Point3.t(),
+          coords: CoordinateSystem3.t(),
           distance: float,
           eye: Point3.t(),
           height: integer(),
           width: integer(),
-          up: Vector3.t(),
           wc_window: %{u_min: float(), u_max: float(), v_min: float(), v_max: float()}
         }
 
@@ -32,15 +31,19 @@ defmodule Raytracer.Camera do
          {:ok, width} <- Map.fetch(contents, "width"),
          {:ok, [u_min, u_max, v_min, v_max]} <- Map.fetch(contents, "wc_window"),
          {:ok, [up_dx, up_dy, up_dz]} <- Map.fetch(contents, "up") do
+      center = %Point3{x: center_x, y: center_y, z: center_z}
+      eye = %Point3{x: eye_x, y: eye_y, z: eye_z}
+      up = %Vector3{dx: up_dx, dy: up_dy, dz: up_dz} |> Vector3.normalize()
+      center_to_eye = Point3.subtract(eye, center)
+
       {:ok,
        %Camera{
-         center: %Point3{x: center_x, y: center_y, z: center_z},
+         coords: CoordinateSystem3.create_from_vw(up, center_to_eye),
          distance: distance,
-         eye: %Point3{x: eye_x, y: eye_y, z: eye_z},
+         eye: eye,
          height: height,
          width: width,
-         wc_window: %{u_min: u_min, u_max: u_max, v_min: v_min, v_max: v_max},
-         up: %Vector3{dx: up_dx, dy: up_dy, dz: up_dz} |> Vector3.normalize()
+         wc_window: %{u_min: u_min, u_max: u_max, v_min: v_min, v_max: v_max}
        }}
     else
       :error ->
@@ -54,32 +57,19 @@ defmodule Raytracer.Camera do
   """
   @spec pixel_grid(Camera.t()) :: list(Point3.t())
   def pixel_grid(camera) do
-    center_to_eye =
-      camera.eye
-      |> Point3.subtract(camera.center)
-      |> Vector3.normalize()
-
-    grid_horizontal_direction =
-      camera.up
-      |> Vector3.cross(center_to_eye)
-      |> Vector3.normalize()
-
     pixel_grid_center =
-      camera.eye
-      |> Point3.subtract(Vector3.multiply(center_to_eye, camera.distance))
+      Point3.subtract(camera.eye, Vector3.multiply(camera.coords.w_axis, camera.distance))
 
     grid_lower_left =
       pixel_grid_center
-      |> Point3.add(Vector3.multiply(grid_horizontal_direction, camera.wc_window.u_min))
-      |> Point3.add(Vector3.multiply(camera.up, camera.wc_window.v_min))
+      |> Point3.add(Vector3.multiply(camera.coords.u_axis, camera.wc_window.u_min))
+      |> Point3.add(Vector3.multiply(camera.coords.v_axis, camera.wc_window.v_min))
 
     {pixel_width, pixel_height} = pixel_size(camera)
-    h_offset = pixel_width / 2.0
-    v_offset = pixel_height / 2.0
 
     for row <- 0..(camera.height - 1), column <- 0..(camera.width - 1) do
-      h = Vector3.multiply(grid_horizontal_direction, column * pixel_width + h_offset)
-      v = Vector3.multiply(camera.up, row * pixel_height + v_offset)
+      h = Vector3.multiply(camera.coords.u_axis, column * pixel_width)
+      v = Vector3.multiply(camera.coords.v_axis, row * pixel_height)
 
       grid_lower_left
       |> Point3.add(h)
