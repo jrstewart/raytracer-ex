@@ -4,7 +4,7 @@ defmodule Raytracer.Shape.Sphere do
   """
 
   alias __MODULE__
-  alias Raytracer.Geometry.{Normal3, Point3, Vector3}
+  alias Raytracer.Geometry.{Point3, Vector3}
   alias Raytracer.{Parser, Shape}
 
   defstruct center: %Point3{}, radius: 0.0
@@ -41,9 +41,9 @@ defmodule Raytracer.Shape.Sphere do
     defp compute_intersection_distance(b, radical_part), do: (-b - :math.sqrt(radical_part)) / 2.0
 
     def compute_inward_normal(sphere, point),
-      do: sphere.center |> Point3.subtract(point) |> Vector3.to_normal() |> Normal3.normalize()
+      do: sphere.center |> Point3.subtract(point) |> Vector3.normalize()
 
     def compute_outward_normal(sphere, point),
-      do: point |> Point3.subtract(sphere.center) |> Vector3.to_normal() |> Normal3.normalize()
+      do: point |> Point3.subtract(sphere.center) |> Vector3.normalize()
   end
 end

@@ -1,7 +1,7 @@
 defmodule Raytracer.Shape.SphereTest do
   use ExUnit.Case, async: true
   alias Raytracer.Shape
-  alias Raytracer.Geometry.{Point3, Ray3, Normal3, Vector3}
+  alias Raytracer.Geometry.{Point3, Ray3, Vector3}
   alias Raytracer.Shape.Sphere
 
   describe "parse/1" do
@@ -50,7 +50,7 @@ defmodule Raytracer.Shape.SphereTest do
       sphere = %Sphere{center: %Point3{x: 0.0, y: 0.0, z: 0.0}, radius: 1.0}
       point = %Point3{x: 1.0, y: 0.0, z: 0.0}
 
-      assert Shape.compute_outward_normal(sphere, point) == %Normal3{dx: 1.0, dy: 0.0, dz: 0.0}
+      assert Shape.compute_outward_normal(sphere, point) == %Vector3{dx: 1.0, dy: 0.0, dz: 0.0}
     end
   end
 
@@ -59,7 +59,7 @@ defmodule Raytracer.Shape.SphereTest do
       sphere = %Sphere{center: %Point3{x: 0.0, y: 0.0, z: 0.0}, radius: 1.0}
       point = %Point3{x: 1.0, y: 0.0, z: 0.0}
 
-      assert Shape.compute_inward_normal(sphere, point) == %Normal3{dx: -1.0, dy: 0.0, dz: 0.0}
+      assert Shape.compute_inward_normal(sphere, point) == %Vector3{dx: -1.0, dy: 0.0, dz: 0.0}
     end
   end
 end
