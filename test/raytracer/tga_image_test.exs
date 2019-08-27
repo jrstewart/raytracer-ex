@@ -70,7 +70,7 @@ defmodule Raytracer.TGAImageTest do
         |> Enum.join()
 
       TGAImage.write(image, test_file, pixels)
-      <<_::binary-18>> <> <<data::binary-30000>> <> _ = File.read!(test_file)
+      <<_::binary-18>> <> <<data::binary-30_000>> <> _ = File.read!(test_file)
 
       assert format_pixels(data) == pixels
 
