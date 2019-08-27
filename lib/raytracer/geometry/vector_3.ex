@@ -233,6 +233,17 @@ defmodule Raytracer.Geometry.Vector3 do
   def normalize(vector), do: divide(vector, Vector3.length(vector))
 
   @doc """
+  Checks if `vector1` and `vector2` are perpendicular to each other.
+  """
+  @spec perpendicular?(t(), t()) :: bool()
+  def perpendicular?(vector1, vector2) do
+    vector1 = Vector3.normalize(vector1)
+    vector2 = Vector3.normalize(vector2)
+    dot = Vector3.dot(vector1, vector2)
+    dot + 0.0002 > 0.0 && dot - 0.0002 < 0.0
+  end
+
+  @doc """
   Subtracts two vectors and returns the resulting vector.
 
   ## Examples
