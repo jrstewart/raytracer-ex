@@ -9,13 +9,13 @@ defmodule Raytracer.CLITest do
     test "-h option prints the help documentation" do
       assert capture_io(fn ->
                CLI.run(["-h"])
-             end) =~ "usage:"
+             end) =~ "Usage:"
     end
 
     test "--help option prints the help documentation" do
       assert capture_io(fn ->
                CLI.run(["--help"])
-             end) =~ "usage:"
+             end) =~ "Usage:"
     end
   end
 end

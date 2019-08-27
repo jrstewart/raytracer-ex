@@ -31,8 +31,9 @@ defmodule Raytracer.Mixfile do
       {:dialyzex, "~> 1.2.0", only: :dev},
       {:excoveralls, "~> 0.10", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
+      {:flow, "~> 0.14.3"},
       {:jason, "~> 1.1"},
-      {:propcheck, "~> 1.1", only: [:dev, :test]}
+      {:propcheck, "~> 1.1", only: [:test]}
     ]
   end
 
