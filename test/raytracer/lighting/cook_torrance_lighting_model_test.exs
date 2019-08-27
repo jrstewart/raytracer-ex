@@ -50,9 +50,9 @@ defmodule Raytracer.Lighting.CookTorranceLightingModelTest do
     test "computes the color for a surface point on a model" do
       color = CookTorranceLightingModel.compute_color(@view_direction, @surface_interaction, @scene)
 
-      assert_in_delta color.red, 0.0056037, @delta
-      assert_in_delta color.green, 0.0055726, @delta
-      assert_in_delta color.blue, 0.0055414, @delta
+      assert_in_delta color.red, 6.7978e-4, @delta
+      assert_in_delta color.green, 6.4862e-4, @delta
+      assert_in_delta color.blue, 6.1747e-4, @delta
     end
 
     test "returns black if the shape is shadowed" do

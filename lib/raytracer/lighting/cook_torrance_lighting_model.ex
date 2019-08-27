@@ -75,7 +75,8 @@ defmodule Raytracer.Lighting.CookTorranceLightingModel do
     Enum.any?(scene.models, fn model ->
       if model.shape !== surface_interaction.model.shape do
         ray = %Ray3{origin: surface_interaction.point, direction: light_source_direction}
-        Shape.compute_intersection(model.shape, ray)
+        distance = Shape.compute_intersection(model.shape, ray)
+        distance && distance > 0.0
       end
     end)
   end
@@ -137,7 +138,7 @@ defmodule Raytracer.Lighting.CookTorranceLightingModel do
     mdv = compute_microfacet_distribution_value(material.shininess, normal_dot_halfway)
 
     specular =
-      frannel_color * :math.pi() * (mdv * masking_value / (normal_dot_light * normal_dot_view))
+      frannel_color / :math.pi() * (mdv * masking_value / (normal_dot_light * normal_dot_view))
 
     material.diffuse * normal_reflectance + material.specular * specular
   end
@@ -189,7 +190,12 @@ defmodule Raytracer.Lighting.CookTorranceLightingModel do
     #   m = shininess value of the surface
     #   alpha = angle between the surface normal and the halfway vector
 
-    alpha = :math.acos(normal_dot_halfway)
+    alpha =
+      if normal_dot_halfway > 1.0 do
+        0.0
+      else
+        :math.acos(normal_dot_halfway)
+      end
 
     :math.exp(-1.0 * :math.pow(:math.tan(alpha) / shininess, 2)) /
       (:math.pow(shininess, 2) * :math.pow(:math.cos(alpha), 4))
