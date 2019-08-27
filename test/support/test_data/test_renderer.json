@@ -1,0 +1,18 @@
+{
+  "camera": {
+    "center": [-10.0, -11.0, -12.0],
+    "distance": 50.0,
+    "eye": [5.0, 6.0, 7.0],
+    "height": 256,
+    "width": 512,
+    "wc_window": [-10.0, 10.0, -20.0, 20.0],
+    "up": [0.0, 2.0, 0.0]
+  },
+  "ambient_light_color": [0.2, 0.4, 0.6],
+  "attenuation_cutoff": 0.2,
+  "background_color": [1.0, 0.8, 0.7],
+  "global_rgb_scale": 0.5,
+  "max_recursive_depth": 6,
+  "supersample_size": 4,
+  "supersample_type": "bartlett"
+}
