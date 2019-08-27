@@ -141,9 +141,15 @@ defmodule Raytracer.Renderer do
     pixel_size = Camera.pixel_size(renderer.camera)
 
     colors =
-      Enum.map(pixel_grid, fn pixel_point ->
-        render_pixel(renderer, scene, pixel_point, pixel_size, renderer.supersample_size)
+      pixel_grid
+      |> Enum.with_index()
+      |> Flow.from_enumerable()
+      |> Flow.map(fn {pixel, index} ->
+        {render_pixel(renderer, scene, pixel, pixel_size, renderer.supersample_size), index}
       end)
+      |> Enum.to_list()
+      |> Enum.sort(&(elem(&1, 1) < elem(&2, 1)))
+      |> Enum.map(&elem(&1, 0))
 
     {:ok, colors}
   end
@@ -158,7 +164,7 @@ defmodule Raytracer.Renderer do
   end
 
   defp render_pixel(renderer, scene, pixel_point, {pixel_width, pixel_height}, sample_size)
-      when sample_size in [2, 4, 6] do
+       when sample_size in [2, 4, 6] do
     offset = 1.0 / sample_size
 
     for u_sample <- 0..sample_size, v_sample <- 0..sample_size do
@@ -182,7 +188,7 @@ defmodule Raytracer.Renderer do
   defp trace_ray(renderer, scene, ray, attenuation, depth) do
     case find_intersecting_model(ray, scene.models) do
       nil ->
-        renderer.background_color
+        if depth == 0, do: renderer.background_color, else: ColorRGB.black()
 
       {distance, model} ->
         point = Point3.add(ray.origin, Vector3.multiply(ray.direction, distance))
