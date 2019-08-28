@@ -135,7 +135,7 @@ defmodule Raytracer.Renderer do
     end
   end
 
-  @spec render_scene(t(), Scene.t()) :: {:ok, list(ColorRGB.t())} | {:error, String.t()}
+  @spec render_scene(t(), Scene.t()) :: {:ok, list(ColorRGB.t())}
   def render_scene(renderer, scene) do
     pixel_grid = Camera.pixel_grid(renderer.camera)
     pixel_size = Camera.pixel_size(renderer.camera)
@@ -144,9 +144,7 @@ defmodule Raytracer.Renderer do
       pixel_grid
       |> Enum.with_index()
       |> Flow.from_enumerable()
-      |> Flow.map(fn {pixel, index} ->
-        {render_pixel(renderer, scene, pixel, pixel_size, renderer.supersample_size), index}
-      end)
+      |> Flow.map(fn {pixel, index} -> {render_pixel(renderer, scene, pixel, pixel_size), index} end)
       |> Enum.to_list()
       |> Enum.sort(&(elem(&1, 1) < elem(&2, 1)))
       |> Enum.map(&elem(&1, 0))
@@ -154,7 +152,13 @@ defmodule Raytracer.Renderer do
     {:ok, colors}
   end
 
-  defp render_pixel(renderer, scene, pixel_point, _pixel_size, 0) do
+  defp render_pixel(
+         %Renderer{supersample_size: supersample_size} = renderer,
+         scene,
+         pixel_point,
+         _pixel_size
+       )
+       when supersample_size == 0 do
     ray = %Ray3{
       origin: renderer.camera.eye,
       direction: pixel_point |> Point3.subtract(renderer.camera.eye) |> Vector3.normalize()
@@ -163,11 +167,16 @@ defmodule Raytracer.Renderer do
     trace_ray(renderer, scene, ray, 1.0, 0)
   end
 
-  defp render_pixel(renderer, scene, pixel_point, {pixel_width, pixel_height}, sample_size)
-       when sample_size in [2, 4, 6] do
-    offset = 1.0 / sample_size
+  defp render_pixel(
+         %Renderer{supersample_size: supersample_size} = renderer,
+         scene,
+         pixel_point,
+         {pixel_width, pixel_height}
+       )
+       when supersample_size in [2, 4, 6] do
+    offset = 1.0 / supersample_size
 
-    for u_sample <- 0..sample_size, v_sample <- 0..sample_size do
+    for u_sample <- 0..supersample_size, v_sample <- 0..supersample_size do
       h = Vector3.multiply(renderer.camera.coords.u_axis, offset * u_sample * pixel_width)
       v = Vector3.multiply(renderer.camera.coords.v_axis, offset * v_sample * pixel_height)
       sample_point = pixel_point |> Point3.add(h) |> Point3.add(v)
@@ -179,7 +188,7 @@ defmodule Raytracer.Renderer do
 
       trace_ray(renderer, scene, ray, 1.0, 0)
     end
-    |> Enum.zip(filter_for_sample_size(sample_size))
+    |> Enum.zip(filter_for_sample_size(supersample_size))
     |> Enum.reduce(ColorRGB.black(), fn {color, filter}, acc ->
       color |> ColorRGB.multiply(filter) |> ColorRGB.add(acc)
     end)
