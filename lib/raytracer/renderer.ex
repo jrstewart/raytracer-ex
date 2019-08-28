@@ -200,7 +200,7 @@ defmodule Raytracer.Renderer do
         if depth == 0, do: renderer.background_color, else: ColorRGB.black()
 
       {distance, model} ->
-        point = Point3.add(ray.origin, Vector3.multiply(ray.direction, distance))
+        {:ok, point} = Ray3.point_at(ray, distance)
         view_direction = renderer.camera.eye |> Point3.subtract(point) |> Vector3.normalize()
         normal = Shape.compute_outward_normal(model.shape, point)
         si = %SurfaceInteraction{model: model, normal: normal, point: point}
