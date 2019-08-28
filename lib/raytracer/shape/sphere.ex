@@ -4,14 +4,14 @@ defmodule Raytracer.Shape.Sphere do
   """
 
   alias __MODULE__
-  alias Raytracer.Geometry.{Point3, Vector3}
   alias Raytracer.{Parser, Shape}
+  alias Raytracer.Geometry.{Point3, Vector3}
+
+  @behaviour Parser
 
   defstruct center: %Point3{}, radius: 0.0
 
   @type t :: %Sphere{center: Point3.t(), radius: float()}
-
-  @behaviour Parser
 
   @doc """
   Parses the sphere data from `contents` and return a new Sphere struct.
@@ -22,7 +22,7 @@ defmodule Raytracer.Shape.Sphere do
          {:ok, radius} <- Map.fetch(contents, "radius") do
       {:ok, %Sphere{center: %Point3{x: x, y: y, z: z}, radius: radius}}
     else
-      :error ->
+      _ ->
         {:error, "error parsing sphere"}
     end
   end

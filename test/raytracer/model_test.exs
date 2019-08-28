@@ -1,8 +1,7 @@
 defmodule Raytracer.ModelTest do
   use ExUnit.Case, async: true
-  alias Raytracer.Model
-  alias Raytracer.Shape.Sphere
-  alias Raytracer.Geometry.Point3
+  alias Raytracer.{Material, Model}
+  alias Raytracer.Shape.{PhongTriangle, Sphere}
 
   @material %{
     "diffuse" => 0.6,
@@ -33,28 +32,23 @@ defmodule Raytracer.ModelTest do
       }
 
       assert {:ok, model} = Model.parse(data)
-      assert model.shape == %Sphere{center: %Point3{x: 1.0, y: 2.0, z: 3.0}, radius: 4.0}
+      assert %Sphere{} = model.shape
+      assert %Material{} = model.material
     end
 
-    test "parses material data" do
+    test "parses a triangle model" do
       data = %{
-        "type" => "sphere",
+        "type" => "triangle",
         "data" => %{
-          "center" => [1.0, 2.0, 3.0],
-          "radius" => 4.0
+          "vertices" => [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [1.0, 1.0, 0.0]],
+          "normals" => [[0.0, 0.0, 1.0], [0.0, 0.0, 1.0], [0.0, 0.0, 1.0]]
         },
         "material" => @material
       }
 
       assert {:ok, model} = Model.parse(data)
-      assert model.material.diffuse == 0.6
-      assert model.material.specular == 0.4
-      assert model.material.shininess == 0.2
-      assert model.material.reflected_scale_factor == 0.8
-      assert model.material.transmitted_scale_factor == 0.1
-      assert model.material.normal_reflectances.red == [0.460, 0.420, 0.410]
-      assert model.material.normal_reflectances.green == [0.350, 0.180]
-      assert model.material.normal_reflectances.blue == [0.080, 0.050]
+      assert %PhongTriangle{} = model.shape
+      assert %Material{} = model.material
     end
   end
 end

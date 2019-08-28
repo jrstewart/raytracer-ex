@@ -3,7 +3,7 @@ defmodule Raytracer.Model do
 
   alias __MODULE__
   alias Raytracer.{Material, Parser, Shape}
-  alias Raytracer.Shape.Sphere
+  alias Raytracer.Shape.{PhongTriangle, Sphere}
 
   @enforce_keys [:material, :shape]
   defstruct [:material, :shape]
@@ -34,5 +34,6 @@ defmodule Raytracer.Model do
   end
 
   defp shape_module_for_type("sphere"), do: {:ok, Sphere}
+  defp shape_module_for_type("triangle"), do: {:ok, PhongTriangle}
   defp shape_module_for_type(type), do: {:error, "module not found for shape type: #{type}"}
 end
