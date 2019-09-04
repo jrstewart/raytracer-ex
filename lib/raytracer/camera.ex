@@ -10,7 +10,7 @@ defmodule Raytracer.Camera do
 
   @type t :: %Camera{
           coords: CoordinateSystem3.t(),
-          distance: float,
+          distance: float(),
           eye: Point3.t(),
           height: integer(),
           width: integer(),
