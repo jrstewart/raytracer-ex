@@ -145,7 +145,6 @@ defmodule Raytracer.Renderer do
       |> Enum.with_index()
       |> Flow.from_enumerable()
       |> Flow.map(fn {pixel, index} -> {render_pixel(renderer, scene, pixel, pixel_size), index} end)
-      |> Enum.to_list()
       |> Enum.sort(&(elem(&1, 1) < elem(&2, 1)))
       |> Enum.map(&elem(&1, 0))
 
