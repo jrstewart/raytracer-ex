@@ -67,28 +67,28 @@ defmodule Raytracer.CLI do
     {:ok, scene} = args |> Keyword.fetch!(:scene_file) |> Scene.from_file()
 
     IO.puts("Rendering scene...")
+
     start_time = Time.utc_now()
-    {:ok, pixel_data} = Renderer.render_scene(renderer, scene)
+
+    {:ok, pixel_stream} = Renderer.render_scene(renderer, scene, &ColorRGB.to_binary/1)
+    image = %TGAImage{width: renderer.camera.width, height: renderer.camera.height}
+    output_file = Keyword.fetch!(args, :output_file)
+    :ok = TGAImage.write(image, output_file, pixel_stream)
+
     end_time = Time.utc_now()
     run_time = Time.diff(end_time, start_time, :millisecond)
+
     IO.puts("Rendering time: #{run_time / 1000.0}s")
 
-    IO.puts("Writing file...")
-    color_data = pixel_data |> Enum.map(&ColorRGB.to_binary(&1)) |> Enum.join()
-
-    :ok =
-      %TGAImage{width: renderer.camera.width, height: renderer.camera.height}
-      |> TGAImage.write(Keyword.fetch!(args, :output_file), color_data)
-
-    if Keyword.get(args, :suggest_scale) do
-      suggest_rgb_scale_factor(pixel_data)
-    end
+    # if Keyword.get(args, :suggest_scale) do
+    #   suggest_rgb_scale_factor(output_file)
+    # end
 
     :ok
   end
 
-  defp suggest_rgb_scale_factor(pixel_data) do
-    max_value = pixel_data |> Enum.flat_map(&[&1.red, &1.green, &1.blue]) |> Enum.max()
-    IO.puts("suggests RGB scale factor: #{1.0 / max_value}")
-  end
+  # defp suggest_rgb_scale_factor(output_file) do
+  #   max_value = output_file |> TGAImage.read_pixels() |> Enum.max()
+  #   IO.puts("suggests RGB scale factor: #{1.0 / max_value}")
+  # end
 end

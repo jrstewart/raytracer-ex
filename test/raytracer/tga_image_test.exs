@@ -9,7 +9,7 @@ defmodule Raytracer.TGAImageTest do
       image = %TGAImage{}
       test_file = @test_dir <> "test_file_1.tga"
 
-      assert TGAImage.write(image, test_file, "") == :ok
+      assert TGAImage.write(image, test_file, []) == :ok
 
       File.rm!(test_file)
     end
@@ -30,7 +30,7 @@ defmodule Raytracer.TGAImageTest do
 
       test_file = @test_dir <> "test_file_2.tga"
 
-      TGAImage.write(image, test_file, "")
+      TGAImage.write(image, test_file, [])
 
       <<id_length::little-8>> <>
         <<color_map_type::little-8>> <>
@@ -41,8 +41,10 @@ defmodule Raytracer.TGAImageTest do
         <<x_origin::little-16>> <>
         <<y_origin::little-16>> <>
         <<width::little-16>> <>
-        <<height::little-16>> <> <<pixel_depth::little-8>> <> <<descriptor::little-8>> <> _ =
-        File.read!(test_file)
+        <<height::little-16>> <>
+        <<pixel_depth::little-8>> <>
+        <<descriptor::little-8>> <>
+        _ = File.read!(test_file)
 
       assert image.id_length == id_length
       assert image.color_map_type == color_map_type
@@ -64,15 +66,14 @@ defmodule Raytracer.TGAImageTest do
       image = %TGAImage{width: 100, height: 100}
       test_file = @test_dir <> "test_file_3.tga"
 
-      pixels =
+      pixel_stream =
         1..(image.width * image.height)
-        |> Enum.map(&<<rem(&1, 64), rem(&1, 128), rem(&1, 255)>>)
-        |> Enum.join()
+        |> Stream.map(&<<rem(&1, 64), rem(&1, 128), rem(&1, 255)>>)
 
-      TGAImage.write(image, test_file, pixels)
+      TGAImage.write(image, test_file, pixel_stream)
       <<_::binary-18>> <> <<data::binary-30_000>> <> _ = File.read!(test_file)
 
-      assert format_pixels(data) == pixels
+      assert format_pixels(data) == Enum.join(pixel_stream)
 
       File.rm!(test_file)
     end
@@ -88,7 +89,7 @@ defmodule Raytracer.TGAImageTest do
       image = %TGAImage{}
       test_file = @test_dir <> "test_file_4.tga"
 
-      TGAImage.write(image, test_file, "")
+      TGAImage.write(image, test_file, [])
       <<_::binary-18>> <> footer = File.read!(test_file)
 
       assert footer == "TRUEVISION-XFILE." <> :binary.copy(<<0>>, 9)

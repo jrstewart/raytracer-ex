@@ -34,35 +34,41 @@ defmodule Raytracer.TGAImage do
         }
 
   @doc """
-  Writes the `image` and `pixels` data to the file at the specified `path`.
+  Writes the `image` and `pixel_stream` data to the file at the specified `path`.
   """
-  @spec write(t(), Path.t(), iodata()) :: :ok | {:error, File.posix()}
-  def write(image, path, pixels) do
-    File.write(path, file_data(image, pixels), [:binary, :raw])
+  @spec write(t(), Path.t(), Enumerable.t()) :: :ok | {:error, File.posix()}
+  def write(image, path, pixel_stream) do
+    File.touch!(path)
+    file_stream = File.stream!(path, [:write, :delayed_write])
+    pixel_stream = Stream.map(pixel_stream, fn <<pixel::24>> -> <<pixel::little-24>> end)
+
+    [header(image), pixel_stream, footer()]
+    |> Stream.concat()
+    |> Stream.into(file_stream)
+    |> Stream.run()
   end
 
-  defp file_data(image, pixels) do
-    <<image.id_length::little-8>> <>
-      <<image.color_map_type::little-8>> <>
-      <<image.image_type::little-8>> <>
-      <<image.color_map_specification.first_entry_index::little-16>> <>
-      <<image.color_map_specification.num_entries::little-16>> <>
-      <<image.color_map_specification.entry_size::little-8>> <>
-      <<image.x_origin::little-16>> <>
-      <<image.y_origin::little-16>> <>
-      <<image.width::little-16>> <>
-      <<image.height::little-16>> <>
-      <<image.pixel_depth::little-8>> <>
-      <<image.descriptor::little-8>> <>
-      format_pixels(image, pixels, "") <>
-      "TRUEVISION-XFILE." <>
+  defp header(image) do
+    [
+      <<image.id_length::little-8>>,
+      <<image.color_map_type::little-8>>,
+      <<image.image_type::little-8>>,
+      <<image.color_map_specification.first_entry_index::little-16>>,
+      <<image.color_map_specification.num_entries::little-16>>,
+      <<image.color_map_specification.entry_size::little-8>>,
+      <<image.x_origin::little-16>>,
+      <<image.y_origin::little-16>>,
+      <<image.width::little-16>>,
+      <<image.height::little-16>>,
+      <<image.pixel_depth::little-8>>,
+      <<image.descriptor::little-8>>
+    ]
+  end
+
+  defp footer do
+    [
+      "TRUEVISION-XFILE.",
       :binary.copy(<<0>>, 9)
-  end
-
-  defp format_pixels(_, "", acc), do: acc
-
-  defp format_pixels(%TGAImage{pixel_depth: pixel_depth} = image, <<pixel::24>> <> rest, acc)
-       when pixel_depth == 24 do
-    format_pixels(image, rest, acc <> <<pixel::little-24>>)
+    ]
   end
 end

@@ -41,10 +41,10 @@ defmodule Raytracer.RendererTest do
       scene_file = "test/support/test_data/test_scene.json"
       {:ok, scene} = Scene.from_file(scene_file)
       {:ok, renderer} = Renderer.parse(@renderer_data)
-      pixel_data = Renderer.render_scene(renderer, scene)
-      expected = File.read!(@test_dir <> "pixel_data.bin") |> :erlang.binary_to_term()
+      {:ok, pixel_stream} = Renderer.render_scene(renderer, scene)
+      {:ok, expected} = File.read!(@test_dir <> "pixel_data.bin") |> :erlang.binary_to_term()
 
-      assert pixel_data == expected
+      assert Enum.to_list(pixel_stream) == expected
     end
 
     test "each pixel color is set to the renderer's background color when the scene is empty" do

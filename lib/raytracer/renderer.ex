@@ -135,20 +135,30 @@ defmodule Raytracer.Renderer do
     end
   end
 
-  @spec render_scene(t(), Scene.t()) :: {:ok, list(ColorRGB.t())}
-  def render_scene(renderer, scene) do
+  @spec render_scene(t(), Scene.t(), (list(ColorRGB.t()) -> list(any()))) :: {:ok, Enumerable.t()}
+  def render_scene(renderer, scene, pixel_converter \\ &pixel_conversion_noop/1) do
     pixel_grid = Camera.pixel_grid(renderer.camera)
     pixel_size = Camera.pixel_size(renderer.camera)
+    batch_size = floor(length(pixel_grid) / (System.schedulers_online() * 16))
+    {:ok, sup_pid} = Task.Supervisor.start_link()
 
-    colors =
-      pixel_grid
-      |> Enum.with_index()
-      |> Flow.from_enumerable()
-      |> Flow.map(fn {pixel, index} -> {render_pixel(renderer, scene, pixel, pixel_size), index} end)
-      |> Enum.sort(&(elem(&1, 1) < elem(&2, 1)))
-      |> Enum.map(&elem(&1, 0))
+    pixel_stream =
+      sup_pid
+      |> Task.Supervisor.async_stream_nolink(
+        Enum.chunk_every(pixel_grid, batch_size),
+        &render_pixels(&1, renderer, scene, pixel_size),
+        timeout: :infinity
+      )
+      |> Stream.map(&elem(&1, 1))
+      |> Stream.flat_map(fn pixels -> Enum.map(pixels, pixel_converter) end)
 
-    {:ok, colors}
+    {:ok, pixel_stream}
+  end
+
+  defp pixel_conversion_noop(pixel), do: pixel
+
+  defp render_pixels(pixels, renderer, scene, pixel_size) do
+    Enum.map(pixels, &render_pixel(renderer, scene, &1, pixel_size))
   end
 
   defp render_pixel(
