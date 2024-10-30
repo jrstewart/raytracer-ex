@@ -27,7 +27,7 @@ defmodule Raytracer.Geometry do
   `value1` is returned. if `t` is 1 then `value2` is returned.
   """
   @spec lerp(number, number, float) :: float
-  def lerp(value1, _, 0.0), do: value1
+  def lerp(value1, _, t) when t == 0.0, do: value1
   def lerp(_, value2, 1.0), do: value2
   def lerp(value1, value2, t), do: (1 - t) * value1 + t * value2
 

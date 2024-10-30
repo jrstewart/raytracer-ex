@@ -105,7 +105,7 @@ defmodule Raytracer.Geometry.Point2 do
 
   """
   @spec lerp(t, t, float) :: t
-  def lerp(point1, _, 0.0), do: point1
+  def lerp(point1, _, t) when t == 0.0, do: point1
   def lerp(_, point2, 1.0), do: point2
   def lerp(point1, point2, t), do: point1 |> multiply(1 - t) |> Point2.add(multiply(point2, t))
 

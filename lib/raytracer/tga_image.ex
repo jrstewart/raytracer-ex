@@ -36,10 +36,10 @@ defmodule Raytracer.TGAImage do
   @doc """
   Writes the `image` and `pixel_stream` data to the file at the specified `path`.
   """
-  @spec write(t(), Path.t(), Enumerable.t()) :: :ok | {:error, File.posix()}
+  @spec write(t(), Path.t(), Enumerable.t()) :: :ok
   def write(image, path, pixel_stream) do
     File.touch!(path)
-    file_stream = File.stream!(path, [:write, :delayed_write])
+    file_stream = File.stream!(path, [:delayed_write])
     pixel_stream = Stream.map(pixel_stream, fn <<pixel::24>> -> <<pixel::little-24>> end)
 
     [header(image), pixel_stream, footer()]

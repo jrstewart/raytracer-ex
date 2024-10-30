@@ -65,7 +65,8 @@ defmodule Raytracer.Geometry.CoordinateSystem3 do
   Finally, `u_axis` is the cross product of `v_axis` and `w_axis`.
   """
   @spec create_from_vw(Vector3.t(), Vector3.t()) :: t()
-  def create_from_vw(_v, %Vector3{dx: 0.0, dy: 0.0, dz: 0.0}) do
+  def create_from_vw(_v, %Vector3{dx: dx, dy: dy, dz: dz})
+      when dx == 0.0 and dy == 0.0 and dz == 0.0 do
     %CoordinateSystem3{
       u_axis: %Vector3{dx: 1.0, dy: 0.0, dz: 0.0},
       v_axis: %Vector3{dx: 0.0, dy: 1.0, dz: 0.0},
