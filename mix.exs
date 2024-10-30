@@ -28,11 +28,11 @@ defmodule Raytracer.Mixfile do
   defp deps do
     [
       {:credo, "~> 1.0", only: :dev, runtime: false},
-      {:dialyzex, "~> 1.2.0", only: :dev},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.10", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:jason, "~> 1.1"},
-      {:propcheck, "~> 1.1", only: [:test]}
+      {:propcheck, git: "https://github.com/alfert/propcheck", branch: "master", only: [:test]}
     ]
   end
 
