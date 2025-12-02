@@ -11,6 +11,7 @@ Clone the repo and fetch its dependencies:
 ```
 git clone https://github.com/jrstewart/raytracer_ex.git
 cd raytracer_ex
+mise install # or asdf install
 mix deps.get
 mix escript.build
 ```
@@ -22,7 +23,6 @@ After cloning the repo and fetch its dependencies run:
 ```
 mix test
 ```
-
 
 ### Running Dialyzer
 
@@ -108,14 +108,22 @@ The following is an example of the format for the scene JSON file:
         "shininess": 0.4,
         "reflected_scale_factor": 0.025,
         "transmitted_scale_factor": 0.0,
-        "normal_reflectances": [0.460, 0.420, 0.410, 0.350, 0.180, 0.080, 0.050]
+        "normal_reflectances": [0.46, 0.42, 0.41, 0.35, 0.18, 0.08, 0.05]
       }
     },
     {
       "type": "triangle",
       "data": {
-        "vertices": [[-100.0, -2.0, -100.0], [100.0, -2.0, -100.0], [-100.0, -2.0, 100.0]],
-        "normals": [[0.0, 1.0, 0.0], [0.0, 1.0, 0.0], [0.0, 1.0, 0.0]]
+        "vertices": [
+          [-100.0, -2.0, -100.0],
+          [100.0, -2.0, -100.0],
+          [-100.0, -2.0, 100.0]
+        ],
+        "normals": [
+          [0.0, 1.0, 0.0],
+          [0.0, 1.0, 0.0],
+          [0.0, 1.0, 0.0]
+        ]
       },
       "material": {
         "diffuse": 0.8,
@@ -129,8 +137,16 @@ The following is an example of the format for the scene JSON file:
     {
       "type": "triangle",
       "data": {
-        "vertices": [[-100.0, -2.0, 100.0], [100.0, -2.0, -100.0], [100.0, -2.0, 100.0]],
-        "normals": [[0.0, 1.0, 0.0], [0.0, 1.0, 0.0], [0.0, 1.0, 0.0]]
+        "vertices": [
+          [-100.0, -2.0, 100.0],
+          [100.0, -2.0, -100.0],
+          [100.0, -2.0, 100.0]
+        ],
+        "normals": [
+          [0.0, 1.0, 0.0],
+          [0.0, 1.0, 0.0],
+          [0.0, 1.0, 0.0]
+        ]
       },
       "material": {
         "diffuse": 0.8,
